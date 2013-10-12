@@ -1,0 +1,443 @@
+
+ <!DOCTYPE window
+     PUBLIC "http://www.w3.org/2001/XMLSchema"
+     "http://xbmc.org/xbmc.xsd">
+
+<window type="dialog">
+    <!--onload>RunScript(special://skin/scripts/rhapsody.py)</onload-->
+    <defaultcontrol>21</defaultcontrol>
+    <allowoverlay>yes</allowoverlay>
+    <coordinates>
+        <posx>0</posx>
+        <posy>0</posy>
+    </coordinates>
+    <controls>
+        <control type="image">
+            <width>1280</width>
+            <height>720</height>
+            <texture>dim.png</texture>
+        </control>
+        <control type="group" id="60">
+            <posx>90</posx>
+            <posy>80</posy>
+            <width>1100</width>
+            <height>560</height>
+            <control type="image">
+                <width>1100</width>
+                <height>560</height>
+                <texture>white.png</texture>
+            </control>
+            <!--control type="group" id="35">
+                <description>container for bottom pre/next nav buttons</description>
+                <posx>0</posx>
+                <posy>120</posy>
+                <description>Slide-out bottom nav for album view</description>
+                <animation effect="slide" start="0,0" end="0,-120" time="400">Focus</animation>
+                <animation effect="slide" start="0,-120" end="0,0" time="400">Unfocus</animation>
+
+                <control type="image" id="30">
+                    <visible>false</visible>
+                    <width>860</width>
+                    <height>50</height>
+                    <posx>120</posx>
+                    <posy>560</posy>
+                    <texture>white.png</texture>
+                </control>
+                <control type="button" id="31">
+                    <width>120</width>
+                    <height>50</height>
+                    <posx>430</posx>
+                    <posy>560</posy>
+                    <label>PREV</label>
+                    <textcolor>black</textcolor>
+                    <textoffsetx>0</textoffsetx>
+                    <textoffsety>0</textoffsety>
+                    <texturefocus>button180x25.png</texturefocus>
+                    <texturenofocus>white.png</texturenofocus>
+                    <font>rhapsody_font35_title</font>
+                    <pulseonselect>false</pulseonselect>
+                    <align>center</align>
+                    <onup>29</onup>
+                    <onleft>-</onleft>
+                    <onright>32</onright>
+                </control>
+                <control type="button" id="32">
+                    <width>120</width>
+                    <height>50</height>
+                    <posx>550</posx>
+                    <posy>560</posy>
+                    <label>NEXT</label>
+                    <align>center</align>
+                    <textcolor>black</textcolor>
+                    <textoffsetx>0</textoffsetx>
+                    <textoffsety>0</textoffsety>
+                    <texturefocus>button180x25.png</texturefocus>
+                    <texturenofocus>white.png</texturenofocus>
+                    <font>rhapsody_font35_title</font>
+                    <pulseonselect>false</pulseonselect>
+                    <onup>29</onup>
+                    <onleft>31</onleft>
+                    <onright>-</onright>
+                </control>
+            </control-->
+
+            <control type="group" id="1200">
+                <!-- Artist info pane -->
+                <control type="group" id="101">
+                    <!--animation effect="slide" start="0,0" end="-268,0" time="400" condition="Control.HasFocus(51)" tween="cubic" easing="inout">Conditional</animation>
+                    <animation effect="slide" start="-268,0" end="0,0" time="400" condition="!Control.HasFocus(51)" tween="cubic" easing="inout">Conditional</animation-->
+                    <width>565</width>
+                    <height>560</height>
+                    <posx>545</posx>
+                    <posy>0</posy>
+                    <!-- Album name, artist name, review -->
+                    <control type="group">
+                        <description>Container for Album name, artist, and review</description>
+                        <posx>0</posx>
+                        <posy>15</posy>
+                        <control type="textbox" id="11">
+                            <description>Album Name</description>
+                            <posx>-1</posx>
+                            <posy>35</posy>
+                            <width>480</width>
+                            <height>98</height>
+                            <align>left</align>
+                            <label></label>
+                            <textcolor>black</textcolor>
+                            <autoscroll delay="3000" time="1000" repeat="10000">!Control.HasFocus(83)</autoscroll>
+                            <font>rhapsody_font35_title</font>
+                        </control>
+                        <control type="label" id="13">
+                            <description>Album Artist Name</description>
+                            <posx>0</posx>
+                            <posy>6</posy>
+                            <width>500</width>
+                            <height>20</height>
+                            <align>left</align>
+                            <label></label>
+                            <textcolor>black</textcolor>
+                            <font>rhapsody_font14</font>
+                        </control>
+                        <control type="textbox" id="14">
+                            <description>Album Review</description>
+                            <posx>0</posx>
+                            <posy>139</posy>
+                            <width>500</width>
+                            <height>258</height>
+                            <label></label>
+                            <textcolor>black</textcolor>
+                            <autoscroll delay="3000" time="1000" repeat="10000">!Control.HasFocus(13)</autoscroll>
+                            <font>rhapsody_font12</font>
+                        </control>
+                    </control>
+                    <!-- Controls under review -->
+                    <control type="group" id="29">
+                        <description>container for all controls under review</description>
+                        <posx>0</posx>
+                        <posy>420</posy>
+                        <control type="button" id="21">
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <label></label>
+                            <textcolor>black</textcolor>
+                            <textoffsety>-8</textoffsety>
+                            <font>rhapsody_symbol96</font>
+                            <texturefocus>button210x80.png</texturefocus>
+
+                            <onright>24</onright>
+                            <onleft>51</onleft>
+                            <ondown>-</ondown>
+                        </control>
+                        <control type="label" id="22">
+                            <posx>90</posx>
+                            <posy>0</posy>
+                            <width>210</width>
+                            <label>PLAY</label>
+                            <textcolor>black</textcolor>
+                            <textoffsety>5</textoffsety>
+                            <font>rhapsody_font45caps_title</font>
+                            <onright>24</onright>
+                            <onleft>21</onleft>
+                            <ondown>-</ondown>
+                        </control>
+                        <control type="group">
+                            <description>subcontainer for Add to... buttons</description>
+                            <posx>215</posx>
+                            <posy>0</posy>
+                            <control type="button" id="23">
+                                <posy>0</posy>
+                                <width>182</width>
+                                <label>ADD TO QUEUE</label>
+                                <textcolor>black</textcolor>
+                                <textoffsetx>12</textoffsetx>
+                                <textoffsety>-3</textoffsety>
+                                <texturefocus>button180x25.png</texturefocus>
+                                <font>rhapsody_font13</font>
+
+                                <onleft>21</onleft>
+                                <onright>26</onright>
+                                <ondown>24</ondown>
+                            </control>
+                            <control type="button" id="24">
+                                <posy>28</posy>
+                                <width>182</width>
+                                <label>ADD TO PLAYLIST</label>
+                                <textcolor>black</textcolor>
+                                <textoffsetx>12</textoffsetx>
+                                <textoffsety>-3</textoffsety>
+                                <texturefocus>button180x25.png</texturefocus>
+                                <font>rhapsody_font13</font>
+
+                                <onup>23</onup>
+                                <onleft>21</onleft>
+                                <onright>26</onright>
+                                <ondown>25</ondown>
+                            </control>
+                            <control type="button" id="25">
+                                <posy>55</posy>
+                                <width>182</width>
+                                <label>ADD TO LIBRARY</label>
+                                <textcolor>black</textcolor>
+                                <textoffsetx>12</textoffsetx>
+                                <textoffsety>-3</textoffsety>
+                                <texturefocus>button180x25.png</texturefocus>
+                                <font>rhapsody_font13</font>
+
+                                <onup>24</onup>
+                                <onleft>21</onleft>
+                                <onright>26</onright>
+                                <ondown>-</ondown>
+                            </control>
+                        </control>
+                        <control type="button" id="26">
+                            <posx>400</posx>
+                            <posy>0</posy>
+                            <width>60</width>
+                            <height>80</height>
+                            <texturefocus>button210x80.png</texturefocus>
+                            <onleft>24</onleft>
+                            <onright>27</onright>
+                            <ondown>-</ondown>
+                            <onup>51</onup>
+                        </control>
+                        <control type="image" id="126">
+                            <posx>400</posx>
+                            <posy>10</posy>
+                            <width>60</width>
+                            <height>60</height>
+                            <aspectratio>keep</aspectratio>
+                            <texture>arrow_left.png</texture>
+                        </control>
+                        <control type="button" id="27">
+                            <posx>460</posx>
+                            <posy>0</posy>
+                            <width>60</width>
+                            <height>80</height>
+                            <texturefocus>button210x80.png</texturefocus>
+                            <onleft>26</onleft>
+                            <onright>-</onright>
+                            <ondown>-</ondown>
+                            <onup>51</onup>
+                        </control>
+                        <control type="image" id="127">
+                            <posx>460</posx>
+                            <posy>10</posy>
+                            <width>60</width>
+                            <height>60</height>
+                            <aspectratio>keep</aspectratio>
+                            <texture>arrow_right.png</texture>
+                        </control>
+                    </control>
+                </control>
+                <!--Tracklist pane -->
+                <control type="list" id="51">
+                    <!--animation effect="slide" start="0,0" end="-575,0" time="400" tween="cubic" easing="inout">Focus</animation>
+                    <animation effect="slide" start="-575,0" end="0,0" time="400" tween="cubic" easing="inout">Unfocus</animation-->
+                    <description>Album tracklist</description>
+                    <posx>20</posx>
+                    <posy>34</posy>
+                    <height>465</height>
+                    <width>550</width>
+                    <onleft>-</onleft>
+                    <onright>21</onright>
+                    <orientation>vertical</orientation>
+                    <itemlayout height="27">
+                        <control type="label">
+                            <posx>40</posx>
+                            <width>440</width>
+                            <info>ListItem.Title</info>
+                            <font>rhapsody_font12</font>
+                            <textcolor>black</textcolor>
+                            <aligny>center></aligny>
+                        </control>
+                        <control type="label">
+                            <posx>10</posx>
+                            <width>30</width>
+                            <info>ListItem.TrackNumber</info>
+                            <font>rhapsody_font12</font>
+                            <textcolor>black</textcolor>
+                            <align>left</align>
+                            <aligny>center></aligny>
+                        </control>
+                        <control type="label">
+                            <posx>510</posx>
+                            <width>50</width>
+                            <info>ListItem.Duration</info>
+                            <font>rhapsody_font12</font>
+                            <textcolor>black</textcolor>
+                            <aligny>center></aligny>
+                            <align>right</align>
+                        </control>
+                    </itemlayout>
+                    <focusedlayout height="27">
+                        <control type="image">
+                            <!--visible>Control.HasFocus(51)</visible-->
+                            <width>520</width>
+                            <height>27</height>
+                            <texture>button180x25.png</texture>
+                        </control>
+                        <control type="label">
+                            <visible>Control.HasFocus(51)</visible>
+                            <posx>40</posx>
+                            <width>440</width>
+                            <info>ListItem.Title</info>
+                            <font>rhapsody_font12</font>
+                            <textcolor>white</textcolor>
+                            <aligny>center></aligny>
+                        </control>
+                        <control type="label">
+                            <visible>Control.HasFocus(51)</visible>
+                            <posx>10</posx>
+                            <width>30</width>
+                            <info>ListItem.TrackNumber</info>
+                            <font>rhapsody_font12</font>
+                            <textcolor>white</textcolor>
+                            <align>left</align>
+                            <aligny>center></aligny>
+                        </control>
+                        <control type="label">
+                            <visible>Control.HasFocus(51)</visible>
+                            <posx>510</posx>
+                            <width>50</width>
+                            <info>ListItem.Duration</info>
+                            <font>rhapsody_font12</font>
+                            <textcolor>white</textcolor>
+                            <aligny>center></aligny>
+                            <align>right</align>
+                        </control>
+                        <control type="label">
+                            <visible>!Control.HasFocus(51)</visible>
+                            <posx>40</posx>
+                            <width>450</width>
+                            <info>ListItem.Title</info>
+                            <font>rhapsody_font12</font>
+                            <textcolor>white</textcolor>
+                            <aligny>center></aligny>
+                        </control>
+                        <control type="label">
+                            <visible>!Control.HasFocus(51)</visible>
+                            <posx>10</posx>
+                            <width>30</width>
+                            <info>ListItem.TrackNumber</info>
+                            <font>rhapsody_font12</font>
+                            <textcolor>white</textcolor>
+                            <align>left</align>
+                            <aligny>center></aligny>
+                        </control>
+                        <control type="label">
+                            <visible>!Control.HasFocus(51)</visible>
+                            <posx>510</posx>
+                            <width>50</width>
+                            <info>ListItem.Duration</info>
+                            <font>rhapsody_font12</font>
+                            <textcolor>white</textcolor>
+                            <aligny>center></aligny>
+                            <align>right</align>
+                        </control>
+
+                    </focusedlayout>
+                </control>
+            </control>
+
+            <!--Large Art pane -->
+            <control type="group">
+                <animation effect="slide" start="0,0" end="283,0" time="600" condition="Control.HasFocus(51)" tween="cubic" easing="inout">Conditional</animation>
+                <animation effect="slide" start="283,0" end="0,0" time="600" condition="!Control.HasFocus(51)" tween="cubic" easing="inout">Conditional</animation>
+                <posx>0</posx>
+                <visible></visible>
+                <description>Container for large art, release dates, lable, and genre</description>
+                <control type="image" id="">
+                    <animation effect="slide" start="0,0" end="-11,0" time="600" condition="Control.HasFocus(51)" tween="cubic" easing="inout">Conditional</animation>
+                    <animation effect="slide" start="-11,0" end="0,0" time="600" condition="!Control.HasFocus(51)" tween="cubic" easing="inout">Conditional</animation>
+                    <posx>0</posx>
+                    <posy>0</posy>
+                    <width>540</width>
+                    <height>530</height>
+                    <texture>white.png</texture>
+                </control>
+                <control type="image" id="7">
+                    <description>Large album image</description>
+                    <posx>30</posx>
+                    <posy>30</posy>
+                    <width>470</width>
+                    <height>470</height>
+                    <texture>-</texture>
+                    <fadetime>500</fadetime>
+                </control>
+                <control type="label" id="8">
+                    <description>Release Date</description>
+                    <posx>30</posx>
+                    <posy>507</posy>
+                    <width>470</width>
+                    <height>20</height>
+                    <align>left</align>
+                    <label></label>
+                    <textcolor>black</textcolor>
+                    <font>rhapsody_font10</font>
+                </control>
+                <control type="label" id="9">
+                    <description>Original Release Date</description>
+                    <!--visible>!IsEmpty(Window(4000).Property(Album.orig_date))</visible-->
+                    <posx>30</posx>
+                    <posy>527</posy>
+                    <width>470</width>
+                    <height>20</height>
+                    <align>left</align>
+                    <label></label>
+                    <textcolor>black</textcolor>
+                    <font>rhapsody_font10</font>
+                </control>
+                <control type="label" id="10">
+                    <description>Record Label</description>
+                    <posx>500</posx>
+                    <posy>507</posy>
+                    <width>470</width>
+                    <height>20</height>
+                    <align>right</align>
+                    <label></label>
+                    <textcolor>black</textcolor>
+                    <font>rhapsody_font10</font>
+                </control>
+                <control type="label" id="6">
+                    <description>Genre Label</description>
+                    <posx>500</posx>
+                    <posy>527</posy>
+                    <width>470</width>
+                    <height>20</height>
+                    <align>right</align>
+                    <label>Primary Genre</label>
+                    <textcolor>black</textcolor>
+                    <font>rhapsody_font10</font>
+                </control>
+            </control>
+
+        </control>
+        <!--control type="image" id="1201">
+            <height>560</height>
+            <width>30</width>
+            <posx>1160</posx>
+            <posy>80</posy>
+            <texture>feather_line_inverted.png</texture>
+        </control-->
+    </controls>
+</window>

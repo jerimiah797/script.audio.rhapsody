@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE window
+     PUBLIC "http://www.w3.org/2001/XMLSchema"
+         "http://xbmc.org/xbmc.xsd">
+
+<window>
+    <!--defaultcontrol>201</defaultcontrol-->
+    <!--onload>RunScript(special://skin/scripts/login.py)</onload-->
+    <allowoverlay>no</allowoverlay>
+
+    <controls>
+        <control type="image">
+            <posx>0</posx>
+            <posy>0</posy>
+            <width>1280</width>
+            <height>720</height>
+            <texture>background/background.png</texture>
+        </control>
+
+
+        <control type="group">
+            <posx>70</posx>
+            <!--visible>StringCompare(Window.Property(view),"")</visible-->
+            <!--visible>IsEmpty(Window.Property(view))</visible-->
+            <!--control type="button" id="202">
+                <description>dummy button to set initial view</description>
+                <posx>0</posx>
+                <posy>0</posy>
+                <texturenofocus>-</texturenofocus>
+                <texturefocus>-</texturefocus>
+                <onfocus>SetFocus(201)</onfocus>
+                <ondown>201</ondown>
+                <onup>201</onup>
+                <onleft>201</onleft>
+                <onright>201</onright>
+            </control-->
+            <control type="image">
+                <posx>0</posx>
+                <posy>160</posy>
+                <height>400</height>
+                <width>400</width>
+                <texture>rhapsody_icon.png</texture>
+            </control>
+            <control type="group">
+                <posx>520</posx>
+                <posy>200</posy>
+                <control type="label">
+                    <posx>-30</posx>
+                    <posy>0</posy>
+                    <label>Sign in to start listening</label>
+                    <font>rhapsody_font45caps_title</font>
+                    <textcolor>darkgrey</textcolor>
+                </control>
+                <control type="label">
+                    <posy>80</posy>
+                    <label>Username (usually your email address)</label>
+                    <align>left</align>
+                    <font>rhapsody_font16</font>
+                    <textcolor>darkgrey</textcolor>
+                </control>
+                <control type="image">
+                    <width>420</width>
+                    <height>40</height>
+                    <posy>120</posy>
+                    <texture>white.png</texture>
+                </control>
+                <control type="label">
+                    <posy>170</posy>
+                    <label>Password</label>
+                    <align>left</align>
+                    <font>rhapsody_font16</font>
+                    <textcolor>darkgrey</textcolor>
+                </control>
+                <control type="image">
+                    <width>420</width>
+                    <height>40</height>
+                    <posy>210</posy>
+                    <texture>white.png</texture>
+                </control>
+                <control type="image">
+                    <posx>290</posx>
+                    <posy>280</posy>
+                    <width>130</width>
+                    <height>50</height>
+                    <texture>white.png</texture>
+                </control>
+                <control type="label" id="10">
+                    <posx>-100</posx>
+                    <posy>370</posy>
+                    <visible>true</visible>
+                    <label>-</label>
+                    <align>left</align>
+                    <font>rhapsody_font30</font>
+                    <textcolor>darkgrey</textcolor>
+                </control>
+            </control>
+        </control>
+    </controls>
+</window>

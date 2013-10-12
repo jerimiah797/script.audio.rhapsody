@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="script.audio.rhapsody" version="1.0-beta1" name="Rhapsody" provider-name="Jerimiah Ham">
+    <requires>
+        <import addon="xbmc.python" version="2.0"/>
+		<import addon="script.module.simplejson" version="2.0.10"/>
+    </requires>
+    <extension point="xbmc.python.script" library="default.py">
+        <provides>audio</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <summary>Rhapsody music service.</summary>
+        <description>Rhapsody lets you search for music, browse your playlists and play your favorite tunes right from XBMC.</description>
+        <disclaimer>It can be used with any Rhapsody account.</disclaimer>
+		<platform>all</platform>
+    </extension>
+</addon>
