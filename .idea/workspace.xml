@@ -2,18 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4793638b-120b-4db6-a351-d77e6d157d79" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/script.audio.rhapsody.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.rhapuser.obj" afterPath="$PROJECT_DIR$/.rhapuser.obj" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/skins/Default/720p/album.xml" afterPath="$PROJECT_DIR$/resources/skins/Default/720p/album.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/default.py" afterPath="$PROJECT_DIR$/default.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/skins/Default/720p/login.xml" afterPath="$PROJECT_DIR$/resources/skins/Default/720p/login.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/skins/Default/720p/main.xml" afterPath="$PROJECT_DIR$/resources/skins/Default/720p/main.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/utils.py" afterPath="$PROJECT_DIR$/utils.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/__init__.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/envutils.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/main.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/resources/skins/Default/720p/schema/xbmc.xsd" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/resources/skins/Default/720p/schema/xwindow.dtd" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/resources/skins/Default/720p/schema/xwindow.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/resources/skins/Default/720p/test.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/resources/skins/Default/rhapsody_icon.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/rhapsody.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/taskutils/__init__.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/taskutils/compat.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/taskutils/decorators.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/taskutils/threads.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/taskutils/utils.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/utils.py" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="script.audio.rhapsody.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -39,10 +46,8 @@
       <file leaf-file-name="default.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/default.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="61" column="115" selection-start="1664" selection-end="1664" vertical-scroll-proportion="-30.0" vertical-offset="135" max-vertical-offset="11475">
-              <folding>
-                <element signature="e#0#14#0" expanded="true" />
-              </folding>
+            <state line="61" column="115" selection-start="1664" selection-end="1664" vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="11475">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -50,11 +55,8 @@
       <file leaf-file-name="main.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/skins/Default/720p/main.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="876" column="52" selection-start="41428" selection-end="41438" vertical-scroll-proportion="-10.846154" vertical-offset="12258" max-vertical-offset="13740">
-              <folding>
-                <element signature="tag#control#3;tag#control#2;tag#controls#0;tag#window#0" expanded="false" />
-                <element signature="tag#control#5;tag#control#2;tag#controls#0;tag#window#0" expanded="false" />
-              </folding>
+            <state line="876" column="52" selection-start="41428" selection-end="41438" vertical-scroll-proportion="0.0" vertical-offset="13140" max-vertical-offset="14340">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -62,16 +64,25 @@
       <file leaf-file-name="login.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/skins/Default/720p/login.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="109" column="29" selection-start="4204" selection-end="4204" vertical-scroll-proportion="-25.384615" vertical-offset="975" max-vertical-offset="1995">
+            <state line="109" column="29" selection-start="4204" selection-end="4204" vertical-scroll-proportion="0.0" vertical-offset="975" max-vertical-offset="1995">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="album.xml" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="album.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/resources/skins/Default/720p/album.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="339" column="37" selection-start="16508" selection-end="16508" vertical-scroll-proportion="0.6423562" vertical-offset="4627" max-vertical-offset="7065">
+            <state line="339" column="37" selection-start="16508" selection-end="16508" vertical-scroll-proportion="0.0" vertical-offset="4627" max-vertical-offset="7065">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="2" column="0" selection-start="47" selection-end="47" vertical-scroll-proportion="0.041208792" vertical-offset="0" max-vertical-offset="728">
               <folding />
             </state>
           </provider>
@@ -100,11 +111,12 @@
         <option value="$PROJECT_DIR$/default.py" />
         <option value="$PROJECT_DIR$/resources/skins/Default/720p/login.xml" />
         <option value="$PROJECT_DIR$/resources/skins/Default/720p/album.xml" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="82" />
+    <option name="x" value="44" />
     <option name="y" value="22" />
     <option name="width" value="1346" />
     <option name="height" value="874" />
@@ -219,36 +231,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="media" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="script.audio.rhapsody" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="script.audio.rhapsody" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="script.audio.rhapsody" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="skins" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Default" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="720p" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -263,8 +245,8 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="options.lastSelected" value="com.jetbrains.python.configuration.PythonContentEntriesConfigurable" />
     <property name="last_opened_file_path" value="$USER_HOME$/src/xbmcstubs" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -272,6 +254,156 @@
     </option>
   </component>
   <component name="RunManager">
+    <configuration default="true" type="DjangoTestsConfigurationType" factoryName="Django tests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="script.audio.rhapsody" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="TARGET" value="" />
+      <option name="SETTINGS_FILE" value="" />
+      <option name="CUSTOM_SETTINGS" value="false" />
+      <option name="USE_OPTIONS" value="false" />
+      <option name="OPTIONS" value="" />
+      <method />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="py.test">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="script.audio.rhapsody" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <option name="testToRun" value="" />
+      <option name="keywords" value="" />
+      <option name="params" value="" />
+      <option name="USE_PARAM" value="false" />
+      <option name="USE_KEYWORD" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Nosetests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="script.audio.rhapsody" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <option name="PARAMS" value="" />
+      <option name="USE_PARAM" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="script.audio.rhapsody" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <method />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Unittests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="script.audio.rhapsody" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <option name="PUREUNITTEST" value="true" />
+      <option name="PARAMS" value="" />
+      <option name="USE_PARAM" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
+      <method />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Doctests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="script.audio.rhapsody" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="tests" factoryName="Attests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="script.audio.rhapsody" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <method />
+    </configuration>
     <list size="0" />
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
@@ -284,27 +416,27 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="82" y="22" width="1346" height="874" extended-state="0" />
+    <frame x="44" y="22" width="1346" height="874" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25384617" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -320,58 +452,65 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/rhapsody.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="13" selection-start="30" selection-end="110" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5925">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="21" selection-start="48" selection-end="48" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4665">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="57" column="0" selection-start="244" selection-end="1165" vertical-scroll-proportion="-25.76923" vertical-offset="185" max-vertical-offset="945">
-          <folding>
-            <element signature="e#0#11#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/default.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="115" selection-start="1664" selection-end="1664" vertical-scroll-proportion="-30.0" vertical-offset="135" max-vertical-offset="11475">
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
+        <state line="61" column="115" selection-start="1664" selection-end="1664" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="11475">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/skins/Default/720p/main.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="876" column="52" selection-start="41428" selection-end="41438" vertical-scroll-proportion="-10.846154" vertical-offset="12258" max-vertical-offset="13740">
-          <folding>
-            <element signature="tag#control#3;tag#control#2;tag#controls#0;tag#window#0" expanded="false" />
-            <element signature="tag#control#5;tag#control#2;tag#controls#0;tag#window#0" expanded="false" />
-          </folding>
+        <state line="876" column="52" selection-start="41428" selection-end="41438" vertical-scroll-proportion="0.0" vertical-offset="13140" max-vertical-offset="14340">
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/skins/Default/720p/login.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="109" column="29" selection-start="4204" selection-end="4204" vertical-scroll-proportion="-25.384615" vertical-offset="975" max-vertical-offset="1995">
+        <state line="109" column="29" selection-start="4204" selection-end="4204" vertical-scroll-proportion="0.0" vertical-offset="975" max-vertical-offset="1995">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/resources/skins/Default/720p/album.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="339" column="37" selection-start="16508" selection-end="16508" vertical-scroll-proportion="0.6423562" vertical-offset="4627" max-vertical-offset="7065">
+        <state line="339" column="37" selection-start="16508" selection-end="16508" vertical-scroll-proportion="0.0" vertical-offset="4627" max-vertical-offset="7065">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/default.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="61" column="115" selection-start="1664" selection-end="1664" vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="11475">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/skins/Default/720p/main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="876" column="52" selection-start="41428" selection-end="41438" vertical-scroll-proportion="0.0" vertical-offset="13140" max-vertical-offset="14340">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/skins/Default/720p/login.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="109" column="29" selection-start="4204" selection-end="4204" vertical-scroll-proportion="0.0" vertical-offset="975" max-vertical-offset="1995">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/resources/skins/Default/720p/album.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="339" column="37" selection-start="16508" selection-end="16508" vertical-scroll-proportion="0.0" vertical-offset="4627" max-vertical-offset="7065">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="0" selection-start="47" selection-end="47" vertical-scroll-proportion="0.041208792" vertical-offset="0" max-vertical-offset="728">
           <folding />
         </state>
       </provider>
