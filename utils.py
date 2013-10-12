@@ -22,7 +22,7 @@ def GetStringFromUrl(encurl):
 			f.close()
 			return str(doc)
 		except:
-			log("could not get data from %s" % encurl)
+			xbmc.log("could not get data from %s" % encurl)
 			xbmc.sleep(1000)
 			succeed += 1
 	return ""

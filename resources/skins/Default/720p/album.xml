@@ -13,6 +13,8 @@
     </coordinates>
     <controls>
         <control type="image">
+            <posx>0</posx>
+            <posy>0</posy>
             <width>1280</width>
             <height>720</height>
             <texture>dim.png</texture>
@@ -23,6 +25,8 @@
             <width>1100</width>
             <height>560</height>
             <control type="image">
+                <posx>0</posx>
+                <posy>0</posy>
                 <width>1100</width>
                 <height>560</height>
                 <texture>white.png</texture>
@@ -138,8 +142,11 @@
                         <control type="button" id="21">
                             <posx>0</posx>
                             <posy>0</posy>
+                            <width>215</width>
+                            <height>80</height>
                             <label></label>
                             <textcolor>black</textcolor>
+                            <textoffsetx>0</textoffsetx>
                             <textoffsety>-8</textoffsety>
                             <font>rhapsody_symbol96</font>
                             <texturefocus>button210x80.png</texturefocus>
@@ -165,8 +172,10 @@
                             <posx>215</posx>
                             <posy>0</posy>
                             <control type="button" id="23">
+                                <posx>0</posx>
                                 <posy>0</posy>
                                 <width>182</width>
+                                <height>25</height>
                                 <label>ADD TO QUEUE</label>
                                 <textcolor>black</textcolor>
                                 <textoffsetx>12</textoffsetx>
@@ -180,7 +189,9 @@
                             </control>
                             <control type="button" id="24">
                                 <posy>28</posy>
+                                <posx>0</posx>
                                 <width>182</width>
+                                <height>25</height>
                                 <label>ADD TO PLAYLIST</label>
                                 <textcolor>black</textcolor>
                                 <textoffsetx>12</textoffsetx>
@@ -194,8 +205,10 @@
                                 <ondown>25</ondown>
                             </control>
                             <control type="button" id="25">
+                                <posx>0</posx>
                                 <posy>55</posy>
                                 <width>182</width>
+                                <height>25</height>
                                 <label>ADD TO LIBRARY</label>
                                 <textcolor>black</textcolor>
                                 <textoffsetx>12</textoffsetx>
@@ -264,6 +277,7 @@
                     <itemlayout height="27">
                         <control type="label">
                             <posx>40</posx>
+                            <posy>0</posy>
                             <width>440</width>
                             <info>ListItem.Title</info>
                             <font>rhapsody_font12</font>
@@ -272,6 +286,7 @@
                         </control>
                         <control type="label">
                             <posx>10</posx>
+                            <posy>0</posy>
                             <width>30</width>
                             <info>ListItem.TrackNumber</info>
                             <font>rhapsody_font12</font>
@@ -281,7 +296,8 @@
                         </control>
                         <control type="label">
                             <posx>510</posx>
-                            <width>50</width>
+                            <posy>0</posy>
+                            <width>54</width>
                             <info>ListItem.Duration</info>
                             <font>rhapsody_font12</font>
                             <textcolor>black</textcolor>
@@ -299,6 +315,7 @@
                         <control type="label">
                             <visible>Control.HasFocus(51)</visible>
                             <posx>40</posx>
+                            <posy>0</posy>
                             <width>440</width>
                             <info>ListItem.Title</info>
                             <font>rhapsody_font12</font>
@@ -308,6 +325,7 @@
                         <control type="label">
                             <visible>Control.HasFocus(51)</visible>
                             <posx>10</posx>
+                            <posy>0</posy>
                             <width>30</width>
                             <info>ListItem.TrackNumber</info>
                             <font>rhapsody_font12</font>
@@ -318,7 +336,8 @@
                         <control type="label">
                             <visible>Control.HasFocus(51)</visible>
                             <posx>510</posx>
-                            <width>50</width>
+                            <posy>0</posy>
+                            <width>54</width>
                             <info>ListItem.Duration</info>
                             <font>rhapsody_font12</font>
                             <textcolor>white</textcolor>
@@ -328,6 +347,7 @@
                         <control type="label">
                             <visible>!Control.HasFocus(51)</visible>
                             <posx>40</posx>
+                            <posy>0</posy>
                             <width>450</width>
                             <info>ListItem.Title</info>
                             <font>rhapsody_font12</font>
@@ -337,6 +357,7 @@
                         <control type="label">
                             <visible>!Control.HasFocus(51)</visible>
                             <posx>10</posx>
+                            <posy>0</posy>
                             <width>30</width>
                             <info>ListItem.TrackNumber</info>
                             <font>rhapsody_font12</font>
@@ -347,6 +368,7 @@
                         <control type="label">
                             <visible>!Control.HasFocus(51)</visible>
                             <posx>510</posx>
+                            <posy>0</posy>
                             <width>50</width>
                             <info>ListItem.Duration</info>
                             <font>rhapsody_font12</font>

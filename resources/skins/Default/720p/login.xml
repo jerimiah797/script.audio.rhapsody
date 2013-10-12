@@ -49,33 +49,54 @@
                     <posy>0</posy>
                     <label>Sign in to start listening</label>
                     <font>rhapsody_font45caps_title</font>
-                    <textcolor>darkgrey</textcolor>
+                    <textcolor>DD171717</textcolor>
+                            <!-- darkgrey -->
                 </control>
                 <control type="label">
+                    <posx>0</posx>
                     <posy>80</posy>
                     <label>Username (usually your email address)</label>
                     <align>left</align>
                     <font>rhapsody_font16</font>
-                    <textcolor>darkgrey</textcolor>
+                    <textcolor>DD171717</textcolor>
+                            <!-- darkgrey -->
                 </control>
                 <control type="image">
                     <width>420</width>
                     <height>40</height>
+                    <posx>0</posx>
                     <posy>120</posy>
                     <texture>white.png</texture>
                 </control>
+                <control type="image">
+                    <width>428</width>
+                    <height>48</height>
+                    <posx>-4</posx>
+                    <posy>116</posy>
+                    <texture border="8">textboxselected.png</texture>
+                </control>
                 <control type="label">
+                    <posx>0</posx>
                     <posy>170</posy>
                     <label>Password</label>
                     <align>left</align>
                     <font>rhapsody_font16</font>
-                    <textcolor>darkgrey</textcolor>
+                    <textcolor>DD171717</textcolor>
+                            <!-- darkgrey -->
                 </control>
                 <control type="image">
                     <width>420</width>
                     <height>40</height>
+                    <posx>0</posx>
                     <posy>210</posy>
                     <texture>white.png</texture>
+                </control>
+                <control type="image">
+                    <width>428</width>
+                    <height>48</height>
+                    <posx>-4</posx>
+                    <posy>206</posy>
+                    <texture border="8">textboxselected.png</texture>
                 </control>
                 <control type="image">
                     <posx>290</posx>
@@ -84,6 +105,13 @@
                     <height>50</height>
                     <texture>white.png</texture>
                 </control>
+                <control type="image">
+                    <posx>286</posx>
+                    <posy>276</posy>
+                    <width>138</width>
+                    <height>58</height>
+                    <texture border="8">textboxselected.png</texture>
+                </control>
                 <control type="label" id="10">
                     <posx>-100</posx>
                     <posy>370</posy>
@@ -91,7 +119,8 @@
                     <label>-</label>
                     <align>left</align>
                     <font>rhapsody_font30</font>
-                    <textcolor>darkgrey</textcolor>
+                    <textcolor>DD171717</textcolor>
+                            <!-- darkgrey -->
                 </control>
             </control>
         </control>

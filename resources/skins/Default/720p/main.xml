@@ -40,18 +40,20 @@
                 <width>300</width>
                 <height>720</height>
                 <onright>200</onright>
-                <ondown>102</ondown>
+                <ondown>101</ondown>
                 <orientation>vertical</orientation>
                 <focusposition>1</focusposition>
                 <itemlayout height="45">
                     <control type="label">
                         <posx>20</posx>
+                        <posy>-</posy>
                         <width>170</width>
                         <height>30</height>
                         <align>left</align>
                         <font>rhapsody_font14</font>
                         <info>ListItem.Label</info>
-                        <textcolor>white</textcolor>
+                        <textcolor>F3FFFFFF</textcolor>
+                            <!-- white -->
                     </control>
                 </itemlayout>
                 <focusedlayout height="45">
@@ -64,12 +66,14 @@
                     </control>
                     <control type="label">
                         <posx>20</posx>
+                        <posy>-</posy>
                         <width>170</width>
                         <height>30</height>
                         <align>left</align>
                         <font>rhapsody_font14</font>
                         <info>ListItem.Label</info>
-                        <textcolor>darkblue</textcolor>
+                        <textcolor>F30C1D2F</textcolor>
+                            <!-- darkblue -->
                     </control>
                 </focusedlayout>
                 <content>
@@ -146,25 +150,27 @@
                     <itemlayout width="230">
                         <control type="label">
                             <posx>0</posx>
+                            <posy>0</posy>
                             <width>210</width>
                             <height>30</height>
                             <align>left</align>
                             <font>rhapsody_font30</font>
                             <info>ListItem.Label</info>
-                            <textcolor>white</textcolor>
-
+                            <textcolor>F3FFFFFF</textcolor>
+                            <!-- white -->
                         </control>
                     </itemlayout>
                     <focusedlayout width="230">
                         <control type="label">
                             <posx>0</posx>
+                            <posy>0</posy>
                             <width>210</width>
                             <height>30</height>
                             <align>left</align>
                             <font>rhapsody_font30</font>
                             <info>ListItem.Label</info>
-                            <textcolor>darkblue</textcolor>
-
+                            <textcolor>F30C1D2F</textcolor>
+                            <!-- darkblue -->
                         </control>
                     </focusedlayout>
                     <!--content>
@@ -199,7 +205,8 @@
                     <posy>50</posy>
                     <label>All Genres</label>
                     <font>rhapsody_font16</font>
-                    <textcolor>darkgrey</textcolor>
+                    <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                 </control>
                 <!-- Albums Panel View, New Releases -->
                 <control type="panel" id="50">
@@ -221,7 +228,7 @@
                             <align>left</align>
                             <font>rhapsody_font10</font>
                             <info>ListItem.Label</info>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
                             <wrapmultiline>true</wrapmultiline>
                             <scroll>false</scroll>
                         </control>
@@ -233,7 +240,7 @@
                             <align>left</align>
                             <font>rhapsody_font9</font>
                             <info>ListItem.Label2</info>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
                             <wrapmultiline>true</wrapmultiline>
                             <scroll>false</scroll>
                         </control>
@@ -250,7 +257,7 @@
                         </control>
                     </itemlayout>
                     <focusedlayout width="235" height="260">
-                        <control type="button">
+                        <!--control type="button">
                             <posx>0</posx>
                             <posy>0</posy>
                             <label>-</label>
@@ -258,8 +265,7 @@
                             <font>-</font>
                             <textcolor>-</textcolor>
                             <focusedcolor>-</focusedcolor>
-                            <!--onfocus>RunScript(special://skin/scripts/newreleases2.py)</onfocus-->
-                        </control>
+                        </control-->
                         <control type="image">
                             <visible>Control.HasFocus(50)</visible>
                             <width>209</width>
@@ -285,7 +291,7 @@
                             <align>left</align>
                             <font>rhapsody_font10</font>
                             <info>ListItem.Label</info>
-                            <textcolor>blue</textcolor>
+                            <textcolor>F39CD4F5</textcolor>
                             <scroll>false</scroll>
                         </control>
                         <control type="label">
@@ -296,7 +302,7 @@
                             <align>left</align>
                             <font>rhapsody_font9</font>
                             <info>ListItem.Label2</info>
-                            <textcolor>blue</textcolor>
+                            <textcolor>F39CD4F5</textcolor>
                             <scroll>false</scroll>
                         </control>
                         <control type="image">
@@ -330,7 +336,8 @@
                             <align>left</align>
                             <font>rhapsody_font10</font>
                             <info>ListItem.Label</info>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                             <wrapmultiline>true</wrapmultiline>
                             <scroll>false</scroll>
                         </control>
@@ -342,7 +349,8 @@
                             <align>left</align>
                             <font>rhapsody_font9</font>
                             <info>ListItem.Label2</info>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                             <wrapmultiline>true</wrapmultiline>
                             <scroll>false</scroll>
                         </control>
@@ -438,7 +446,8 @@
                             <align>left</align>
                             <font>rhapsody_font10</font>
                             <info>ListItem.Label</info>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                             <wrapmultiline>true</wrapmultiline>
                             <scroll>false</scroll>
                         </control>
@@ -450,7 +459,8 @@
                             <align>left</align>
                             <font>rhapsody_font9</font>
                             <info>ListItem.Label2</info>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                             <wrapmultiline>true</wrapmultiline>
                             <scroll>false</scroll>
                         </control>
@@ -546,7 +556,8 @@
                             <align>left</align>
                             <font>rhapsody_font10</font>
                             <info>ListItem.Label</info>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                             <wrapmultiline>true</wrapmultiline>
                             <scroll>false</scroll>
                         </control>
@@ -558,7 +569,8 @@
                             <align>left</align>
                             <font>rhapsody_font9</font>
                             <info>ListItem.Label2</info>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                             <wrapmultiline>true</wrapmultiline>
                             <scroll>false</scroll>
                         </control>
@@ -767,75 +779,94 @@
             <control type="group" id="1000">
                 <visible>StringCompare(Window.Property(view),Settings)</visible>
                 <control type="label">
+                    <posx>0</posx>
                     <posy>28</posy>
                     <label>$INFO[Window.Property(view)]</label>
                     <align>left</align>
                     <font>rhapsody_font35_title</font>
-                    <textcolor>darkgrey</textcolor>
+                    <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                 </control>
                 <control type="group">
                     <posy>50</posy>
                     <control type="label">
+                        <posx>0</posx>
                         <posy>100</posy>
                         <label>Rhapsody for XBMC</label>
                         <align>left</align>
                         <font>rhapsody_font24_title</font>
-                        <textcolor>darkgrey</textcolor>
+                        <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                     </control>
                     <control type="label">
+                        <posx>0</posx>
                         <posy>140</posy>
                         <label>Version 1.0.2   [CR]Coded by Jerimiah Ham</label>
                         <align>left</align>
                         <font>rhapsody_font13</font>
-                        <textcolor>darkgrey</textcolor>
+                        <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                     </control>
                     <control type="label">
+                        <posx>0</posx>
                         <posy>230</posy>
                         <label>Account Info</label>
                         <align>left</align>
                         <font>rhapsody_font24_title</font>
-                        <textcolor>darkgrey</textcolor>
+                        <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                     </control>
                     <control type="group">
                         <posx>0</posx>
                         <posy>270</posy>
                         <width>650</width>
                         <control type="label">
+                            <posx>0</posx>
                             <posy>0</posy>
                             <label>User:</label>
                             <align>left</align>
                             <font>rhapsody_font13</font>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                         </control>
                         <control type="label">
+                            <posx>0</posx>
                             <posy>30</posy>
                             <label>Email/Login:</label>
                             <align>left</align>
                             <font>rhapsody_font13</font>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                         </control>
                         <control type="label">
+                            <posx>0</posx>
                             <posy>60</posy>
                             <label>Country:</label>
                             <align>left</align>
                             <font>rhapsody_font13</font>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                         </control>
                         <control type="label">
+                            <posx>0</posx>
                             <posy>90</posy>
                             <label>Member Since:</label>
                             <align>left</align>
                             <font>rhapsody_font13</font>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                         </control>
                         <control type="label">
+                            <posx>0</posx>
                             <posy>120</posy>
                             <label>Account Type:</label>
                             <align>left</align>
                             <font>rhapsody_font13</font>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                            <!-- darkgrey -->
                         </control>
                         <control type="button" id="201">
+                            <posx>0</posx>
                             <posy>200</posy>
                             <width>420</width>
                             <height>50</height>
@@ -845,7 +876,8 @@
                             <texturenofocus>white.png</texturenofocus>
                             <texturefocus border="8">textboxselected.png</texturefocus>
                             <font>rhapsody_font24_title</font>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                             <onclick>ClearProperty(username)</onclick>
                             <onclick>ClearProperty(password)</onclick>
                             <onclick>ClearProperty(guid)</onclick>
@@ -866,39 +898,49 @@
                         <posy>270</posy>
                         <width>450</width>
                         <control type="label">
+                            <posx>0</posx>
                             <posy>0</posy>
                             <label>$INFO[Window.Property(full_name)]</label>
                             <align>left</align>
                             <font>rhapsody_font13</font>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                         </control>
                         <control type="label">
+                            <posx>0</posx>
                             <posy>30</posy>
                             <label>$INFO[Window.Property(username)]</label>
                             <align>left</align>
                             <font>rhapsody_font13</font>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                         </control>
                         <control type="label">
+                            <posx>0</posx>
                             <posy>60</posy>
                             <label>$INFO[Window.Property(country)]</label>
                             <align>left</align>
                             <font>rhapsody_font13</font>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                         </control>
                         <control type="label">
+                            <posx>0</posx>
                             <posy>90</posy>
                             <label>$INFO[Window.Property(date_created)]</label>
                             <align>left</align>
                             <font>rhapsody_font13</font>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                         </control>
                         <control type="label">
+                            <posx>0</posx>
                             <posy>120</posy>
                             <label>$INFO[Window.Property(account_type)]</label>
                             <align>left</align>
                             <font>rhapsody_font13</font>
-                            <textcolor>darkgrey</textcolor>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
                         </control>
                     </control>
                 </control>
