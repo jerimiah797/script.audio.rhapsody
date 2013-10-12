@@ -8,6 +8,7 @@ import json
 import pickle
 import base64
 import os
+import gc
 
 
 
@@ -24,6 +25,35 @@ AUTHURL = 'https://api.rhapsody.com/oauth/token'
 APIKEY = "22Q1bFiwGxYA2eaG4vVAGsJqi3SQWzmd"
 SECRET = "Z1AAYBC1JEtnMJGm"
 
+__newreleases__ = []
+__toptracks__ = []
+__topalbums__ = []
+__topartists__ = []
+
+
+class Application:
+    __vars = None
+
+
+    def __init__(self):
+        self.__vars = {}
+
+
+    def set_var(self, name, value):
+        self.__vars[name] = value
+
+
+    def has_var(self, name):
+        return name in self.__vars
+
+
+    def get_var(self, name):
+        return self.__vars[name]
+
+
+    def remove_var(self, name):
+        del self.__vars[name]
+
 
 
 class LoginBase(xbmcgui.WindowXML):
@@ -34,21 +64,21 @@ class LoginBase(xbmcgui.WindowXML):
 class LoginWin(LoginBase):
 	def __init__(self, *args, **kwargs):
 		LoginBase.__init__(self, *args)
-		self.mem = kwargs.get('member')
+		#self.mem = kwargs.get('member')
 
 
 	def onInit(self):
 		print "Starting onInit Loop"
-		while not self.mem.logged_in:
-			if self.mem.bad_creds:
+		while not mem.logged_in:
+			if mem.bad_creds:
 				self.getControl(10).setLabel('Login failed! Try again...')
 				print "Set fail label message"
 			self.inputwin = InputDialog()
 			self.inputwin.showInputDialog()
-			self.mem.login_member(self.inputwin.name_txt, self.inputwin.pswd_txt)
+			mem.login_member(self.inputwin.name_txt, self.inputwin.pswd_txt)
 			del self.inputwin
-			print "Logged_in value: " + str(self.mem.logged_in)
-			print "Bad Creds value: " + str(self.mem.bad_creds)
+			print "Logged_in value: " + str(mem.logged_in)
+			print "Bad Creds value: " + str(mem.bad_creds)
 
 		print "Exited the while loop! Calling the del function"
 		self.close()
@@ -120,12 +150,10 @@ class InputDialog(xbmcgui.WindowDialog):
 class MainWin(xbmcgui.WindowXML):
 	def __init__(self, xmlName, thescriptPath, defaultname, forceFallback):
 		self.setup = False
-		self.newreleases = []
 		self.pos = ""
 		self.view = ""
-		self.mem = Member()
-		self.alb = Album()
-		self.genres = Genres()
+		#self.mem = Member()
+
 		self.browse_list = ["Browse_newreleases","Browse_topalbums","Browse_topartists","Browse_toptracks"]
 		print "Script path: " + __addon_path__
 
@@ -141,12 +169,12 @@ class MainWin(xbmcgui.WindowXML):
 		self.win.setProperty("view", self.view)
 		print "onInit(): Window initialized"
 		print "Starting the engines"
-		print "Logged in? " + str(self.mem.logged_in)
-		if not self.mem.logged_in:
+		print "Logged in? " + str(mem.logged_in)
+		if not mem.logged_in:
 			print "not already logged in. Checking for saved creds"
-			if not self.mem.has_saved_creds():
+			if not mem.has_saved_creds():
 				print "No saved creds. Need to do full login"
-				self.logwin = LoginWin("login.xml", __addon_path__, 'Default', '720p', member=self.mem)
+				self.logwin = LoginWin("login.xml", __addon_path__, 'Default', '720p', member=mem)
 				self.logwin.doModal()
 				del self.logwin
 				print "deleting logwin"
@@ -161,26 +189,26 @@ class MainWin(xbmcgui.WindowXML):
 		#while running:
 		print "self.win view property is "+self.win.getProperty("view")
 		# set window properties
-		self.win.setProperty("username", self.mem.username)
-		self.win.setProperty("password", self.mem.password)
-		self.win.setProperty("guid", self.mem.guid)
-		self.win.setProperty("token", self.mem.access_token)
+		self.win.setProperty("username", mem.username)
+		self.win.setProperty("password", mem.password)
+		self.win.setProperty("guid", mem.guid)
+		self.win.setProperty("token", mem.access_token)
 		#self.win.setProperty("account_type", mem.account_type)
 		#self.win.setProperty("date_created", mem.date_created)
-		self.win.setProperty("full_name", self.mem.first_name)
-		self.win.setProperty("country", self.mem.catalog)
+		self.win.setProperty("full_name", mem.first_name)
+		self.win.setProperty("country", mem.catalog)
 		self.win.setProperty("logged_in", "true")
 		if self.view == "Browse_newreleases":
 			print "self.view = "+self.view
 			#self.clearList()
 			self.getControl(300).setVisible(True)
 			self.getControl(50).setVisible(True)
-			self.alb.get_newreleases(self, self.mem)
+			alb.get_newreleases(self, mem)
 		if self.view == "Browse_topalbums":
 			#self.clearList()
 			self.getControl(300).setVisible(True)
 			self.getControl(50).setVisible(True)
-			self.alb.get_topalbums(self, self.mem)
+			alb.get_topalbums(self, mem)
 
 
 	def onAction(self, action):
@@ -206,13 +234,9 @@ class MainWin(xbmcgui.WindowXML):
 		print "onclick(): control %i" % control
 		self.pos = self.getCurrentListPosition()
 		if control == 50:
-			#print "onClick(): clicked item " + str(self.pos) + ": " + self.newreleases[self.pos]["album"]
-			#get_album_details(self.newreleases, self.pos)
-			#get_large_art(self.newreleases, self.pos)
-			#get_album_review(self.newreleases, self.pos)
 			print "Opening album detail dialog"
-			alb_dialog = AlbumDialog("album.xml", __addon_path__, 'Default', '720p', current_list=self.newreleases,
-			                         pos=self.pos, alb=self.alb, gen=self.genres)
+			alb_dialog = AlbumDialog("album.xml", __addon_path__, 'Default', '720p', current_list=__newreleases__,
+			                         pos=self.pos)
 			alb_dialog.setProperty("review", "has_review")
 			alb_dialog.doModal()
 			del alb_dialog
@@ -234,8 +258,8 @@ class AlbumDialog(DialogBase):
 		DialogBase.__init__(self, *args)
 		self.current_list = kwargs.get('current_list')
 		self.pos = kwargs.get('pos')
-		self.alb = kwargs.get('alb')
-		self.genres = kwargs.get('gen')
+		#self.alb = kwargs.get('alb')
+		#self.genres = kwargs.get('gen')
 		self.img_dir = __addon_path__+'/resources/skins/Default/media/'
 		self.bottom_nav = ""
 		self.myPlayer = xbmc.Player()
@@ -255,14 +279,14 @@ class AlbumDialog(DialogBase):
 
 	def show_info(self):
 		self.populate_fields()
-		self.alb.get_large_art(self.current_list, self.pos)
+		alb.get_large_art(self.current_list, self.pos)
 		self.populate_fields()
-		self.alb.get_album_review(self.current_list, self.pos)
+		alb.get_album_review(self.current_list, self.pos)
 		print self.getProperty("review")
 		self.populate_fields()
-		self.alb.get_album_details(self.current_list, self.pos, self.genres)
+		alb.get_album_details(self.current_list, self.pos, genres)
 		self.populate_fields()
-		self.alb.get_album_tracklist(self.current_list, self.pos, self)
+		alb.get_album_tracklist(self.current_list, self.pos, self)
 		#print "focus id: "+str(self.getFocusId())
 
 
@@ -273,8 +297,8 @@ class AlbumDialog(DialogBase):
 		if action.getId() == 7:
 			# ---Play Button ---
 			if self.getFocusId() == 21:
-				self.alb.get_album_playlist(self.current_list, self.pos, self)
-				self.myPlayer.play(self.alb.playlist)
+				alb.get_album_playlist(self.current_list, self.pos, self)
+				self.myPlayer.play(alb.playlist)
 				self.setFocusId(51)
 			# --- Next Button---
 			elif self.getFocusId() == 27:
@@ -286,10 +310,11 @@ class AlbumDialog(DialogBase):
 				self.clearList()
 				self.pos = (self.pos-1) % len(self.current_list)
 				self.show_info()
+			# --- tracklist ---
 			elif self.getFocusId() == 51:
 				print "Clicked on track # "+str(self.getCurrentListPosition()+1)
 				if self.current_playlist_albumId != self.current_list[self.pos]["album_id"]:
-					self.alb.get_album_playlist(self.current_list, self.pos, self)
+					alb.get_album_playlist(self.current_list, self.pos, self)
 					print "updating playlist with selected album"
 				self.myPlayer.playselected(self.getCurrentListPosition())
 			else: pass
@@ -474,21 +499,21 @@ class Album():
 	def get_album_review(self, newreleases, pos):
 		results = []
 		out = ""
-		if newreleases[pos]["review"] == "":
+		if __newreleases__[pos]["review"] == "":
 			try:
 				#url = "http://direct.rhapsody.com/metadata/data/methods/getAlbumReview.js?developerKey=9H9H9E6G1E4I5E0I&albumId=%s&cobrandId=40134" % (newreleases[pos]["album_id"])
-				url = "%salbums/%s/reviews?apikey=%s" % (BASEURL, newreleases[pos]["album_id"], APIKEY)
+				url = "%salbums/%s/reviews?apikey=%s" % (BASEURL, __newreleases__[pos]["album_id"], APIKEY)
 				response = urllib2.urlopen(url)
 				results = json.load(response)
 			except:
 				print "Review api not returning response"
 			if results:
 				#prettyprint(results)
-				newreleases[pos]["review"] = remove_html_markup(results[0]["body"])
+				__newreleases__[pos]["review"] = remove_html_markup(results[0]["body"])
 				return out
 			else:
 				print "No review for this album"
-				newreleases[pos]["review"] = ""
+				__newreleases__[pos]["review"] = ""
 				return out
 		else:
 			print "Already have the review for this album"
@@ -496,7 +521,7 @@ class Album():
 
 	def get_album_details(self, newreleases, pos, gen):
 		data = []
-		if newreleases[pos]["label"] == "":
+		if __newreleases__[pos]["label"] == "":
 			print "Getting genre, tracks and label with API call"
 			try:
 				url = "http://direct.rhapsody.com/metadata/data/methods/getAlbum.js?developerKey=9H9H9E6G1E4I5E0I&albumId=%s&cobrandId=40134&filterRightsKey=0" % (newreleases[pos]["album_id"])
@@ -510,9 +535,9 @@ class Album():
 				#orig_date = time.strftime('%B %Y', time.localtime(int(data["originalReleaseDate"]["time"]) / 1000))
 				#if newreleases[pos]["album_date"] != orig_date:
 					#newreleases[pos]["orig_date"] = orig_date
-				newreleases[pos]["label"] = data["label"]
-				newreleases[pos]["tracks"] = data["trackMetadatas"]
-				newreleases[pos]["style"] = data["primaryStyle"]
+				__newreleases__[pos]["label"] = data["label"]
+				__newreleases__[pos]["tracks"] = data["trackMetadatas"]
+				__newreleases__[pos]["style"] = data["primaryStyle"]
 				#print "Got label and original date for album"
 			#prettyprint(newreleases[pos]["tracks"])
 		else:
@@ -522,22 +547,22 @@ class Album():
 
 	def get_large_art(self, newreleases, pos):
 		image_dir = verify_image_dir()
-		if os.path.isfile(image_dir + newreleases[pos]["bigthumb"][6:]):
+		if os.path.isfile(image_dir + __newreleases__[pos]["bigthumb"][6:]):
 			#print "Using cached image for cover art: " + newreleases[pos]["bigthumb"]
 			pass
 		else:
 			#print "Getting album art with API call"
-			file = self.get_big_image(newreleases[pos]["album_id"], image_dir)
-			newreleases[pos]["bigthumb"] = file
+			file = self.get_big_image(__newreleases__[pos]["album_id"], image_dir)
+			__newreleases__[pos]["bigthumb"] = file
 			#print "Big Thumb: " + newreleases[pos]["bigthumb"]
 
 	def get_newreleases(self, mainwin, member):
-		if (len(mainwin.newreleases)) > 2:
+		if (len(__newreleases__)) > 2:
 			mainwin.clearList()
-			for x in range (0, len(mainwin.newreleases)):
-				mainwin.addItem(mainwin.newreleases[x]["listitem"])
+			for x in range (0, len(__newreleases__)):
+				mainwin.addItem(__newreleases__[x]["listitem"])
 				try:
-					print mainwin.newreleases[x]["album"]
+					print __newreleases__[x]["album"]
 				except:
 					print "non-ascii character in album name. :-("
 			print "populated the window listcontrol with cached newreleases"
@@ -619,7 +644,7 @@ class Album():
 						         'list_id': count,
 						         'artist_id': item["artist"]["id"],
 						         'listitem': xbmcgui.ListItem(item["name"], item["artist"]["name"], '', "album/" + img_file)}
-					mainwin.newreleases.append(album)
+					__newreleases__.append(album)
 					#print "Added album to list control"
 					mainwin.addItem(album["listitem"])
 					count += 1
@@ -738,22 +763,46 @@ def remove_html_markup(s):
 
 
 
-
-
-
-
-
-
-
-
-
-
-def main():
-	win = MainWin("main.xml", __addon_path__, 'Default', '720p')
+def main(win, loadwin):
+	print "creating main window"
+	print "going modal with main window"
 	win.doModal()
+	del loadwin
+	print "loading window has closed"
 	del win
-	print "App has been exited"
+	print "main window has closed"
+	gc.collect()
+	print "Collecting garbage"
 
 
-main()
+
+
+
+app = Application()
+mem = Member()
+alb = Album()
+genres = Genres()
+
+loadwin = xbmcgui.WindowXML("loading.xml", __addon_path__, 'Default', '720p')
+loadwin.show()
+
+logwin = LoginWin("login.xml", __addon_path__, 'Default', '720p', member=mem)
+win = MainWin("main.xml", __addon_path__, 'Default', '720p')
+
+print "Logged in? " + str(mem.logged_in)
+if not mem.logged_in:
+	print "not already logged in. Checking for saved creds"
+	if not mem.has_saved_creds():
+		print "No saved creds. Need to do full login"
+		logwin.doModal()
+		del logwin
+		print "deleting logwin"
+		main(win, loadwin)
+	else:
+		main(win, loadwin)
+else:
+	main(win, loadwin)
+
+print "App has been exited"
+#main()
 

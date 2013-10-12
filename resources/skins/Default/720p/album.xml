@@ -319,7 +319,8 @@
                             <width>440</width>
                             <info>ListItem.Title</info>
                             <font>rhapsody_font12</font>
-                            <textcolor>white</textcolor>
+                            <textcolor>F3FFFFFF</textcolor>
+                            <!-- white -->
                             <aligny>center></aligny>
                         </control>
                         <control type="label">
@@ -329,7 +330,8 @@
                             <width>30</width>
                             <info>ListItem.TrackNumber</info>
                             <font>rhapsody_font12</font>
-                            <textcolor>white</textcolor>
+                            <textcolor>F3FFFFFF</textcolor>
+                            <!-- white -->
                             <align>left</align>
                             <aligny>center></aligny>
                         </control>
@@ -340,7 +342,8 @@
                             <width>54</width>
                             <info>ListItem.Duration</info>
                             <font>rhapsody_font12</font>
-                            <textcolor>white</textcolor>
+                            <textcolor>F3FFFFFF</textcolor>
+                            <!-- white -->
                             <aligny>center></aligny>
                             <align>right</align>
                         </control>
@@ -351,7 +354,8 @@
                             <width>450</width>
                             <info>ListItem.Title</info>
                             <font>rhapsody_font12</font>
-                            <textcolor>white</textcolor>
+                            <textcolor>F3FFFFFF</textcolor>
+                            <!-- white -->
                             <aligny>center></aligny>
                         </control>
                         <control type="label">
@@ -361,7 +365,8 @@
                             <width>30</width>
                             <info>ListItem.TrackNumber</info>
                             <font>rhapsody_font12</font>
-                            <textcolor>white</textcolor>
+                            <textcolor>F3FFFFFF</textcolor>
+                            <!-- white -->
                             <align>left</align>
                             <aligny>center></aligny>
                         </control>
@@ -372,7 +377,8 @@
                             <width>50</width>
                             <info>ListItem.Duration</info>
                             <font>rhapsody_font12</font>
-                            <textcolor>white</textcolor>
+                            <textcolor>F3FFFFFF</textcolor>
+                            <!-- white -->
                             <aligny>center></aligny>
                             <align>right</align>
                         </control>

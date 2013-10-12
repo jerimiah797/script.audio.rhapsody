@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE window
+     PUBLIC "http://www.w3.org/2001/XMLSchema"
+         "http://xbmc.org/xbmc.xsd">
+
+<window>
+    <!--defaultcontrol>201</defaultcontrol-->
+    <!--onload>RunScript(special://skin/scripts/login.py)</onload-->
+    <allowoverlay>no</allowoverlay>
+
+    <controls>
+        <control type="image">
+            <posx>0</posx>
+            <posy>0</posy>
+            <width>1280</width>
+            <height>720</height>
+            <texture>background/background.png</texture>
+        </control>
+    </controls>
+</window>
