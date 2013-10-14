@@ -561,10 +561,10 @@ class Album():
 			mainwin.clearList()
 			for x in range (0, len(__newreleases__)):
 				mainwin.addItem(__newreleases__[x]["listitem"])
-				try:
-					print __newreleases__[x]["album"]
-				except:
-					print "non-ascii character in album name. :-("
+				#try:
+				#	print __newreleases__[x]["album"]
+				#except:
+				#	print "non-ascii character in album name. :-("
 			print "populated the window listcontrol with cached newreleases"
 			return
 		else:
@@ -650,7 +650,98 @@ class Album():
 					count += 1
 
 	def get_topalbums(self, mainwin, member):
-		pass
+		if (len(__topalbums__)) > 2:
+			mainwin.clearList()
+			for x in range (0, len(__topalbums__)):
+				mainwin.addItem(__topalbums__[x]["listitem"])
+				#try:
+				#	print __topalbums__[x]["album"]
+				#except:
+				#	print "non-ascii character in album name. :-("
+			print "populated the window listcontrol with cached topalbums"
+			return
+		else:
+			mainwin.clearList()
+			img_dir = verify_image_dir()
+			default_album_img = __addon_path__+'/resources/skins/Default/media/'+"AlbumPlaceholder.png"
+			results = ""
+			try:
+				url = '%salbums/top?apikey=%s&limit=100' % (BASEURL, APIKEY)
+				response = urllib2.urlopen(url)
+				results = json.load(response)
+			except:
+				print("Error when fetching Rhapsody data from net")
+			count = 0
+			if results:
+				#print results["albums"][3]
+				for item in results:
+					img_file = item["images"][0]["url"].split('/')[(len(item["images"][0]["url"].split('/'))) - 1]
+					img_path = img_dir + img_file
+					if not os.path.isfile(img_path):
+						try :
+							print ("We need to get album art for " + item["name"] + ". Starting download")
+						except:
+							print "We need to get album art for a non-ascii album title. Starting download"
+						#xbmc.log(msg=mess, level=xbmc.LOGDEBUG)
+						try:
+							while not os.path.isfile(img_path):
+								urllib.urlretrieve(item["images"][0]["url"], img_path)
+								print("Downloaded " + img_file)
+								album = {'album_id': item["id"],
+								         'album': item["name"],
+								         'thumb': "album/" + img_file,
+								         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
+								         'orig_date': "",
+								         'label': "",
+								         'review': "",
+								         'bigthumb': "",
+								         'tracks': "",
+								         'style': '',
+								         'artist': item["artist"]["name"],
+								         'list_id': count,
+								         'artist_id': item["artist"]["id"],
+								         'listitem': xbmcgui.ListItem(item["name"], item["artist"]["name"], '',
+								                                      "album/" + img_file)}
+						except:
+							try:
+								print("Album art not available for " + item["name"] + ". Using default album image")
+							except:
+								print "Album art not available for non-ascii album title. Using default album image"
+							album = {'album_id': item["id"],
+							         'album': item["name"],
+							         'thumb': default_album_img,
+							         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
+							         'orig_date': "",
+							         'label': "",
+							         'review': "",
+							         'bigthumb': "",
+							         'tracks': "",
+							         'style': '',
+							         'artist': item["artist"]["name"],
+							         'list_id': count,
+							         'artist_id': item["artist"]["id"],
+							         'listitem': xbmcgui.ListItem(item["name"], item["artist"]["name"], '', default_album_img)}
+					else:
+						#print("Already have album art for " + item["name"] + ". Moving on...")
+						album = {'album_id': item["id"],
+						         'album': item["name"],
+						         'thumb': "album/" + img_file,
+						         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
+						         'orig_date': "",
+						         'label': "",
+						         'review': "",
+						         'bigthumb': "",
+						         'tracks': "",
+						         'style': '',
+						         'artist': item["artist"]["name"],
+						         'list_id': count,
+						         'artist_id': item["artist"]["id"],
+						         'listitem': xbmcgui.ListItem(item["name"], item["artist"]["name"], '', "album/" + img_file)}
+					__topalbums__.append(album)
+					#print "Added album to list control"
+					mainwin.addItem(album["listitem"])
+					count += 1
+
 
 	def get_topartists(self, mainwin, member):
 		pass
