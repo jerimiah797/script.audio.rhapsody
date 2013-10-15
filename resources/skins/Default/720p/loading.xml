@@ -17,11 +17,11 @@
             <texture>background/background.png</texture>
         </control>
         <control type="image">
-            <posx>500</posx>
-            <posy>500</posy>
-            <texture>main-loading.gif</texture>
-            <width>128</width>
-            <height>128</height>
+            <posx>490</posx>
+            <posy>210</posy>
+            <texture>page-loader.gif</texture>
+            <width>300</width>
+            <height>300</height>
         </control>
     </controls>
 </window>

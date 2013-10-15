@@ -557,6 +557,7 @@ class Album():
 
 	def get_big_image(self, albumid, img_dir):
 		results = []
+		print "finding largest image with API call"
 		try:
 			url = "%salbums/%s/images?apikey=%s" %(BASEURL, albumid, APIKEY)
 			response = urllib2.urlopen(url)
@@ -653,11 +654,14 @@ class Album():
 
 	def get_large_art(self, list, pos):
 		image_dir = verify_image_dir()
-		if os.path.isfile(image_dir + list[pos]["bigthumb"][6:]):
-			#print "Using cached image for cover art: " + newreleases[pos]["bigthumb"]
-			pass
+		alb_id = list[pos]["album_id"]
+		print "Thumb value: "+app.album[alb_id]['bigthumb']
+		if os.path.isfile(image_dir + app.album[alb_id]['bigthumb'][6:]):
+			print "Using cached image for cover art: " + app.album[alb_id]['bigthumb']
+			list[pos]["bigthumb"] = app.album[alb_id]['bigthumb']
+			#pass
 		else:
-			#print "Getting album art with API call"
+			print "Getting album art with API call"
 			file = self.get_big_image(list[pos]["album_id"], image_dir)
 			list[pos]["bigthumb"] = file
 			#print "Big Thumb: " + newreleases[pos]["bigthumb"]
