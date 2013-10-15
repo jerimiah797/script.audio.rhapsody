@@ -16,5 +16,12 @@
             <height>720</height>
             <texture>background/background.png</texture>
         </control>
+        <control type="image">
+            <posx>500</posx>
+            <posy>500</posy>
+            <texture>main-loading.gif</texture>
+            <width>128</width>
+            <height>128</height>
+        </control>
     </controls>
 </window>

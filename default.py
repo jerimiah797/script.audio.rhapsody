@@ -292,13 +292,13 @@ class MainWin(xbmcgui.WindowXML):
 		self.win.setProperty("logged_in", "true")
 		if self.view == "Browse_newreleases":
 			#print "self.view = "+self.view
-			app.save_album_data()
+			#app.save_album_data()
 			app.set_var(list, app.newreleases__)
 			self.getControl(300).setVisible(True)
 			self.getControl(50).setVisible(True)
 			alb.get_newreleases(self)
 		if self.view == "Browse_topalbums":
-			app.save_album_data()
+			#app.save_album_data()
 			app.set_var(list, app.topalbums__)
 			self.getControl(300).setVisible(True)
 			self.getControl(50).setVisible(True)
@@ -317,8 +317,11 @@ class MainWin(xbmcgui.WindowXML):
 				self.win.setProperty("view", self.view)
 				self.main()
 		if action.getId() == 10:
+			#app.save_album_data()
 			self.close()
 		elif action.getId() == 92:
+			#app.save_album_data()
+			#xbmc.executebuiltin("ActivateWindow(yesnodialog)")
 			self.close()
 		else:
 			pass
@@ -602,11 +605,11 @@ class Album():
 			except:
 				print "Review api not returning response"
 			if results:
-				#prettyprint(results)
+				print "got review from API call"
 				list[pos]["review"] = remove_html_markup(results[0]["body"])
 				return out
 			else:
-				print "No review for this album"
+				print "Tried API. No review for this album"
 				list[pos]["review"] = ""
 				return out
 		else:
@@ -615,25 +618,34 @@ class Album():
 
 	def get_album_details(self, list, pos):
 		data = []
+		alb_id = list[pos]["album_id"]
+		print alb_id
 		if list[pos]["label"] == "":
-			print "Getting genre, tracks and label with API call"
-			try:
-				url = "http://direct.rhapsody.com/metadata/data/methods/getAlbum.js?developerKey=9H9H9E6G1E4I5E0I&albumId=%s&cobrandId=40134&filterRightsKey=0" % (list[pos]["album_id"])
-				#url = "%salbums/%s?apikey=%s" %(BASEURL, newreleases[pos]["album_id"], APIKEY)
-				response = urllib2.urlopen(url)
-				data = json.load(response)
-			except:
-				print "Album Detail api not returning response"
-			if data:
-				#prettyprint(data)
-				#orig_date = time.strftime('%B %Y', time.localtime(int(data["originalReleaseDate"]["time"]) / 1000))
-				#if newreleases[pos]["album_date"] != orig_date:
-					#newreleases[pos]["orig_date"] = orig_date
-				list[pos]["label"] = data["label"]
-				list[pos]["tracks"] = data["trackMetadatas"]
-				list[pos]["style"] = data["primaryStyle"]
-				#print "Got label and original date for album"
-			#prettyprint(newreleases[pos]["tracks"])
+			# try to get info from cached album data
+			if app.album.has_key(alb_id):
+				print "getting info from cached album data"
+				list[pos]["label"] = app.album[alb_id]["label"]
+				list[pos]["tracks"] = app.album[alb_id]["tracks"]
+				list[pos]["style"] = app.album[alb_id]["style"]
+			else:
+				print "Getting genre, tracks and label with API call"
+				try:
+					url = "http://direct.rhapsody.com/metadata/data/methods/getAlbum.js?developerKey=9H9H9E6G1E4I5E0I&albumId=%s&cobrandId=40134&filterRightsKey=0" % (list[pos]["album_id"])
+					#url = "%salbums/%s?apikey=%s" %(BASEURL, newreleases[pos]["album_id"], APIKEY)
+					response = urllib2.urlopen(url)
+					data = json.load(response)
+				except:
+					print "Album Detail api not returning response"
+				if data:
+					#prettyprint(data)
+					#orig_date = time.strftime('%B %Y', time.localtime(int(data["originalReleaseDate"]["time"]) / 1000))
+					#if newreleases[pos]["album_date"] != orig_date:
+						#newreleases[pos]["orig_date"] = orig_date
+					list[pos]["label"] = data["label"]
+					list[pos]["tracks"] = data["trackMetadatas"]
+					list[pos]["style"] = data["primaryStyle"]
+					#print "Got label and original date for album"
+				#prettyprint(newreleases[pos]["tracks"])
 		else:
 			print "Already have label info for this album"
 
@@ -939,10 +951,11 @@ def main(win, loadwin):
 	print "creating main window"
 	print "going modal with main window"
 	win.doModal()
-	del loadwin
-	print "loading window has closed"
 	del win
 	print "main window has closed"
+	app.save_album_data()
+	del loadwin
+	print "loading window has closed"
 	gc.collect()
 	print "Collecting garbage"
 
