@@ -38,23 +38,31 @@ class Application():
 	def __init__(self):
 		self.__vars = {}
 		self.user_data = {}
+
 		self.newreleases__ = []
 		self.newreleases_listitems = []
 		self.newreleases = {}
 		self.newreleases_file = __addon_path__+'/resources/.newreleases.obj'
+
 		self.toptracks__ = []
 		self.toptracks_listitems = []
+
 		self.topalbums__ = []
 		self.topalbums_listitems = []
 		self.topalbums = {}
 		self.topalbums_file = __addon_path__+'/resources/.topalbums.obj'
+
 		self.topartists__ = []
 		self.topartists_listitems = []
+
 		self.genre_tree__ = []
 		self.genre_dict__ = {}
+
 		self.artist = {}
+
 		self.album = {}
 		self.album_file = __addon_path__+'/resources/.albumdb.obj'
+
 		self.genre = {}
 		self.genre_file = __addon_path__+'/resources/.genres.obj'
 
@@ -75,61 +83,70 @@ class Application():
 		del self.__vars[name]
 
 	def save_genre_data(self):
-		#print "Adding data to user_info object"
-		#self.user_data['vars'] = self.__vars
-		#self.user_data['newreleases'] = self.newreleases_json
-		#self.user_data['toptracks'] = self.toptracks__
-		#self.user_data['topalbums'] = self.topalbums_json
-		#self.user_data['topartists'] = self.topartists__
 		self.genre['genretree'] = self.genre_tree__
 		self.genre['genredict'] = self.genre_dict__
 		self.genre['timestamp'] = time.time()
-		#prettyprint(self.user_info)
 		pickle.dump(self.genre, open(self.genre_file, 'wb'))
 		print "Genre data saved!"
 
 	def save_newreleases_data(self):
-		#print "Adding data to user_info object"
-		#self.user_data['vars'] = self.__vars
 		self.newreleases['newreleases'] = self.newreleases__
-		#self.user_data['toptracks'] = self.toptracks__
-		#self.user_data['topalbums'] = self.topalbums_json
-		#self.user_data['topartists'] = self.topartists__
-		#self.genre['genretree'] = self.genre_tree__
-		#self.genre['genredict'] = self.genre_dict__
 		self.newreleases['timestamp'] = time.time()
-		#prettyprint(self.user_info)
 		pickle.dump(self.newreleases, open(self.newreleases_file, 'wb'))
 		print "New Releases data saved!"
 
 	def save_topalbums_data(self):
-		#print "Adding data to user_info object"
-		#self.user_data['vars'] = self.__vars
-		#self.newreleases['newreleases'] = self.newreleases_json
-		#self.user_data['toptracks'] = self.toptracks__
 		self.topalbums['topalbums'] = self.topalbums__
-		#self.user_data['topartists'] = self.topartists__
-		#self.genre['genretree'] = self.genre_tree__
-		#self.genre['genredict'] = self.genre_dict__
 		self.topalbums['timestamp'] = time.time()
-		#prettyprint(self.user_info)
 		pickle.dump(self.topalbums, open(self.topalbums_file, 'wb'))
 		print "Top Albums data saved!"
 
 	def save_album_data(self):
-		#print "Adding data to user_info object"
-		#self.user_data['vars'] = self.__vars
-		#self.newreleases['newreleases'] = self.newreleases_json
-		#self.user_data['toptracks'] = self.toptracks__
-		#self.album['album'] = self.album
-		#self.user_data['topartists'] = self.topartists__
-		#self.genre['genretree'] = self.genre_tree__
-		#self.genre['genredict'] = self.genre_dict__
-		#self.topalbums['timestamp'] = time.time()
-		#prettyprint(self.user_info)
 		pickle.dump(self.album, open(self.album_file, 'wb'))
-		print "Album info cached!"
+		print "Album info saved in cachefile!"
 
+	def load_cached_data(self):
+		print "checking cached data"
+		try:
+			self.album = pickle.load(open(self.album_file, 'rb'))
+			print "Loaded Album cache"
+		except:
+			print "Couldn't read album cache file. Skipping..."
+
+		try:
+			self.genre = pickle.load(open(self.genre_file, 'rb'))
+			self.genre_tree__ = self.genre['genretree']
+			self.genre_dict__ = self.genre['genredict']
+			print "Loaded Genre cache"
+		except:
+			print("Couldn't read genre cache file. Regenerating...")
+			genres.get_genre_tree()
+			genres.flatten_genre_keys(app.genre_tree__)
+			self.save_genre_data()
+
+		try:
+			self.newreleases = pickle.load(open(self.newreleases_file, 'rb'))
+			self.newreleases__ = self.newreleases['newreleases']
+			print "Loaded New Releases cache"
+		except:
+			print "Couldn't read new releases cache file. Skipping..."
+
+		try:
+			self.topalbums = pickle.load(open(self.topalbums_file, 'rb'))
+			self.topalbums__ = self.topalbums['topalbums']
+			print "Loaded Top Albums cache"
+		except:
+			print "Couldn't read top albums cache file. Skipping..."
+
+		#print "current time: "+str(time.time())
+		#print "creds time: "+str(self.timestamp)
+		#if time.time() - self.timestamp < self.expires_in:
+		#	print "Saved creds look good. Automatic login successful!"
+		#	self.logged_in = True
+		#	return True
+		#else:
+		#	print "Saved creds have expired. Generating new ones."
+		#	self.login_member(self.username, self.password)
 
 
 class LoginBase(xbmcgui.WindowXML):
@@ -158,7 +175,6 @@ class LoginWin(LoginBase):
 
 		print "Exited the while loop! Calling the del function"
 		self.close()
-		#del self.inputwin
 
 
 class InputDialog(xbmcgui.WindowDialog):
@@ -275,16 +291,18 @@ class MainWin(xbmcgui.WindowXML):
 		self.win.setProperty("country", mem.catalog)
 		self.win.setProperty("logged_in", "true")
 		if self.view == "Browse_newreleases":
-			print "self.view = "+self.view
+			#print "self.view = "+self.view
+			app.save_album_data()
 			app.set_var(list, app.newreleases__)
 			self.getControl(300).setVisible(True)
 			self.getControl(50).setVisible(True)
-			alb.get_newreleases(self, mem)
+			alb.get_newreleases(self)
 		if self.view == "Browse_topalbums":
+			app.save_album_data()
 			app.set_var(list, app.topalbums__)
 			self.getControl(300).setVisible(True)
 			self.getControl(50).setVisible(True)
-			alb.get_topalbums(self, mem)
+			alb.get_topalbums(self)
 
 
 	def onAction(self, action):
@@ -537,7 +555,6 @@ class Album():
 	def get_big_image(self, albumid, img_dir):
 		results = []
 		try:
-			#url = "http://direct.rhapsody.com/metadata/data/methods/getImagesForAlbum.js?developerKey=9H9H9E6G1E4I5E0I&albumId=%s&cobrandId=40134" % (albumid)
 			url = "%salbums/%s/images?apikey=%s" %(BASEURL, albumid, APIKEY)
 			response = urllib2.urlopen(url)
 			results = json.load(response)
@@ -633,210 +650,180 @@ class Album():
 			list[pos]["bigthumb"] = file
 			#print "Big Thumb: " + newreleases[pos]["bigthumb"]
 
-	def get_newreleases(self, mainwin, member):
+	def get_newreleases(self, mainwin):
 		print "entered get_newreleases"
 		if (len(app.newreleases_listitems)) > 2:
-			print "newreleases list is already present. Building window list"
-			mainwin.clearList()
-			print "cleared existing list"
-			for x in range (0, len(app.newreleases_listitems)):
-				try:
-					mainwin.addItem(app.newreleases_listitems[x])
-				except:
-					print "newreleases_listitems is missing it's listitems!"
-				#try:
-				#	print app.newreleases__[x]["album"]
-				#except:
-				#	print "non-ascii character in album name. :-("
-			print "populated the window listcontrol with cached newreleases"
+			#rebuild window list from topalbums_listitems
+			self.rebuild_window_list_from_listitems(app.newreleases_listitems)
 			return
 		else:
-			mainwin.clearList()
-			img_dir = verify_image_dir()
-			default_album_img = __addon_path__+'/resources/skins/Default/media/'+"AlbumPlaceholder.png"
-			results = ""
-			try:
-				url = '%salbums/new?apikey=%s&limit=100' % (BASEURL, APIKEY)
-				response = urllib2.urlopen(url)
-				results = json.load(response)
-			except:
-				print("Error when fetching Rhapsody data from net")
-			count = 0
-			if results:
-				#print results["albums"][3]
-				for item in results:
-					img_file = item["images"][0]["url"].split('/')[(len(item["images"][0]["url"].split('/'))) - 1]
-					img_path = img_dir + img_file
-					if not os.path.isfile(img_path):
-						try :
-							print ("We need to get album art for " + item["name"] + ". Starting download")
-						except:
-							print "We need to get album art for a non-ascii album title. Starting download"
-						#xbmc.log(msg=mess, level=xbmc.LOGDEBUG)
-						try:
-							while not os.path.isfile(img_path):
-								urllib.urlretrieve(item["images"][0]["url"], img_path)
-								print("Downloaded " + img_file)
-								album = {'album_id': item["id"],
-								         'album': item["name"],
-								         'thumb': "album/" + img_file,
-								         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
-								         'orig_date': "",
-								         'label': "",
-								         'review': "",
-								         'bigthumb': "",
-								         'tracks': "",
-								         'style': '',
-								         'artist': item["artist"]["name"],
-								         'list_id': count,
-								         'artist_id': item["artist"]["id"]}
-								listitem = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', "album/" + img_file)
-						except:
-							try:
-								print("Album art not available for " + item["name"] + ". Using default album image")
-							except:
-								print "Album art not available for non-ascii album title. Using default album image"
-							album = {'album_id': item["id"],
-							         'album': item["name"],
-							         'thumb': default_album_img,
-							         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
-							         'orig_date': "",
-							         'label': "",
-							         'review': "",
-							         'bigthumb': "",
-							         'tracks': "",
-							         'style': '',
-							         'artist': item["artist"]["name"],
-							         'list_id': count,
-							         'artist_id': item["artist"]["id"]}
-							listitem = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', default_album_img)
-					else:
-						#print("Already have album art for " + item["name"] + ". Moving on...")
-						album = {'album_id': item["id"],
-						         'album': item["name"],
-						         'thumb': "album/" + img_file,
-						         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
-						         'orig_date': "",
-						         'label': "",
-						         'review': "",
-						         'bigthumb': "",
-						         'tracks': "",
-						         'style': '',
-						         'artist': item["artist"]["name"],
-						         'list_id': count,
-						         'artist_id': item["artist"]["id"]}
-						listitem = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', "album/" + img_file)
-					app.newreleases__.append(album)
+			#need to build newreleases list
+			#check if newrelease__ is already present
+			if app.newreleases__:
+				#iterate through newreleases__ and build newreleases_list
+				for item in app.newreleases__:
+					listitem = xbmcgui.ListItem(item["album"], item["artist"], '', item['thumb'])
 					app.newreleases_listitems.append(listitem)
-					#print "Added album to list control"
-					mainwin.addItem(listitem)
-					#album["listitem"] = None
-					app.album[item["id"]] = album
-					count += 1
-				print "saving cached newreleasesdata"
-				app.save_newreleases_data()
-				app.save_album_data()
+				self.rebuild_window_list_from_listitems(app.newreleases_listitems)
+				print "rebuilt list of newreleases listitems and populated win list"
+				return
+			else:
+				mainwin.clearList()
+				img_dir = verify_image_dir()
+				default_album_img = __addon_path__+'/resources/skins/Default/media/'+"AlbumPlaceholder.png"
+				results = ""
+				count = 0
+				try:
+					url = '%salbums/new?apikey=%s&limit=100' % (BASEURL, APIKEY)
+					response = urllib2.urlopen(url)
+					results = json.load(response)
+				except:
+					print("Error when fetching Rhapsody data from net")
+				if results:
+					#print results["albums"][3]
+					for item in results:
+						img_file = item["images"][0]["url"].split('/')[(len(item["images"][0]["url"].split('/'))) - 1]
+						img_path = img_dir + img_file
+						data = self.get_alb_and_build_listitem(img_path, img_file, count, item, default_album_img)
+						app.newreleases__.append(data['album'])
+						app.newreleases_listitems.append(data['listitem'])
+						#print "Added album to list control"
+						mainwin.addItem(data['listitem'])
+						if not app.album.has_key(item["id"]):
+							app.album[item["id"]] = data['album']
+							print 'added an album to app.album'
+						else:
+							print 'album already in app.album'
+						count += 1
+					print "saving newreleasesdata"
+					app.save_newreleases_data()
+					app.save_album_data()
+
+
 				#prettyprint(app.album["Alb.122693202"])
 				#prettyprint(app.album.keys())
 
 
-	def get_topalbums(self, mainwin, member):
+	def get_topalbums(self, mainwin):
 		if (len(app.topalbums_listitems)) > 2:
-			mainwin.clearList()
-			for x in range (0, len(app.topalbums_listitems)):
-				mainwin.addItem(app.topalbums_listitems[x])
-				#try:
-				#	print app.topalbums__[x]["album"]
-				#except:
-				#	print "non-ascii character in album name. :-("
-			print "populated the window listcontrol with cached topalbums"
+			#rebuild window list from topalbums_listitems
+			self.rebuild_window_list_from_listitems(app.topalbums_listitems)
 			return
 		else:
-			mainwin.clearList()
-			img_dir = verify_image_dir()
-			default_album_img = __addon_path__+'/resources/skins/Default/media/'+"AlbumPlaceholder.png"
-			results = ""
-			try:
-				url = '%salbums/top?apikey=%s&limit=100' % (BASEURL, APIKEY)
-				response = urllib2.urlopen(url)
-				results = json.load(response)
-			except:
-				print("Error when fetching Rhapsody data from net")
-			count = 0
-			if results:
-				#print results["albums"][3]
-				for item in results:
-					img_file = item["images"][0]["url"].split('/')[(len(item["images"][0]["url"].split('/'))) - 1]
-					img_path = img_dir + img_file
-					if not os.path.isfile(img_path):
-						try :
-							print ("We need to get album art for " + item["name"] + ". Starting download")
-						except:
-							print "We need to get album art for a non-ascii album title. Starting download"
-						#xbmc.log(msg=mess, level=xbmc.LOGDEBUG)
-						try:
-							while not os.path.isfile(img_path):
-								urllib.urlretrieve(item["images"][0]["url"], img_path)
-								print("Downloaded " + img_file)
-								album = {'album_id': item["id"],
-								         'album': item["name"],
-								         'thumb': "album/" + img_file,
-								         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
-								         'orig_date': "",
-								         'label': "",
-								         'review': "",
-								         'bigthumb': "",
-								         'tracks': "",
-								         'style': '',
-								         'artist': item["artist"]["name"],
-								         'list_id': count,
-								         'artist_id': item["artist"]["id"]}
-								listitem = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', "album/" + img_file)
-						except:
-							try:
-								print("Album art not available for " + item["name"] + ". Using default album image")
-							except:
-								print "Album art not available for non-ascii album title. Using default album image"
-							album = {'album_id': item["id"],
-							         'album': item["name"],
-							         'thumb': default_album_img,
-							         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
-							         'orig_date': "",
-							         'label': "",
-							         'review': "",
-							         'bigthumb': "",
-							         'tracks': "",
-							         'style': '',
-							         'artist': item["artist"]["name"],
-							         'list_id': count,
-							         'artist_id': item["artist"]["id"]}
-							listitem = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', default_album_img)
-					else:
-						#print("Already have album art for " + item["name"] + ". Moving on...")
-						album = {'album_id': item["id"],
-						         'album': item["name"],
-						         'thumb': "album/" + img_file,
-						         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
-						         'orig_date': "",
-						         'label': "",
-						         'review': "",
-						         'bigthumb': "",
-						         'tracks': "",
-						         'style': '',
-						         'artist': item["artist"]["name"],
-						         'list_id': count,
-						         'artist_id': item["artist"]["id"]}
-						listitem = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', "album/" + img_file)
-					app.topalbums__.append(album)
+			#need to build topalbums list
+			#check if topalbums__ is already present
+			if app.topalbums__:
+				#iterate through topalbum__s and build topalbums_list
+				for item in app.topalbums__:
+					listitem = xbmcgui.ListItem(item["album"], item["artist"], '', item['thumb'])
 					app.topalbums_listitems.append(listitem)
-					#print "Added album to list control"
-					mainwin.addItem(listitem)
-					app.album[item["id"]] = album
-					count += 1
-				print "saving cached topalbumsdata"
-				app.save_topalbums_data()
-				app.save_album_data()
+				self.rebuild_window_list_from_listitems(app.topalbums_listitems)
+				print "rebuilt list of  topalbums listitems and populated win list"
+				return
+			else:
+				#start from scratch with API call for newreleases
+				img_dir = verify_image_dir()
+				default_album_img = __addon_path__+'/resources/skins/Default/media/'+"AlbumPlaceholder.png"
+				results = ""
+				count = 0
+				try:
+					url = '%salbums/top?apikey=%s&limit=100' % (BASEURL, APIKEY)
+					response = urllib2.urlopen(url)
+					results = json.load(response)
+				except:
+					print("Error when fetching Rhapsody data from net")
+				if results:
+					#print results["albums"][3]
+					mainwin.clearList()
+					for item in results:
+						img_file = item["images"][0]["url"].split('/')[(len(item["images"][0]["url"].split('/'))) - 1]
+						img_path = img_dir + img_file
+						data = self.get_alb_and_build_listitem(img_path, img_file, count, item, default_album_img)
+						app.topalbums__.append(data['album'])
+						app.topalbums_listitems.append(data['listitem'])
+						#print "Added album to list control"
+						mainwin.addItem(data['listitem'])
+						if not app.album.has_key(item["id"]):
+							app.album[item["id"]] = data['album']
+							print 'added an album to app.album'
+						else:
+							print 'album already in app.album'
+						count += 1
+					print "saving topalbumsdata"
+					app.save_topalbums_data()
+					app.save_album_data()
 
+	def get_alb_and_build_listitem(self, img_path, img_file, count, item, default_album_img):
+		data = {}
+		if not os.path.isfile(img_path):
+			try :
+				print ("We need to get album art for " + item["name"] + ". Starting download")
+			except:
+				print "We need to get album art for a non-ascii album title. Starting download"
+			#xbmc.log(msg=mess, level=xbmc.LOGDEBUG)
+			try:
+				while not os.path.isfile(img_path):
+					urllib.urlretrieve(item["images"][0]["url"], img_path)
+					print("Downloaded " + img_file)
+					album = {'album_id': item["id"],
+					         'album': item["name"],
+					         'thumb': "album/" + img_file,
+					         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
+					         'orig_date': "",
+					         'label': "",
+					         'review': "",
+					         'bigthumb': "",
+					         'tracks': "",
+					         'style': '',
+					         'artist': item["artist"]["name"],
+					         'list_id': count,
+					         'artist_id': item["artist"]["id"]}
+					listitem = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', "album/" + img_file)
+			except:
+				try:
+					print("Album art not available for " + item["name"] + ". Using default album image")
+				except:
+					print "Album art not available for non-ascii album title. Using default album image"
+				album = {'album_id': item["id"],
+				         'album': item["name"],
+				         'thumb': default_album_img,
+				         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
+				         'orig_date': "",
+				         'label': "",
+				         'review': "",
+				         'bigthumb': "",
+				         'tracks': "",
+				         'style': '',
+				         'artist': item["artist"]["name"],
+				         'list_id': count,
+				         'artist_id': item["artist"]["id"]}
+				listitem = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', default_album_img)
+		else:
+			#print("Already have album art for " + item["name"] + ". Moving on...")
+			album = {'album_id': item["id"],
+			         'album': item["name"],
+			         'thumb': "album/" + img_file,
+			         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
+			         'orig_date': "",
+			         'label': "",
+			         'review': "",
+			         'bigthumb': "",
+			         'tracks': "",
+			         'style': '',
+			         'artist': item["artist"]["name"],
+			         'list_id': count,
+			         'artist_id': item["artist"]["id"]}
+			listitem = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', "album/" + img_file)
+		data['album'] = album
+		data['listitem'] = listitem
+		return data
+
+
+	def rebuild_window_list_from_listitems(self, list_of_listitems):
+		win.clearList()
+		for x in range (0, len(list_of_listitems)):
+			win.addItem(list_of_listitems[x])
+		print "populated the window listcontrol with cached listitems"
 
 	def get_topartists(self, mainwin, member):
 		pass
@@ -873,12 +860,10 @@ class Album():
 
 class Genres():
 	def __init__(self):
-		#self.genre_tree = app.genre_tree__
-		#self.genre_dict = app.genre_dict__
-		self.get_genre_tree()
-		self.flatten_genre_keys(app.genre_tree__)
-		#print "Genre 458 is : "+self.genre_dict['g.458']
-		app.save_genre_data()
+		#self.get_genre_tree()
+		#self.flatten_genre_keys(app.genre_tree__)
+		#app.save_genre_data()
+		pass
 
 
 	def get_genre_tree(self):
@@ -973,6 +958,8 @@ genres = Genres()
 
 loadwin = xbmcgui.WindowXML("loading.xml", __addon_path__, 'Default', '720p')
 loadwin.show()
+
+app.load_cached_data()
 
 logwin = LoginWin("login.xml", __addon_path__, 'Default', '720p', member=mem)
 win = MainWin("main.xml", __addon_path__, 'Default', '720p')
