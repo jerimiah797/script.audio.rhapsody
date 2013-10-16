@@ -244,6 +244,7 @@ class MainWin(xbmcgui.WindowXML):
 		self.setup = False
 		self.pos = ""
 		self.view = ""
+		self.current_playlist_albumId = None
 		#self.mem = Member()
 
 		self.browse_list = ["Browse_newreleases","Browse_topalbums","Browse_topartists","Browse_toptracks"]
@@ -290,6 +291,7 @@ class MainWin(xbmcgui.WindowXML):
 		self.win.setProperty("full_name", mem.first_name)
 		self.win.setProperty("country", mem.catalog)
 		self.win.setProperty("logged_in", "true")
+		self.alb_dialog = None
 		if self.view == "Browse_newreleases":
 			#print "self.view = "+self.view
 			#app.save_album_data()
@@ -333,11 +335,11 @@ class MainWin(xbmcgui.WindowXML):
 		if control == 50:
 			print "Opening album detail dialog"
 			#print str(app.get_var(list))
-			alb_dialog = AlbumDialog("album.xml", __addon_path__, 'Default', '720p', current_list=app.get_var(list),
+			self.alb_dialog = AlbumDialog("album.xml", __addon_path__, 'Default', '720p', current_list=app.get_var(list),
 			                         pos=self.pos)
-			alb_dialog.setProperty("review", "has_review")
-			alb_dialog.doModal()
-			del alb_dialog
+			self.alb_dialog.setProperty("review", "has_review")
+			self.alb_dialog.doModal()
+			del self.alb_dialog
 		if control == 201:
 			print "I see you've clicked the nav menu"
 
@@ -356,22 +358,16 @@ class AlbumDialog(DialogBase):
 		DialogBase.__init__(self, *args)
 		self.current_list = kwargs.get('current_list')
 		self.pos = kwargs.get('pos')
-		#self.alb = kwargs.get('alb')
-		#self.genres = kwargs.get('gen')
 		self.img_dir = __addon_path__+'/resources/skins/Default/media/'
-		self.bottom_nav = ""
-		self.myPlayer = xbmc.Player()
-		self.myPlaylist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
-		self.current_playlist_albumId = None
+		#win.current_playlist_albumId
 
 
 
 	def onInit(self):
 		#self.win = xbmcgui.WindowDialog(xbmcgui.getCurrentWindowDialogId())
 		self.clearList()
-		#self.bottom_nav = self.getControl(35)
-		#self.bottom_nav.setVisible(False)
 		self.show_info()
+
 
 
 
@@ -396,25 +392,37 @@ class AlbumDialog(DialogBase):
 			# ---Play Button ---
 			if self.getFocusId() == 21:
 				alb.get_album_playlist(self.current_list, self.pos, self)
-				self.myPlayer.play(alb.playlist)
+
+				player.play(alb.playlist)
+				self.setCurrentListPosition(alb.playlist.getposition())
+				#print "---------------Started playlist from dialog play button. Current playlist position is: "+str(alb.playlist.getposition())
+				#print "---------------Current window list position is: "+str(self.getCurrentListPosition())
+				#print "---------------Current playlist album is: "+win.current_playlist_albumId
+				#print "---------------Current dialog album is: "+self.current_list[self.pos]["album_id"]
 				self.setFocusId(51)
 			# --- Next Button---
 			elif self.getFocusId() == 27:
 				self.clearList()
+				#print "self.pos before: "+str(self.pos)
+				#print "Album_id before: "+self.current_list[self.pos]["album_id"]
 				self.pos = (self.pos+1) % len(self.current_list)
+				#print "self.pos after:  "+str(self.pos)
+				#print "Album_id after: "+self.current_list[self.pos]["album_id"]
+				#player.sync_current_list_pos()
 				self.show_info()
 			# --- Prev Button ---
 			elif self.getFocusId() == 26:
 				self.clearList()
 				self.pos = (self.pos-1) % len(self.current_list)
+				#player.sync_current_list_pos()
 				self.show_info()
 			# --- tracklist ---
 			elif self.getFocusId() == 51:
 				print "Clicked on track # "+str(self.getCurrentListPosition()+1)
-				if self.current_playlist_albumId != self.current_list[self.pos]["album_id"]:
+				if win.current_playlist_albumId != self.current_list[self.pos]["album_id"]:
 					alb.get_album_playlist(self.current_list, self.pos, self)
 					print "updating playlist with selected album"
-				self.myPlayer.playselected(self.getCurrentListPosition())
+				player.playselected(self.getCurrentListPosition())
 			else: pass
 		elif action.getId() == 10:
 			self.close()
@@ -596,8 +604,13 @@ class Album():
 
 	def get_album_review(self, list, pos):
 		results = []
+		alb_id = list[pos]["album_id"]
 		out = ""
-		if list[pos]["review"] == "":
+		if not (app.album[alb_id]["review"] == ""):
+			list[pos]["review"] = app.album[alb_id]["review"]
+			print "Using saved review from album cache"
+			return out
+		elif list[pos]["review"] == "":
 			try:
 				#url = "http://direct.rhapsody.com/metadata/data/methods/getAlbumReview.js?developerKey=9H9H9E6G1E4I5E0I&albumId=%s&cobrandId=40134" % (newreleases[pos]["album_id"])
 				url = "%salbums/%s/reviews?apikey=%s" % (BASEURL, list[pos]["album_id"], APIKEY)
@@ -614,7 +627,7 @@ class Album():
 				list[pos]["review"] = ""
 				return out
 		else:
-			print "Already have the review for this album"
+			print "Already have the review in memory for this album"
 
 
 	def get_album_details(self, list, pos):
@@ -859,6 +872,7 @@ class Album():
 			albumdialog.addItem(newlistitem)
 			x += 1
 		print "Added "+str(x)+"tracks to list"
+		player.sync_current_list_pos()
 
 	def get_album_playlist(self, album_list, pos, albumdialog):
 
@@ -868,10 +882,7 @@ class Album():
 			self.playlist.add(album_list[pos]["tracks"][x]["previewURL"], listitem=xbmcgui.ListItem(''))
 			x += 1
 		print "Added "+str(x)+"tracks to playlist for "+album_list[pos]["album_id"]
-		albumdialog.current_playlist_albumId = album_list[pos]["album_id"]
-
-
-
+		win.current_playlist_albumId = album_list[pos]["album_id"]
 
 
 class Genres():
@@ -904,6 +915,31 @@ class Genres():
 				#print "found subgenres. Calling self recursively"
 				self.flatten_genre_keys(item['subgenres'])
 
+class Player(xbmc.Player):
+
+	def onQueueNextItem(self):
+		print "Rhapsody knows the next track has been queued"
+
+	def onPlayBackStarted(self):
+		#print "-----------OnPlaybackStarted: Attempting to set albdialog list focus---------------"
+		#print "-----------Current playlist albumID: "+str(win.current_playlist_albumId)
+		#print "-----------Current dialog albumId:   "+str(win.current_list[win.alb_dialog.pos]["album_id"])
+		self.sync_current_list_pos()
+
+
+	def sync_current_list_pos(self):
+		print "-------------checking if we need to  sync list position"
+		print "playlist: "+win.current_playlist_albumId+"  dialoglist: "+win.alb_dialog.current_list[win.alb_dialog.pos]["album_id"]
+		if win.current_playlist_albumId == win.alb_dialog.current_list[win.alb_dialog.pos]["album_id"]:
+
+			print "albums match. let's try to sync"
+			print "Current focused song position: "+str(win.alb_dialog.getCurrentListPosition()+1)
+			win.alb_dialog.setCurrentListPosition(alb.playlist.getposition())
+			#win.alb_dialog.setFocusId(51)
+			print "sync complete. Should have worked! Set position to track "+str(alb.playlist.getposition()+1)
+		else:
+			print "albums don't match - no list sync necessary"
+
 
 def GetStringFromUrl(encurl):
 	doc = ""
@@ -920,10 +956,8 @@ def GetStringFromUrl(encurl):
 			succeed += 1
 	return ""
 
-
 def prettyprint(string):
 	print(json.dumps(string, sort_keys=True, indent=4, separators=(',', ': ')))
-
 
 def verify_image_dir():
 	img_dir = __addon_path__+'/resources/skins/Default/media/album/'
@@ -949,8 +983,6 @@ def remove_html_markup(s):
 			out = out + c
 	return out
 
-
-
 def main(win, loadwin):
 	print "creating main window"
 	print "going modal with main window"
@@ -965,13 +997,11 @@ def main(win, loadwin):
 
 
 
-
-
 app = Application()
 mem = Member()
 alb = Album()
 genres = Genres()
-
+player = Player()
 
 loadwin = xbmcgui.WindowXML("loading.xml", __addon_path__, 'Default', '720p')
 loadwin.show()
