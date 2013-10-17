@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE window
+     PUBLIC "http://www.w3.org/2001/XMLSchema"
+         "http://xbmc.org/xbmc.xsd">
+
+
+
+<window type="dialog">
+    <controls>
+        <control type="button" id="1">
+            <posx>900</posx>
+            <posy>480</posy>
+            <width>130</width>
+            <height>50</height>
+            <label>Sign In</label>
+            <font>rhapsody_font24_title</font>
+            <textcolor>DD171717</textcolor>
+            <focusedcolor>DD171717</focusedcolor>
+            <texturefocus>none.jpg</texturefocus>
+        </control>
+    </controls>
+</window>

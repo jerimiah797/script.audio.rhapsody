@@ -168,8 +168,9 @@ class LoginWin(LoginBase):
 			if mem.bad_creds:
 				self.getControl(10).setLabel('Login failed! Try again...')
 				print "Set fail label message"
-			self.inputwin = InputDialog()
-			self.inputwin.showInputDialog()
+			self.inputwin = InputDialog("input.xml", __addon_path__, 'Default', '720p')
+			#self.inputwin.showInputDialog()
+			self.inputwin.doModal()
 			mem.login_member(self.inputwin.name_txt, self.inputwin.pswd_txt)
 			del self.inputwin
 			print "Logged_in value: " + str(mem.logged_in)
@@ -179,8 +180,8 @@ class LoginWin(LoginBase):
 		self.close()
 
 
-class InputDialog(xbmcgui.WindowDialog):
-	def __init__(self):
+class InputDialog(xbmcgui.WindowXMLDialog):
+	def __init__(self, xmlFilename, scriptPath, defaultSkin, defaultRes):
 		img = __addon_path__+"/resources/skins/Default/media/textboxselected.png"
 		print "path to image is: "+img
 		self.name = xbmcgui.ControlEdit(530, 320, 400, 120, '', 'rhapsody_font16', '0xDD171717', focusTexture="none.png")
@@ -189,12 +190,26 @@ class InputDialog(xbmcgui.WindowDialog):
 		self.pswd = xbmcgui.ControlEdit(530, 320, 400, 120, '', font='rhapsody_font16', textColor='0xDD171717', focusTexture="none.png", isPassword=1)
 		self.addControl(self.pswd)
 		#self.inputbox_password.setText("Here's the password field")
-		self.butn = xbmcgui.ControlButton(900, 480, 130, 50, 'Sign In', font='rhapsody_font24_title', textColor='0xDD171717',
-		                                  focusedColor='0xDD171717', focusTexture="none.png")
-		self.addControl(self.butn)
+		#self.butn = xbmcgui.ControlButton(900, 480, 130, 50, 'Sign In', font='rhapsody_font24_title', textColor='0xDD171717',
+		#                                  focusedColor='0xDD171717', focusTexture="none.png")
+		#self.addControl(self.butn)
+		self.butn = None
 		self.setFocus(self.name)
 		self.name_txt = ""
 		self.pswd_txt = ""
+
+	def onInit(self):
+		self.butn = self.getControl(1)
+		self.name.setPosition(600, 320)
+		self.name.setWidth(400)
+		self.name.controlDown(self.pswd)
+		self.pswd.setPosition(600, 410)
+		self.pswd.setWidth(400)
+		self.pswd.controlUp(self.name)
+		self.pswd.controlDown(self.butn)
+		self.butn.controlUp(self.pswd)
+		pass
+
 
 	def onAction(self, action):
 		print str(action.getId())
@@ -204,6 +219,14 @@ class InputDialog(xbmcgui.WindowDialog):
 				self.setFocus(self.pswd)
 			elif self.getFocus() == self.pswd:
 				self.setFocus(self.butn)
+			elif self.getFocusId() == 1:
+				print "Detected the button press!!"
+				print "closing dialog window and attempting login"
+				self.close()
+				self.name_txt = self.name.getText()
+				self.pswd_txt = self.pswd.getText()
+				print self.name_txt
+				print self.pswd_txt
 			else: pass
 		elif action.getId() == 18:
 			if self.getFocus() == self.name:
@@ -216,20 +239,22 @@ class InputDialog(xbmcgui.WindowDialog):
 
 
 	def onControl(self, control):
-		if control == self.butn:
-			#print "if condition met: control == self.butn"
-			#print "closing dialog window"
+		#if control == self.butn:
+		if control == 1:
+			print "if condition met: control == self.butn"
+			print "closing dialog window"
 			self.close()
 			self.name_txt = self.name.getText()
 			self.pswd_txt = self.pswd.getText()
-			#print self.name_txt
-			#print self.pswd_txt
+			print self.name_txt
+			print self.pswd_txt
 			count = 1
 			return count
 		else: pass
 
 
 	def showInputDialog(self):
+		self.butn = self.getControl(1)
 		self.name.setPosition(600, 320)
 		self.name.setWidth(400)
 		self.name.controlDown(self.pswd)
@@ -523,9 +548,9 @@ class Member():
 		self.user_info['catalog'] = self.catalog
 		self.user_info['timestamp'] = time.time()
 		#prettyprint(self.user_info)
-		print "Saving userdata..."
-		pickle.dump(self.user_info, open(self.filename, 'wb'))
-		print "Userdata saved!"
+		#print "Saving userdata..."
+		#pickle.dump(self.user_info, open(self.filename, 'wb'))
+		#print "Userdata saved!"
 
 
 	def login_member(self, name, pswd):
