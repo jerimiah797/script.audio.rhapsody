@@ -288,7 +288,7 @@ class MainWin(xbmcgui.WindowXML):
 		self.win.setProperty("token", mem.access_token)
 		#self.win.setProperty("account_type", mem.account_type)
 		#self.win.setProperty("date_created", mem.date_created)
-		self.win.setProperty("full_name", mem.first_name)
+		self.win.setProperty("full_name", mem.first_name+" "+mem.last_name)
 		self.win.setProperty("country", mem.catalog)
 		self.win.setProperty("logged_in", "true")
 		self.alb_dialog = None
@@ -636,7 +636,7 @@ class Album():
 		print alb_id
 		if list[pos]["label"] == "":
 			# try to get info from cached album data
-			if app.album.has_key(alb_id):
+			if app.album.has_key(alb_id) and (app.album[alb_id]['label'] != ""):
 				print "getting info from cached album data"
 				list[pos]["label"] = app.album[alb_id]["label"]
 				list[pos]["tracks"] = app.album[alb_id]["tracks"]
@@ -929,7 +929,7 @@ class Player(xbmc.Player):
 
 	def sync_current_list_pos(self):
 		print "-------------checking if we need to  sync list position"
-		print "playlist: "+win.current_playlist_albumId+"  dialoglist: "+win.alb_dialog.current_list[win.alb_dialog.pos]["album_id"]
+		#print "playlist: "+win.current_playlist_albumId+"  dialoglist: "+win.alb_dialog.current_list[win.alb_dialog.pos]["album_id"]
 		if win.current_playlist_albumId == win.alb_dialog.current_list[win.alb_dialog.pos]["album_id"]:
 
 			print "albums match. let's try to sync"
