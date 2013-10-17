@@ -781,8 +781,8 @@ class Album():
 							print 'album already in app.album'
 						count += 1
 					#print "saving topalbumsdata"
-					app.save_topalbums_data()
-					#app.save_album_data()
+					#app.save_topalbums_data()
+					app.save_album_data()
 
 	def get_alb_and_build_listitem(self, img_path, img_file, count, item, default_album_img):
 		data = {}
