@@ -12,7 +12,6 @@ import gc
 
 
 
-
 #Set global addon information first
 __addon_id__ = 'script.audio.rhapsody'
 addon_cfg = xbmcaddon.Addon(__addon_id__)
@@ -147,6 +146,9 @@ class Application():
 		#else:
 		#	print "Saved creds have expired. Generating new ones."
 		#	self.login_member(self.username, self.password)
+
+
+
 
 
 class LoginBase(xbmcgui.WindowXML):
@@ -724,8 +726,8 @@ class Album():
 						else:
 							print 'album already in app.album'
 						count += 1
-					print "saving newreleasesdata"
-					app.save_newreleases_data()
+					#print "saving newreleasesdata"
+					#app.save_newreleases_data()
 					app.save_album_data()
 
 
@@ -778,9 +780,9 @@ class Album():
 						else:
 							print 'album already in app.album'
 						count += 1
-					print "saving topalbumsdata"
+					#print "saving topalbumsdata"
 					app.save_topalbums_data()
-					app.save_album_data()
+					#app.save_album_data()
 
 	def get_alb_and_build_listitem(self, img_path, img_file, count, item, default_album_img):
 		data = {}
