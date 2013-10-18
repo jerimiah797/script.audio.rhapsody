@@ -345,11 +345,13 @@ class MainWin(xbmcgui.WindowXML):
 		if action.getId() == 10:
 			#app.save_album_data()
 			app.set_var('running',False)
+			player.stop()
 			self.close()
 		elif action.getId() == 92:
 			#app.save_album_data()
 			#xbmc.executebuiltin("ActivateWindow(yesnodialog)")
 			app.set_var('running',False)
+			player.stop()
 			self.close()
 		else:
 			pass
