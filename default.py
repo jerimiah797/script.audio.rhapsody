@@ -19,11 +19,6 @@ __addon_path__ = addon_cfg.getAddonInfo('path')
 __addon_version__ = addon_cfg.getAddonInfo('version')
 
 
-BASEURL = "http://api.rhapsody.com/v1/"
-AUTHURL = 'https://api.rhapsody.com/oauth/token'
-APIKEY = "22Q1bFiwGxYA2eaG4vVAGsJqi3SQWzmd"
-SECRET = "Z1AAYBC1JEtnMJGm"
-
 #__newreleases__ = []
 __toptracks__ = []
 #__topalbums__ = []
@@ -141,7 +136,7 @@ class Application():
 		#print "creds time: "+str(self.timestamp)
 		#if time.time() - self.timestamp < self.expires_in:
 		#	print "Saved creds look good. Automatic login successful!"
-		#	self.logged_in = True
+		#	app.set_var('logged_in', True)
 		#	return True
 		#else:
 		#	print "Saved creds have expired. Generating new ones."
@@ -164,16 +159,16 @@ class LoginWin(LoginBase):
 
 	def onInit(self):
 		print "Starting onInit Loop"
-		while not mem.logged_in:
-			if mem.bad_creds:
+		while not app.get_var('logged_in'):
+			if app.get_var('bad_creds'):
 				self.getControl(10).setLabel('Login failed! Try again...')
 				print "Set fail label message"
 			self.inputwin = InputDialog("input.xml", __addon_path__, 'Default', '720p')
 			self.inputwin.doModal()
 			mem.login_member(self.inputwin.name_txt, self.inputwin.pswd_txt)
 			del self.inputwin
-			print "Logged_in value: " + str(mem.logged_in)
-			print "Bad Creds value: " + str(mem.bad_creds)
+			print "Logged_in value: " + str(app.get_var('logged_in'))
+			print "Bad Creds value: " + str(app.get_var('bad_creds'))
 
 		print "Exited the while loop! Calling the del function"
 		self.close()
@@ -288,8 +283,8 @@ class MainWin(xbmcgui.WindowXML):
 		self.win.setProperty("view", self.view)
 		print "onInit(): Window initialized"
 		print "Starting the engines"
-		#print "Logged in? " + str(mem.logged_in)
-		#if not mem.logged_in:
+		#print "Logged in? " + str(app.get_var('logged_in'))
+		#if not app.get_var('logged_in'):
 		#	print "not already logged in. Checking for saved creds"
 		#	if not mem.has_saved_creds():
 		#		print "No saved creds. Need to do full login"
@@ -343,7 +338,7 @@ class MainWin(xbmcgui.WindowXML):
 				self.win.setProperty("view", self.view)
 				self.main()
 			if self.getFocusId() == 1001:
-				mem.logged_in = False
+				app.set_var('logged_in', False)
 				player.stop()
 				alb.playlist.clear()
 				self.close()
@@ -489,8 +484,6 @@ class AlbumDialog(DialogBase):
 
 class Member():
 	def __init__(self):
-		self.logged_in = False
-		self.bad_creds = False
 		self.info = []
 		self.filename = __addon_path__+'/resources/.rhapuser.obj'
 		self.picklefile = ''
@@ -536,7 +529,7 @@ class Member():
 		print "creds time: "+str(self.timestamp)
 		if time.time() - self.timestamp < self.expires_in:
 			print "Saved creds look good. Automatic login successful!"
-			self.logged_in = True
+			app.set_var('logged_in', True)
 			return True
 		else:
 			print "Saved creds have expired. Generating new ones."
@@ -566,10 +559,10 @@ class Member():
 		self.username = name
 		self.password = pswd
 		data = urllib.urlencode({'username': self.username, 'password': self.password, 'grant_type': 'password'})
-		header = b'Basic ' + base64.b64encode(APIKEY + b':' + SECRET)
+		header = b'Basic ' + base64.b64encode(app.get_var('APIKEY') + b':' + app.get_var('SECRET'))
 		result = "Bad username/password combination"
 
-		req = urllib2.Request(AUTHURL, data)
+		req = urllib2.Request(app.get_var('AUTHURL'), data)
 		req.add_header('Authorization', header)
 		try:
 			response = urllib2.urlopen(req)
@@ -584,15 +577,15 @@ class Member():
 				self.issued_at =        result["issued_at"]
 				self.last_name =        result["last_name"]
 				self.refresh_token =    result["refresh_token"]
-				self.logged_in =        True
-				self.bad_creds =        False
+				app.set_var('logged_in', True)
+				app.set_var('bad_creds', False)
 				#self.save_user_info()
 		except: #urllib2.HTTPError, e:
 			print "login failed"
 			#print e.headers
 			#print e
-			self.logged_in = False
-			self.bad_creds = True
+			app.set_var('logged_in', False)
+			app.set_var('bad_creds', True)
 		#prettyprint(result)
 
 
@@ -605,7 +598,7 @@ class Album():
 		results = []
 		print "finding largest image with API call"
 		try:
-			url = "%salbums/%s/images?apikey=%s" %(BASEURL, albumid, APIKEY)
+			url = "%salbums/%s/images?apikey=%s" %(app.get_var('BASEURL'), albumid, app.get_var('APIKEY'))
 			response = urllib2.urlopen(url)
 			results = json.load(response)
 		except:
@@ -651,7 +644,7 @@ class Album():
 		elif list[pos]["review"] == "":
 			try:
 				#url = "http://direct.rhapsody.com/metadata/data/methods/getAlbumReview.js?developerKey=9H9H9E6G1E4I5E0I&albumId=%s&cobrandId=40134" % (newreleases[pos]["album_id"])
-				url = "%salbums/%s/reviews?apikey=%s" % (BASEURL, list[pos]["album_id"], APIKEY)
+				url = "%salbums/%s/reviews?apikey=%s" % (app.get_var('BASEURL'), list[pos]["album_id"], app.get_var('APIKEY'))
 				response = urllib2.urlopen(url)
 				results = json.load(response)
 			except:
@@ -683,7 +676,7 @@ class Album():
 				print "Getting genre, tracks and label with API call"
 				try:
 					url = "http://direct.rhapsody.com/metadata/data/methods/getAlbum.js?developerKey=9H9H9E6G1E4I5E0I&albumId=%s&cobrandId=40134&filterRightsKey=0" % (list[pos]["album_id"])
-					#url = "%salbums/%s?apikey=%s" %(BASEURL, newreleases[pos]["album_id"], APIKEY)
+					#url = "%salbums/%s?apikey=%s" %(app.get_var('BASEURL'), newreleases[pos]["album_id"], app.get_var('APIKEY'))
 					response = urllib2.urlopen(url)
 					data = json.load(response)
 				except:
@@ -741,7 +734,7 @@ class Album():
 				results = ""
 				count = 0
 				try:
-					url = '%salbums/new?apikey=%s&limit=100' % (BASEURL, APIKEY)
+					url = '%salbums/new?apikey=%s&limit=100' % (app.get_var('BASEURL'), app.get_var('APIKEY'))
 					response = urllib2.urlopen(url)
 					results = json.load(response)
 				except:
@@ -794,7 +787,7 @@ class Album():
 				results = ""
 				count = 0
 				try:
-					url = '%salbums/top?apikey=%s&limit=100' % (BASEURL, APIKEY)
+					url = '%salbums/top?apikey=%s&limit=100' % (app.get_var('BASEURL'), app.get_var('APIKEY'))
 					response = urllib2.urlopen(url)
 					results = json.load(response)
 				except:
@@ -934,7 +927,7 @@ class Genres():
 	def get_genre_tree(self):
 		results = None
 		try:
-			url = "%sgenres?apikey=%s" % (BASEURL, APIKEY)
+			url = "%sgenres?apikey=%s" % (app.get_var('BASEURL'), app.get_var('APIKEY'))
 			response = urllib2.urlopen(url)
 			results = json.load(response)
 		except:
@@ -1025,7 +1018,7 @@ def main(win, loadwin):
 	print "creating main window"
 	print "going modal with main window"
 	win.doModal()
-	#mem.logged_in = False
+	#app.set_var('logged_in', False)
 	#main(win, loadwin)  # testing to see if logout and login can work
 	#app.set_var('running',False)
 	del win
@@ -1044,19 +1037,24 @@ alb = Album()
 genres = Genres()
 player = Player()
 
+app.set_var("BASEURL", "http://api.rhapsody.com/v1/")
+app.set_var("AUTHURL", "https://api.rhapsody.com/oauth/token")
+app.set_var("APIKEY",  "22Q1bFiwGxYA2eaG4vVAGsJqi3SQWzmd")
+app.set_var("SECRET",  "Z1AAYBC1JEtnMJGm")
+app.set_var('running', True)
+app.set_var('logged_in', False)
+app.set_var('bad_creds', False)
+
 loadwin = xbmcgui.WindowXML("loading.xml", __addon_path__, 'Default', '720p')
 loadwin.show()
 
 app.load_cached_data()
 
-#logwin = LoginWin("login.xml", __addon_path__, 'Default', '720p', member=mem)
+
 win = MainWin("main.xml", __addon_path__, 'Default', '720p')
 
-print "Logged in? " + str(mem.logged_in)
-app.set_var('running', True)
-
 while app.get_var('running'):
-	if not mem.logged_in:
+	if not app.get_var('logged_in'):
 		print "not already logged in. Checking for saved creds"
 		if not mem.has_saved_creds():
 			print "No saved creds. Need to do full login"
