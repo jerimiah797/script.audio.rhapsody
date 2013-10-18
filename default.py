@@ -169,7 +169,6 @@ class LoginWin(LoginBase):
 				self.getControl(10).setLabel('Login failed! Try again...')
 				print "Set fail label message"
 			self.inputwin = InputDialog("input.xml", __addon_path__, 'Default', '720p')
-			#self.inputwin.showInputDialog()
 			self.inputwin.doModal()
 			mem.login_member(self.inputwin.name_txt, self.inputwin.pswd_txt)
 			del self.inputwin
@@ -289,24 +288,22 @@ class MainWin(xbmcgui.WindowXML):
 		self.win.setProperty("view", self.view)
 		print "onInit(): Window initialized"
 		print "Starting the engines"
-		print "Logged in? " + str(mem.logged_in)
-		if not mem.logged_in:
-			print "not already logged in. Checking for saved creds"
-			if not mem.has_saved_creds():
-				print "No saved creds. Need to do full login"
-				self.logwin = LoginWin("login.xml", __addon_path__, 'Default', '720p', member=mem)
-				self.logwin.doModal()
-				del self.logwin
-				print "deleting logwin"
-			else:
-				self.main()
-		else:
-			self.main()
-
+		#print "Logged in? " + str(mem.logged_in)
+		#if not mem.logged_in:
+		#	print "not already logged in. Checking for saved creds"
+		#	if not mem.has_saved_creds():
+		#		print "No saved creds. Need to do full login"
+		#		self.logwin = LoginWin("login.xml", __addon_path__, 'Default', '720p', member=mem)
+		#		self.logwin.doModal()
+		#		del self.logwin
+		#		print "deleting logwin"
+		#	else:
+		#		self.main()
+		#else:
+		#	self.main()
+		self.main()
 
 	def main(self):
-		#running = True
-		#while running:
 		print "self.win view property is "+self.win.getProperty("view")
 		# set window properties
 		self.win.setProperty("username", mem.username)
@@ -347,10 +344,12 @@ class MainWin(xbmcgui.WindowXML):
 				self.main()
 		if action.getId() == 10:
 			#app.save_album_data()
+			app.set_var('running',False)
 			self.close()
 		elif action.getId() == 92:
 			#app.save_album_data()
 			#xbmc.executebuiltin("ActivateWindow(yesnodialog)")
+			app.set_var('running',False)
 			self.close()
 		else:
 			pass
@@ -554,6 +553,7 @@ class Member():
 
 
 	def login_member(self, name, pswd):
+		print "attempting login..."
 		self.username = name
 		self.password = pswd
 		data = urllib.urlencode({'username': self.username, 'password': self.password, 'grant_type': 'password'})
@@ -564,6 +564,7 @@ class Member():
 		req.add_header('Authorization', header)
 		try:
 			response = urllib2.urlopen(req)
+			print "got response from login server"
 			if response:
 				result = json.load(response)
 				self.access_token =     result["access_token"]
@@ -576,11 +577,11 @@ class Member():
 				self.refresh_token =    result["refresh_token"]
 				self.logged_in =        True
 				self.bad_creds =        False
-				self.save_user_info()
-
-		except urllib2.HTTPError, e:
-			print e.headers
-			print e
+				#self.save_user_info()
+		except: #urllib2.HTTPError, e:
+			print "login failed"
+			#print e.headers
+			#print e
 			self.logged_in = False
 			self.bad_creds = True
 		#prettyprint(result)
@@ -1015,11 +1016,12 @@ def main(win, loadwin):
 	print "creating main window"
 	print "going modal with main window"
 	win.doModal()
-	mem.logged_in = False
-	main(win, loadwin)  # testing to see if logout and login can work
+	#mem.logged_in = False
+	#main(win, loadwin)  # testing to see if logout and login can work
+	app.set_var('running',False)
 	del win
 	print "main window has closed"
-	app.save_album_data()
+	#app.save_album_data()
 	del loadwin
 	print "loading window has closed"
 	gc.collect()
@@ -1042,19 +1044,18 @@ logwin = LoginWin("login.xml", __addon_path__, 'Default', '720p', member=mem)
 win = MainWin("main.xml", __addon_path__, 'Default', '720p')
 
 print "Logged in? " + str(mem.logged_in)
-if not mem.logged_in:
-	print "not already logged in. Checking for saved creds"
-	if not mem.has_saved_creds():
-		print "No saved creds. Need to do full login"
-		logwin.doModal()
-		del logwin
-		print "deleting logwin"
-		main(win, loadwin)
-	else:
-		main(win, loadwin)
-else:
-	main(win, loadwin)
+app.set_var('running', True)
 
+while app.get_var('running'):
+	if not mem.logged_in:
+		print "not already logged in. Checking for saved creds"
+		if not mem.has_saved_creds():
+			print "No saved creds. Need to do full login"
+			logwin.doModal()
+			del logwin
+			print "deleting logwin"
+			#main(win, loadwin)
+	main(win, loadwin)
 print "App has been exited"
-#main()
+
 
