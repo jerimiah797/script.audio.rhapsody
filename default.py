@@ -575,6 +575,7 @@ class Member():
 				self.last_name =        result["last_name"]
 				self.refresh_token =    result["refresh_token"]
 				self.logged_in =        True
+				self.bad_creds =        False
 				self.save_user_info()
 
 		except urllib2.HTTPError, e:
@@ -1014,6 +1015,8 @@ def main(win, loadwin):
 	print "creating main window"
 	print "going modal with main window"
 	win.doModal()
+	mem.logged_in = False
+	main(win, loadwin)  # testing to see if logout and login can work
 	del win
 	print "main window has closed"
 	app.save_album_data()
