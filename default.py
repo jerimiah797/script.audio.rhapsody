@@ -342,16 +342,23 @@ class MainWin(xbmcgui.WindowXML):
 				self.view = self.browse_list[menuitem]
 				self.win.setProperty("view", self.view)
 				self.main()
+			if self.getFocusId() == 1001:
+				mem.logged_in = False
+				player.stop()
+				alb.playlist.clear()
+				self.close()
 		if action.getId() == 10:
 			#app.save_album_data()
 			app.set_var('running',False)
 			player.stop()
+			alb.playlist.clear()
 			self.close()
 		elif action.getId() == 92:
 			#app.save_album_data()
 			#xbmc.executebuiltin("ActivateWindow(yesnodialog)")
 			app.set_var('running',False)
 			player.stop()
+			alb.playlist.clear()
 			self.close()
 		else:
 			pass
@@ -1020,7 +1027,7 @@ def main(win, loadwin):
 	win.doModal()
 	#mem.logged_in = False
 	#main(win, loadwin)  # testing to see if logout and login can work
-	app.set_var('running',False)
+	#app.set_var('running',False)
 	del win
 	print "main window has closed"
 	#app.save_album_data()
@@ -1042,7 +1049,7 @@ loadwin.show()
 
 app.load_cached_data()
 
-logwin = LoginWin("login.xml", __addon_path__, 'Default', '720p', member=mem)
+#logwin = LoginWin("login.xml", __addon_path__, 'Default', '720p', member=mem)
 win = MainWin("main.xml", __addon_path__, 'Default', '720p')
 
 print "Logged in? " + str(mem.logged_in)
@@ -1053,6 +1060,7 @@ while app.get_var('running'):
 		print "not already logged in. Checking for saved creds"
 		if not mem.has_saved_creds():
 			print "No saved creds. Need to do full login"
+			logwin = LoginWin("login.xml", __addon_path__, 'Default', '720p', member=mem)
 			logwin.doModal()
 			del logwin
 			print "deleting logwin"

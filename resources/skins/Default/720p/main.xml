@@ -863,7 +863,7 @@
                             <textcolor>DD171717</textcolor>
                             <!-- darkgrey -->
                         </control>
-                        <control type="button" id="201">
+                        <control type="button" id="1001">
                             <posx>0</posx>
                             <posy>200</posy>
                             <width>420</width>
