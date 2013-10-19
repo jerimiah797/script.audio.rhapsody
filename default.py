@@ -480,8 +480,6 @@ class AlbumDialog(DialogBase):
 		self.getControl(14).setText(self.current_list[self.pos]["review"])
 
 
-
-
 class Member():
 	def __init__(self):
 		self.info = []
@@ -946,6 +944,7 @@ class Genres():
 				#print "found subgenres. Calling self recursively"
 				self.flatten_genre_keys(item['subgenres'])
 
+
 class Player(xbmc.Player):
 
 	def onQueueNextItem(self):
@@ -1014,13 +1013,11 @@ def remove_html_markup(s):
 			out = out + c
 	return out
 
+
 def main(win, loadwin):
 	print "creating main window"
 	print "going modal with main window"
 	win.doModal()
-	#app.set_var('logged_in', False)
-	#main(win, loadwin)  # testing to see if logout and login can work
-	#app.set_var('running',False)
 	del win
 	print "main window has closed"
 	#app.save_album_data()
@@ -1055,7 +1052,8 @@ win = MainWin("main.xml", __addon_path__, 'Default', '720p')
 
 while app.get_var('running'):
 	if not app.get_var('logged_in'):
-		print "not already logged in. Checking for saved creds"
+		#xbmc.log("not already logged in. Checking for saved creds")
+		#xbmc.log(msg='This is a test string.', level=xbmc.LOGDEBUG)
 		if not mem.has_saved_creds():
 			print "No saved creds. Need to do full login"
 			logwin = LoginWin("login.xml", __addon_path__, 'Default', '720p', member=mem)

@@ -68,13 +68,13 @@
                     <posy>120</posy>
                     <texture>white.png</texture>
                 </control>
-                <control type="image">
+                <!--control type="image">
                     <width>428</width>
                     <height>48</height>
                     <posx>-4</posx>
                     <posy>116</posy>
                     <texture border="8">textboxselected.png</texture>
-                </control>
+                </control-->
                 <control type="label">
                     <posx>0</posx>
                     <posy>170</posy>
@@ -91,13 +91,13 @@
                     <posy>210</posy>
                     <texture>white.png</texture>
                 </control>
-                <control type="image">
+                <!--control type="image">
                     <width>428</width>
                     <height>48</height>
                     <posx>-4</posx>
                     <posy>206</posy>
                     <texture border="8">textboxselected.png</texture>
-                </control>
+                </control-->
                 <control type="image">
                     <posx>290</posx>
                     <posy>280</posy>
@@ -105,13 +105,13 @@
                     <height>50</height>
                     <texture>white.png</texture>
                 </control>
-                <control type="image">
+                <!--control type="image">
                     <posx>286</posx>
                     <posy>276</posy>
                     <width>138</width>
                     <height>58</height>
                     <texture border="8">textboxselected.png</texture>
-                </control>
+                </control-->
                 <control type="label" id="10">
                     <posx>-100</posx>
                     <posy>370</posy>

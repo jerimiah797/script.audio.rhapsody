@@ -86,7 +86,7 @@
                         <label>Browse</label>
                         <!--onclick>RunScript(script.rhapsodyinfo,info=NewReleases)</onclick-->
                         <onclick>SetProperty(view,Browse_newreleases)</onclick>
-                        <onclick>Window.SetFocus(50)</onclick>
+                        <onclick>Window.SetFocus(202)</onclick>
                     </item>
                     <item id="104">
                         <label>My Music</label>
