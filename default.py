@@ -170,13 +170,11 @@ class LoginWin(xbmcgui.WindowXML):
 
 class InputDialog(xbmcgui.WindowXMLDialog):
 	def __init__(self, xmlFilename, scriptPath, defaultSkin, defaultRes):
-		img = __addon_path__+"/resources/skins/Default/media/textboxselected.png"
-		print "path to image is: "+img
 		self.name = xbmcgui.ControlEdit(530, 320, 400, 120, '', 'rhapsody_font16', '0xDD171717', focusTexture="none.png")
-		self.addControl(self.name)
+		#self.addControl(self.name)
 		#self.inputbox_username.setText("Here's some sample text")
 		self.pswd = xbmcgui.ControlEdit(530, 320, 400, 120, '', font='rhapsody_font16', textColor='0xDD171717', focusTexture="none.png", isPassword=1)
-		self.addControl(self.pswd)
+		#self.addControl(self.pswd)
 		#self.inputbox_password.setText("Here's the password field")
 		#self.butn = xbmcgui.ControlButton(900, 480, 130, 50, 'Sign In', font='rhapsody_font24_title', textColor='0xDD171717',
 		#                                  focusedColor='0xDD171717', focusTexture="none.png")
@@ -187,7 +185,9 @@ class InputDialog(xbmcgui.WindowXMLDialog):
 		self.pswd_txt = ""
 
 	def onInit(self):
-		self.butn = self.getControl(1)
+		self.addControl(self.name)
+		self.addControl(self.pswd)
+		self.butn = self.getControl(22)
 		self.name.setPosition(600, 320)
 		self.name.setWidth(400)
 		self.name.controlDown(self.pswd)
@@ -196,6 +196,7 @@ class InputDialog(xbmcgui.WindowXMLDialog):
 		self.pswd.controlUp(self.name)
 		self.pswd.controlDown(self.butn)
 		self.butn.controlUp(self.pswd)
+		self.setFocus(self.name)
 
 
 	def onAction(self, action):
@@ -206,7 +207,7 @@ class InputDialog(xbmcgui.WindowXMLDialog):
 				self.setFocus(self.pswd)
 			elif self.getFocus() == self.pswd:
 				self.setFocus(self.butn)
-			elif self.getFocusId() == 1:
+			elif self.getFocusId() == 22:
 				print "Detected the button press!!"
 				print "closing dialog window and attempting login"
 				self.close()

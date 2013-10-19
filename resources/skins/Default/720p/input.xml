@@ -10,6 +10,67 @@
         <control type="group">
             <posx>590</posx>
             <posy>200</posy>
+            <control type="label">
+                <posx>-30</posx>
+                <posy>0</posy>
+                <label>Sign in to start listening</label>
+                <font>rhapsody_font45caps_title</font>
+                <textcolor>DD171717</textcolor>
+                        <!-- darkgrey -->
+            </control>
+            <control type="label">
+                <posx>0</posx>
+                <posy>80</posy>
+                <label>Username (usually your email address)</label>
+                <align>left</align>
+                <font>rhapsody_font16</font>
+                <textcolor>DD171717</textcolor>
+                        <!-- darkgrey -->
+            </control>
+            <control type="image">
+                <width>420</width>
+                <height>40</height>
+                <posx>0</posx>
+                <posy>120</posy>
+                <texture>white.png</texture>
+            </control>
+            <!--control type="image">
+                <width>428</width>
+                <height>48</height>
+                <posx>-4</posx>
+                <posy>116</posy>
+                <texture border="8">textboxselected.png</texture>
+            </control-->
+            <control type="label">
+                <posx>0</posx>
+                <posy>170</posy>
+                <label>Password</label>
+                <align>left</align>
+                <font>rhapsody_font16</font>
+                <textcolor>DD171717</textcolor>
+                        <!-- darkgrey -->
+            </control>
+            <control type="image">
+                <width>420</width>
+                <height>40</height>
+                <posx>0</posx>
+                <posy>210</posy>
+                <texture>white.png</texture>
+            </control>
+            <!--control type="image">
+                <width>428</width>
+                <height>48</height>
+                <posx>-4</posx>
+                <posy>206</posy>
+                <texture border="8">textboxselected.png</texture>
+            </control-->
+            <control type="image">
+                <posx>290</posx>
+                <posy>280</posy>
+                <width>130</width>
+                <height>50</height>
+                <texture>white.png</texture>
+            </control>
             <!--control type="image" id="10">
                 <description>Highlight for username</description>
                 <width>428</width>
@@ -26,7 +87,7 @@
                 <posy>206</posy>
                 <texture border="8">textboxselected.png</texture>
             </control-->
-            <control type="button" id="1">
+            <control type="button" id="22">
                 <posx>310</posx>
                 <posy>280</posy>
                 <width>130</width>
@@ -39,7 +100,7 @@
             </control>
             <control type="image" id="12">
                 <description>Highlight for submit button</description>
-                <visible>Control.HasFocus(1)</visible>
+                <visible>Control.HasFocus(22)</visible>
                 <posx>286</posx>
                 <posy>276</posy>
                 <width>138</width>
