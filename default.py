@@ -146,15 +146,9 @@ class Application():
 
 
 
-class LoginBase(xbmcgui.WindowXML):
+class LoginWin(xbmcgui.WindowXML):
 	def __init__(self, xmlName, thescriptPath, defaultname, forceFallback):
 		print "I'm the base login win class"
-
-
-class LoginWin(LoginBase):
-	def __init__(self, *args, **kwargs):
-		LoginBase.__init__(self, *args)
-		#self.mem = kwargs.get('member')
 
 
 	def onInit(self):
@@ -1056,7 +1050,7 @@ while app.get_var('running'):
 		#xbmc.log(msg='This is a test string.', level=xbmc.LOGDEBUG)
 		if not mem.has_saved_creds():
 			print "No saved creds. Need to do full login"
-			logwin = LoginWin("login.xml", __addon_path__, 'Default', '720p', member=mem)
+			logwin = LoginWin("login.xml", __addon_path__, 'Default', '720p')
 			logwin.doModal()
 			del logwin
 			print "deleting logwin"
