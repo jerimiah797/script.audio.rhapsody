@@ -34,13 +34,6 @@
                 <posy>120</posy>
                 <texture>white.png</texture>
             </control>
-            <!--control type="image">
-                <width>428</width>
-                <height>48</height>
-                <posx>-4</posx>
-                <posy>116</posy>
-                <texture border="8">textboxselected.png</texture>
-            </control-->
             <control type="label">
                 <posx>0</posx>
                 <posy>170</posy>
@@ -57,13 +50,6 @@
                 <posy>210</posy>
                 <texture>white.png</texture>
             </control>
-            <!--control type="image">
-                <width>428</width>
-                <height>48</height>
-                <posx>-4</posx>
-                <posy>206</posy>
-                <texture border="8">textboxselected.png</texture>
-            </control-->
             <control type="image">
                 <posx>290</posx>
                 <posy>280</posy>
@@ -71,22 +57,22 @@
                 <height>50</height>
                 <texture>white.png</texture>
             </control>
-            <!--control type="image" id="10">
+            <control type="image" id="10">
                 <description>Highlight for username</description>
-                <width>428</width>
-                <height>48</height>
-                <posx>-4</posx>
-                <posy>116</posy>
-                <texture border="8">textboxselected.png</texture>
+                <width>424</width>
+                <height>44</height>
+                <posx>-2</posx>
+                <posy>118</posy>
+                <texture border="8">selectoutline.png</texture>
             </control>
             <control type="image" id="11">
                 <description>Highlight for password</description>
-                <width>428</width>
-                <height>48</height>
-                <posx>-4</posx>
-                <posy>206</posy>
-                <texture border="8">textboxselected.png</texture>
-            </control-->
+                <width>424</width>
+                <height>44</height>
+                <posx>-2</posx>
+                <posy>208</posy>
+                <texture border="8">selectoutline.png</texture>
+            </control>
             <control type="button" id="22">
                 <posx>310</posx>
                 <posy>280</posy>
@@ -101,11 +87,11 @@
             <control type="image" id="12">
                 <description>Highlight for submit button</description>
                 <visible>Control.HasFocus(22)</visible>
-                <posx>286</posx>
-                <posy>276</posy>
-                <width>138</width>
-                <height>58</height>
-                <texture border="8">textboxselected248.png</texture>
+                <posx>288</posx>
+                <posy>278</posy>
+                <width>134</width>
+                <height>54</height>
+                <texture border="8">selectoutline.png</texture>
             </control>
         </control>
     </controls>

@@ -872,7 +872,7 @@
                             <textoffsety>8</textoffsety>
                             <label>Login with different account</label>
                             <texturenofocus>white.png</texturenofocus>
-                            <texturefocus border="8">textboxselected.png</texturefocus>
+                            <texturefocus border="8">selectoutline_solid.png</texturefocus>
                             <font>rhapsody_font24_title</font>
                             <textcolor>DD171717</textcolor>
                     <!-- darkgrey -->

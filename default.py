@@ -185,6 +185,10 @@ class InputDialog(xbmcgui.WindowXMLDialog):
 		self.pswd_txt = ""
 
 	def onInit(self):
+		self.name_select = self.getControl(10)
+		#self.name_select.setVisible(False)
+		self.pswd_select = self.getControl(11)
+		self.pswd_select.setVisible(False)
 		self.addControl(self.name)
 		self.addControl(self.pswd)
 		self.butn = self.getControl(22)
@@ -221,9 +225,25 @@ class InputDialog(xbmcgui.WindowXMLDialog):
 				self.setFocus(self.pswd)
 			elif self.getFocus() == self.pswd:
 				self.setFocus(self.butn)
+			elif self.getFocus() == self.butn:
+				self.setFocus(self.name)
 			else: pass
 		else:
 			pass
+
+	def onFocus(self, control):
+		print "onfocus control: "+str(control)
+		if control == 3001:
+			self.name_select.setVisible(True)
+			self.pswd_select.setVisible(False)
+		elif control == 3002:
+			self.name_select.setVisible(False)
+			self.pswd_select.setVisible(True)
+		elif control == 22:
+			self.name_select.setVisible(False)
+			self.pswd_select.setVisible(False)
+		else: pass
+
 
 
 class MainWin(xbmcgui.WindowXML):
