@@ -17,19 +17,21 @@
             <texture>background/background.png</texture>
         </control>
         <control type="image">
-            <posx>490</posx>
+            <posx>540</posx>
             <posy>210</posy>
             <texture>page-loader.gif</texture>
-            <width>300</width>
-            <height>300</height>
+            <width>200</width>
+            <height>200</height>
         </control>
         <control type="label" id="10">
-            <posx>640</posx>
-            <posy>600</posy>
+            <posx>350</posx>
+            <posy>460</posy>
+            <width>600</width>
+            <align>center</align>
             <visible>true</visible>
             <label>-</label>
             <align>left</align>
-            <font>rhapsody_font45caps_title</font>
+            <font>rhapsody_font30</font>
             <textcolor>DD171717</textcolor>
             <!-- darkgrey -->
         </control>
