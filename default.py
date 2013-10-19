@@ -148,7 +148,7 @@ class Application():
 
 class LoginWin(xbmcgui.WindowXML):
 	def __init__(self, xmlName, thescriptPath, defaultname, forceFallback):
-		print "I'm the base login win class"
+		pass
 
 
 	def onInit(self):
@@ -196,7 +196,6 @@ class InputDialog(xbmcgui.WindowXMLDialog):
 		self.pswd.controlUp(self.name)
 		self.pswd.controlDown(self.butn)
 		self.butn.controlUp(self.pswd)
-		pass
 
 
 	def onAction(self, action):
@@ -224,34 +223,6 @@ class InputDialog(xbmcgui.WindowXMLDialog):
 			else: pass
 		else:
 			pass
-
-
-	def onControl(self, control):
-		#if control == self.butn:
-		if control == 1:
-			print "if condition met: control == self.butn"
-			print "closing dialog window"
-			self.close()
-			self.name_txt = self.name.getText()
-			self.pswd_txt = self.pswd.getText()
-			print self.name_txt
-			print self.pswd_txt
-			count = 1
-			return count
-		else: pass
-
-
-	def showInputDialog(self):
-		self.butn = self.getControl(1)
-		self.name.setPosition(600, 320)
-		self.name.setWidth(400)
-		self.name.controlDown(self.pswd)
-		self.pswd.setPosition(600, 410)
-		self.pswd.setWidth(400)
-		self.pswd.controlUp(self.name)
-		self.pswd.controlDown(self.butn)
-		self.butn.controlUp(self.pswd)
-		self.doModal()
 
 
 class MainWin(xbmcgui.WindowXML):
@@ -980,8 +951,10 @@ def GetStringFromUrl(encurl):
 			succeed += 1
 	return ""
 
+
 def prettyprint(string):
 	print(json.dumps(string, sort_keys=True, indent=4, separators=(',', ': ')))
+
 
 def verify_image_dir():
 	img_dir = __addon_path__+'/resources/skins/Default/media/album/'
@@ -991,6 +964,7 @@ def verify_image_dir():
 	else:
 		print "Image directory is present!"
 	return img_dir
+
 
 def remove_html_markup(s):
 	tag = False
