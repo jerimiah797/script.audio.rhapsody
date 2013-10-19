@@ -714,9 +714,9 @@ class Album():
 						mainwin.addItem(data['listitem'])
 						if not app.album.has_key(item["id"]):
 							app.album[item["id"]] = data['album']
-							print 'added an album to app.album'
-						else:
-							print 'album already in app.album'
+							#print 'added an album to app.album'
+						#else:
+						#	print 'album already in app.album'
 						count += 1
 					#print "saving newreleasesdata"
 					#app.save_newreleases_data()
@@ -1012,24 +1012,30 @@ app.set_var('bad_creds', False)
 
 loadwin = xbmcgui.WindowXML("loading.xml", __addon_path__, 'Default', '720p')
 loadwin.show()
-
+loadwin.getControl(10).setLabel('Getting things ready...')
 app.load_cached_data()
+time.sleep(1)
 
-
-win = MainWin("main.xml", __addon_path__, 'Default', '720p')
 
 while app.get_var('running'):
 	if not app.get_var('logged_in'):
-		#xbmc.log("not already logged in. Checking for saved creds")
-		#xbmc.log(msg='This is a test string.', level=xbmc.LOGDEBUG)
 		if not mem.has_saved_creds():
-			print "No saved creds. Need to do full login"
 			logwin = LoginWin("login.xml", __addon_path__, 'Default', '720p')
 			logwin.doModal()
+			loadwin.getControl(10).setLabel('Logging you in...')
 			del logwin
-			print "deleting logwin"
-			#main(win, loadwin)
-	main(win, loadwin)
+			time.sleep(1)
+	win = MainWin("main.xml", __addon_path__, 'Default', '720p')
+	win.doModal()
+	if app.get_var('logged_in') == False:
+		loadwin.getControl(10).setLabel('Logging you out...')
+	else:
+		loadwin.getControl(10).setLabel('Finishing up...')
+	del win
+	time.sleep(1)
+	#app.save_album_data()
+del loadwin
+gc.collect()
 print "App has been exited"
 
 

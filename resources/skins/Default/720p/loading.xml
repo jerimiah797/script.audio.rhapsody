@@ -23,5 +23,15 @@
             <width>300</width>
             <height>300</height>
         </control>
+        <control type="label" id="10">
+            <posx>640</posx>
+            <posy>600</posy>
+            <visible>true</visible>
+            <label>-</label>
+            <align>left</align>
+            <font>rhapsody_font45caps_title</font>
+            <textcolor>DD171717</textcolor>
+            <!-- darkgrey -->
+        </control>
     </controls>
 </window>
