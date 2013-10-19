@@ -59,18 +59,18 @@
             </control>
             <control type="image" id="10">
                 <description>Highlight for username</description>
-                <width>424</width>
-                <height>44</height>
-                <posx>-2</posx>
-                <posy>118</posy>
+                <width>422</width>
+                <height>42</height>
+                <posx>-1</posx>
+                <posy>119</posy>
                 <texture border="8">selectoutline.png</texture>
             </control>
             <control type="image" id="11">
                 <description>Highlight for password</description>
-                <width>424</width>
-                <height>44</height>
-                <posx>-2</posx>
-                <posy>208</posy>
+                <width>422</width>
+                <height>42</height>
+                <posx>-1</posx>
+                <posy>209</posy>
                 <texture border="8">selectoutline.png</texture>
             </control>
             <control type="button" id="22">
