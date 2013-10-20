@@ -1,6 +1,7 @@
 import xbmcgui
 import xbmc
 import xbmcaddon
+import xbmcplugin
 import time
 import urllib
 import urllib2
@@ -421,10 +422,15 @@ class AlbumDialog(DialogBase):
 			# --- tracklist ---
 			elif self.getFocusId() == 51:
 				print "Clicked on track # "+str(self.getCurrentListPosition()+1)
+				print "track_id is: "+self.current_list[self.pos]['tracks'][self.getCurrentListPosition()]['trackId']
+				tid = self.current_list[self.pos]['tracks'][self.getCurrentListPosition()]['trackId']
 				if win.current_playlist_albumId != self.current_list[self.pos]["album_id"]:
 					alb.get_album_playlist(self.current_list, self.pos, self)
 					print "updating playlist with selected album"
 				player.playselected(self.getCurrentListPosition())
+				#print "gonna try to play a real song"
+				test = player.get_playable_url(tid)
+
 			else: pass
 		elif action.getId() == 10:
 			self.close()
@@ -480,7 +486,7 @@ class Member():
 		try:
 			self.user_info = pickle.load(open(self.filename, 'rb'))
 			print "I see the cred file. Here's the contents:"
-			#prettyprint(self.user_info)
+			prettyprint(self.user_info)
 			self.username = self.user_info['username']
 			self.password = base64.b64decode(self.user_info['password'])
 			self.guid = self.user_info['guid']
@@ -642,6 +648,7 @@ class Album():
 				list[pos]["label"] = app.album[alb_id]["label"]
 				list[pos]["tracks"] = app.album[alb_id]["tracks"]
 				list[pos]["style"] = app.album[alb_id]["style"]
+				prettyprint(list[pos]["tracks"])
 			else:
 				print "Getting genre, tracks and label with API call"
 				try:
@@ -660,7 +667,7 @@ class Album():
 					list[pos]["tracks"] = data["trackMetadatas"]
 					list[pos]["style"] = data["primaryStyle"]
 					#print "Got label and original date for album"
-				#prettyprint(newreleases[pos]["tracks"])
+				prettyprint(list[pos]["tracks"])
 		else:
 			print "Already have label info for this album"
 
@@ -942,6 +949,34 @@ class Player(xbmc.Player):
 		else:
 			print "albums don't match - no list sync necessary"
 
+	def get_playback_session(self):
+		print 'curl -v -H "Authorization: Bearer 1l1iEkDO0hV9sjLJlSAmmH1Auw4B" https://api.rhapsody.com/v1/play/Tra.44464021'
+
+	def get_playable_url(self, track_id):
+		url = "%splay/%s" %(app.get_var('S_BASEURL'), track_id)
+		print "Trying to get this track url: "+url
+		header = b'Bearer ' + mem.access_token
+		req = urllib2.Request(url)
+		req.add_header('Authorization', header)
+
+		print "getting playable URL for track"
+		try:
+			response = urllib2.urlopen(req)
+			print "got response!"
+			if response:
+				print "got results!"
+				results = json.load(response)
+				print results['url']
+				print results['format']
+				print results['bitrate']
+		except urllib2.HTTPError, e:
+			print "Bad server response getting playable URL"
+			print e.headers
+			print e
+
+
+		#self.play(results['url'])
+
 
 def GetStringFromUrl(encurl):
 	doc = ""
@@ -1008,8 +1043,10 @@ mem = Member()
 alb = Album()
 genres = Genres()
 player = Player()
+plugin = 
 
 app.set_var("BASEURL", "http://api.rhapsody.com/v1/")
+app.set_var("S_BASEURL", "https://api.rhapsody.com/v1/")
 app.set_var("AUTHURL", "https://api.rhapsody.com/oauth/token")
 app.set_var("APIKEY",  "22Q1bFiwGxYA2eaG4vVAGsJqi3SQWzmd")
 app.set_var("SECRET",  "Z1AAYBC1JEtnMJGm")
