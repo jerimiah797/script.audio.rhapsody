@@ -171,16 +171,8 @@ class LoginWin(xbmcgui.WindowXML):
 class InputDialog(xbmcgui.WindowXMLDialog):
 	def __init__(self, xmlFilename, scriptPath, defaultSkin, defaultRes):
 		self.name = xbmcgui.ControlEdit(530, 320, 400, 120, '', 'rhapsody_font16', '0xDD171717', focusTexture="none.png")
-		#self.addControl(self.name)
-		#self.inputbox_username.setText("Here's some sample text")
 		self.pswd = xbmcgui.ControlEdit(530, 320, 400, 120, '', font='rhapsody_font16', textColor='0xDD171717', focusTexture="none.png", isPassword=1)
-		#self.addControl(self.pswd)
-		#self.inputbox_password.setText("Here's the password field")
-		#self.butn = xbmcgui.ControlButton(900, 480, 130, 50, 'Sign In', font='rhapsody_font24_title', textColor='0xDD171717',
-		#                                  focusedColor='0xDD171717', focusTexture="none.png")
-		#self.addControl(self.butn)
 		self.butn = None
-		self.setFocus(self.name)
 		self.name_txt = ""
 		self.pswd_txt = ""
 
@@ -212,13 +204,9 @@ class InputDialog(xbmcgui.WindowXMLDialog):
 			elif self.getFocus() == self.pswd:
 				self.setFocus(self.butn)
 			elif self.getFocusId() == 22:
-				print "Detected the button press!!"
-				print "closing dialog window and attempting login"
 				self.close()
 				self.name_txt = self.name.getText()
 				self.pswd_txt = self.pswd.getText()
-				print self.name_txt
-				print self.pswd_txt
 			else: pass
 		elif action.getId() == 18:
 			if self.getFocus() == self.name:
@@ -232,7 +220,6 @@ class InputDialog(xbmcgui.WindowXMLDialog):
 			pass
 
 	def onFocus(self, control):
-		print "onfocus control: "+str(control)
 		if control == 3001:
 			self.name_select.setVisible(True)
 			self.pswd_select.setVisible(False)
@@ -243,7 +230,6 @@ class InputDialog(xbmcgui.WindowXMLDialog):
 			self.name_select.setVisible(False)
 			self.pswd_select.setVisible(False)
 		else: pass
-
 
 
 class MainWin(xbmcgui.WindowXML):
@@ -533,8 +519,8 @@ class Member():
 		self.user_info['catalog'] = self.catalog
 		self.user_info['timestamp'] = time.time()
 		#prettyprint(self.user_info)
-		#print "Saving userdata..."
-		#pickle.dump(self.user_info, open(self.filename, 'wb'))
+		print "Saving userdata..."
+		pickle.dump(self.user_info, open(self.filename, 'wb'))
 		#print "Userdata saved!"
 
 
@@ -563,7 +549,7 @@ class Member():
 				self.refresh_token =    result["refresh_token"]
 				app.set_var('logged_in', True)
 				app.set_var('bad_creds', False)
-				#self.save_user_info()
+				self.save_user_info()
 		except: #urllib2.HTTPError, e:
 			print "login failed"
 			#print e.headers
@@ -1054,7 +1040,7 @@ while app.get_var('running'):
 		loadwin.getControl(10).setLabel('Finishing up...')
 	del win
 	time.sleep(1)
-	#app.save_album_data()
+	app.save_album_data()
 del loadwin
 gc.collect()
 print "App has been exited"
