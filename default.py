@@ -1043,7 +1043,7 @@ mem = Member()
 alb = Album()
 genres = Genres()
 player = Player()
-plugin = 
+
 
 app.set_var("BASEURL", "http://api.rhapsody.com/v1/")
 app.set_var("S_BASEURL", "https://api.rhapsody.com/v1/")
