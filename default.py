@@ -944,14 +944,17 @@ class Player(xbmc.Player):
 	def sync_current_list_pos(self):
 		#print "-------------checking if we need to  sync list position"
 		#print "playlist: "+win.current_playlist_albumId+"  dialoglist: "+win.alb_dialog.current_list[win.alb_dialog.pos]["album_id"]
-		if win.current_playlist_albumId == win.alb_dialog.current_list[win.alb_dialog.pos]["album_id"]:
-			#print "albums match. let's try to sync"
-			#print "Current focused song position: "+str(win.alb_dialog.getCurrentListPosition()+1)
-			win.alb_dialog.setCurrentListPosition(alb.playlist.getposition())
-			#win.alb_dialog.setFocusId(51)
-			#print "sync complete. Should have worked! Set position to track "+str(alb.playlist.getposition()+1)
-		#else:
-		#	print "albums don't match - no list sync necessary"
+		try:
+			if win.current_playlist_albumId == win.alb_dialog.current_list[win.alb_dialog.pos]["album_id"]:
+				#print "albums match. let's try to sync"
+				#print "Current focused song position: "+str(win.alb_dialog.getCurrentListPosition()+1)
+				win.alb_dialog.setCurrentListPosition(alb.playlist.getposition())
+				#win.alb_dialog.setFocusId(51)
+				#print "sync complete. Should have worked! Set position to track "+str(alb.playlist.getposition()+1)
+			#else:
+			#	print "albums don't match - no list sync necessary"
+		except:
+			print "No dialog window open, so don't need to sync dialog list"
 
 	def get_playback_session(self):
 		print 'curl -v -H "Authorization: Bearer 1l1iEkDO0hV9sjLJlSAmmH1Auw4B" https://api.rhapsody.com/v1/play/Tra.44464021'
