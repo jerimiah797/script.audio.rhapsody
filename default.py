@@ -382,20 +382,23 @@ class AlbumDialog(DialogBase):
 			# ---Play Button ---
 			if self.getFocusId() == 21:
 				alb.get_album_playlist(self.current_list, self.pos, self)
-
-				player.play(alb.playlist)
+				player.add_playable_track(0,0)
+				player.playselected(0)
 				self.setCurrentListPosition(alb.playlist.getposition())
+				self.setFocusId(51)
+				player.add_playable_track(self.getCurrentListPosition(),1)
+				#player.play(alb.playlist)
 				#print "---------------Started playlist from dialog play button. Current playlist position is: "+str(alb.playlist.getposition())
 				#print "---------------Current window list position is: "+str(self.getCurrentListPosition())
 				#print "---------------Current playlist album is: "+win.current_playlist_albumId
 				#print "---------------Current dialog album is: "+self.current_list[self.pos]["album_id"]
-				self.setFocusId(51)
 			# --- Next Button---
 			elif self.getFocusId() == 27:
 				self.clearList()
 				#print "self.pos before: "+str(self.pos)
 				#print "Album_id before: "+self.current_list[self.pos]["album_id"]
 				self.pos = (self.pos+1) % len(self.current_list)
+				win.pos = self.pos
 				#print "self.pos after:  "+str(self.pos)
 				#print "Album_id after: "+self.current_list[self.pos]["album_id"]
 				#player.sync_current_list_pos()
@@ -404,6 +407,7 @@ class AlbumDialog(DialogBase):
 			elif self.getFocusId() == 26:
 				self.clearList()
 				self.pos = (self.pos-1) % len(self.current_list)
+				win.pos = self.pos
 				#player.sync_current_list_pos()
 				self.show_info()
 			# --- tracklist ---
@@ -413,10 +417,15 @@ class AlbumDialog(DialogBase):
 				if win.current_playlist_albumId != self.current_list[self.pos]["album_id"]:
 					alb.get_album_playlist(self.current_list, self.pos, self)
 					#print "updating playlist with selected album"
-				self.add_playable_track(0)
-				player.playselected(self.getCurrentListPosition())
-				self.add_playable_track(1)
 				print "Playlist has "+str(len(alb.playlist))+" songs"
+				player.add_playable_track(self.getCurrentListPosition(),0)
+				player.playselected(self.getCurrentListPosition())
+				if self.getCurrentListPosition()+1 < len(alb.playlist):
+					player.add_playable_track(self.getCurrentListPosition(),1)
+				else:
+					print "At end of tracklist. Prefetch first song in case repeat is on"
+					player.add_playable_track(0,0)
+				print "Playlist still has "+str(len(alb.playlist))+" songs"
 
 			else: pass
 		elif action.getId() == 10:
@@ -426,23 +435,14 @@ class AlbumDialog(DialogBase):
 		else:
 			pass
 
-	def add_playable_track(self, offset):
-		#item = alb.playlist.__getitem__(self.getCurrentListPosition()+offset)
-		print "!!!! -------- Current playlist item filename: "+alb.playlist.__getitem__(self.getCurrentListPosition()+offset).getfilename()
-		tid = self.current_list[self.pos]['tracks'][self.getCurrentListPosition()+offset]['trackId']
-		tname = alb.playlist.__getitem__(self.getCurrentListPosition()+offset).getfilename()
-		playurl = player.get_playable_url(tid)
-		alb.playlist.remove(tname)
-		alb.playlist.add(playurl, listitem=xbmcgui.ListItem(''), index=self.getCurrentListPosition()+offset)
-
 
 	#def onFocus(self, control):
 		#print("onfocus(): control %i" % control)
 
 
 	def populate_fields(self):
-		print "current list length: "+str(len(self.current_list))
-		print "current self.pos: "+str(self.pos)
+		#print "current list length: "+str(len(self.current_list))
+		#print "current self.pos: "+str(self.pos)
 		self.getControl(6).setLabel(self.current_list[self.pos]["style"])
 		self.getControl(7).setImage(self.current_list[self.pos]["bigthumb"])
 		self.getControl(8).setLabel(self.current_list[self.pos]["album_date"])
@@ -942,34 +942,33 @@ class Player(xbmc.Player):
 		#print str(info.getTrack())
 
 	def sync_current_list_pos(self):
-		print "-------------checking if we need to  sync list position"
+		#print "-------------checking if we need to  sync list position"
 		#print "playlist: "+win.current_playlist_albumId+"  dialoglist: "+win.alb_dialog.current_list[win.alb_dialog.pos]["album_id"]
 		if win.current_playlist_albumId == win.alb_dialog.current_list[win.alb_dialog.pos]["album_id"]:
-
-			print "albums match. let's try to sync"
-			print "Current focused song position: "+str(win.alb_dialog.getCurrentListPosition()+1)
+			#print "albums match. let's try to sync"
+			#print "Current focused song position: "+str(win.alb_dialog.getCurrentListPosition()+1)
 			win.alb_dialog.setCurrentListPosition(alb.playlist.getposition())
 			#win.alb_dialog.setFocusId(51)
-			print "sync complete. Should have worked! Set position to track "+str(alb.playlist.getposition()+1)
-		else:
-			print "albums don't match - no list sync necessary"
+			#print "sync complete. Should have worked! Set position to track "+str(alb.playlist.getposition()+1)
+		#else:
+		#	print "albums don't match - no list sync necessary"
 
 	def get_playback_session(self):
 		print 'curl -v -H "Authorization: Bearer 1l1iEkDO0hV9sjLJlSAmmH1Auw4B" https://api.rhapsody.com/v1/play/Tra.44464021'
 
 	def get_playable_url(self, track_id):
 		url = "%splay/%s" %(app.get_var('S_BASEURL'), track_id)
-		print "Trying to get this track url: "+url
+		#print "Trying to get this track url: "+url
 		header = b'Bearer ' + mem.access_token
 		req = urllib2.Request(url)
 		req.add_header('Authorization', header)
 
-		print "getting playable URL for track"
+		#print "getting playable URL for track"
 		try:
 			response = urllib2.urlopen(req)
 			#print "got response!"
 			if response:
-				print "got results!"
+				#print "got results!"
 				results = json.load(response)
 				#print "------------------"+results['url']
 				#print "------------------"+results['format']
@@ -981,9 +980,13 @@ class Player(xbmc.Player):
 			print e
 			return None
 
-
-		#self.play(results['url'])
-
+	def add_playable_track(self, pos, offset):
+		#print "!!!! -------- Current playlist item filename: "+alb.playlist.__getitem__(pos+offset).getfilename()
+		tid = app.get_var(list)[win.pos]['tracks'][pos+offset]['trackId']
+		tname = alb.playlist.__getitem__(pos+offset).getfilename()
+		playurl = player.get_playable_url(tid)
+		alb.playlist.remove(tname)
+		alb.playlist.add(playurl, listitem=xbmcgui.ListItem(''), index=pos+offset)
 
 def GetStringFromUrl(encurl):
 	doc = ""
