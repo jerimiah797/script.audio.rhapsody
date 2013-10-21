@@ -427,9 +427,12 @@ class AlbumDialog(DialogBase):
 				if win.current_playlist_albumId != self.current_list[self.pos]["album_id"]:
 					alb.get_album_playlist(self.current_list, self.pos, self)
 					print "updating playlist with selected album"
+				playurl = player.get_playable_url(tid)
+				print "Here's the playable URL: ---- "+playurl
+				name = "track"+str(self.getCurrentListPosition())
+				alb.playlist.remove(name)
+				alb.playlist.add(playurl, listitem=xbmcgui.ListItem(''), index=self.getCurrentListPosition())
 				player.playselected(self.getCurrentListPosition())
-				#print "gonna try to play a real song"
-				test = player.get_playable_url(tid)
 
 			else: pass
 		elif action.getId() == 10:
@@ -648,7 +651,7 @@ class Album():
 				list[pos]["label"] = app.album[alb_id]["label"]
 				list[pos]["tracks"] = app.album[alb_id]["tracks"]
 				list[pos]["style"] = app.album[alb_id]["style"]
-				prettyprint(list[pos]["tracks"])
+				#prettyprint(list[pos]["tracks"])
 			else:
 				print "Getting genre, tracks and label with API call"
 				try:
@@ -667,7 +670,7 @@ class Album():
 					list[pos]["tracks"] = data["trackMetadatas"]
 					list[pos]["style"] = data["primaryStyle"]
 					#print "Got label and original date for album"
-				prettyprint(list[pos]["tracks"])
+				#prettyprint(list[pos]["tracks"])
 		else:
 			print "Already have label info for this album"
 
@@ -887,10 +890,14 @@ class Album():
 		self.playlist.clear()
 		x = 0
 		for item in album_list[pos]["tracks"]:
-			self.playlist.add(album_list[pos]["tracks"][x]["previewURL"], listitem=xbmcgui.ListItem(''))
+			#self.playlist.add(album_list[pos]["tracks"][x]["previewURL"], listitem=xbmcgui.ListItem(''))
+			name = "track"+str(x)
+			self.playlist.add(name, listitem=xbmcgui.ListItem(''))
 			x += 1
 		print "Added "+str(x)+"tracks to playlist for "+album_list[pos]["album_id"]
 		win.current_playlist_albumId = album_list[pos]["album_id"]
+
+
 
 
 class Genres():
@@ -962,17 +969,19 @@ class Player(xbmc.Player):
 		print "getting playable URL for track"
 		try:
 			response = urllib2.urlopen(req)
-			print "got response!"
+			#print "got response!"
 			if response:
 				print "got results!"
 				results = json.load(response)
-				print results['url']
-				print results['format']
-				print results['bitrate']
+				#print "------------------"+results['url']
+				#print "------------------"+results['format']
+				#print "------------------"+str(results['bitrate'])
+				return results['url']
 		except urllib2.HTTPError, e:
-			print "Bad server response getting playable URL"
+			print "------------------  Bad server response getting playable URL"
 			print e.headers
 			print e
+			return None
 
 
 		#self.play(results['url'])
