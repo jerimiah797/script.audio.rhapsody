@@ -256,19 +256,6 @@ class MainWin(xbmcgui.WindowXML):
 		self.win.setProperty("view", self.view)
 		print "onInit(): Window initialized"
 		print "Starting the engines"
-		#print "Logged in? " + str(app.get_var('logged_in'))
-		#if not app.get_var('logged_in'):
-		#	print "not already logged in. Checking for saved creds"
-		#	if not mem.has_saved_creds():
-		#		print "No saved creds. Need to do full login"
-		#		self.logwin = LoginWin("login.xml", __addon_path__, 'Default', '720p', member=mem)
-		#		self.logwin.doModal()
-		#		del self.logwin
-		#		print "deleting logwin"
-		#	else:
-		#		self.main()
-		#else:
-		#	self.main()
 		self.main()
 
 	def main(self):
@@ -312,21 +299,21 @@ class MainWin(xbmcgui.WindowXML):
 				self.main()
 			if self.getFocusId() == 1001:
 				app.set_var('logged_in', False)
-				player.stop()
-				alb.playlist.clear()
+				#player.stop()
+				#alb.playlist.clear()
 				self.close()
 		if action.getId() == 10:
 			#app.save_album_data()
 			app.set_var('running',False)
-			player.stop()
-			alb.playlist.clear()
+			#player.stop()
+			#alb.playlist.clear()
 			self.close()
 		elif action.getId() == 92:
 			#app.save_album_data()
 			#xbmc.executebuiltin("ActivateWindow(yesnodialog)")
 			app.set_var('running',False)
-			player.stop()
-			alb.playlist.clear()
+			#player.stop()
+			#alb.playlist.clear()
 			self.close()
 		else:
 			pass
@@ -388,8 +375,8 @@ class AlbumDialog(DialogBase):
 
 
 	def onAction(self, action):
-		print str(action.getId())
-		print type(action)
+		#print str(action.getId())
+		#print type(action)
 		# --- Enter / Select ---
 		if action.getId() == 7:
 			# ---Play Button ---
@@ -421,18 +408,15 @@ class AlbumDialog(DialogBase):
 				self.show_info()
 			# --- tracklist ---
 			elif self.getFocusId() == 51:
-				print "Clicked on track # "+str(self.getCurrentListPosition()+1)
-				print "track_id is: "+self.current_list[self.pos]['tracks'][self.getCurrentListPosition()]['trackId']
-				tid = self.current_list[self.pos]['tracks'][self.getCurrentListPosition()]['trackId']
+				#print "Clicked on track # "+str(self.getCurrentListPosition()+1)
+				#print "track_id is: "+self.current_list[self.pos]['tracks'][self.getCurrentListPosition()]['trackId']
 				if win.current_playlist_albumId != self.current_list[self.pos]["album_id"]:
 					alb.get_album_playlist(self.current_list, self.pos, self)
-					print "updating playlist with selected album"
-				playurl = player.get_playable_url(tid)
-				print "Here's the playable URL: ---- "+playurl
-				name = "track"+str(self.getCurrentListPosition())
-				alb.playlist.remove(name)
-				alb.playlist.add(playurl, listitem=xbmcgui.ListItem(''), index=self.getCurrentListPosition())
+					#print "updating playlist with selected album"
+				self.add_playable_track(0)
 				player.playselected(self.getCurrentListPosition())
+				self.add_playable_track(1)
+				print "Playlist has "+str(len(alb.playlist))+" songs"
 
 			else: pass
 		elif action.getId() == 10:
@@ -441,6 +425,15 @@ class AlbumDialog(DialogBase):
 			self.close()
 		else:
 			pass
+
+	def add_playable_track(self, offset):
+		#item = alb.playlist.__getitem__(self.getCurrentListPosition()+offset)
+		print "!!!! -------- Current playlist item filename: "+alb.playlist.__getitem__(self.getCurrentListPosition()+offset).getfilename()
+		tid = self.current_list[self.pos]['tracks'][self.getCurrentListPosition()+offset]['trackId']
+		tname = alb.playlist.__getitem__(self.getCurrentListPosition()+offset).getfilename()
+		playurl = player.get_playable_url(tid)
+		alb.playlist.remove(tname)
+		alb.playlist.add(playurl, listitem=xbmcgui.ListItem(''), index=self.getCurrentListPosition()+offset)
 
 
 	#def onFocus(self, control):
@@ -890,9 +883,9 @@ class Album():
 		self.playlist.clear()
 		x = 0
 		for item in album_list[pos]["tracks"]:
-			#self.playlist.add(album_list[pos]["tracks"][x]["previewURL"], listitem=xbmcgui.ListItem(''))
-			name = "track"+str(x)
-			self.playlist.add(name, listitem=xbmcgui.ListItem(''))
+			self.playlist.add(album_list[pos]["tracks"][x]["previewURL"], listitem=xbmcgui.ListItem(''))
+			#name = "track"+str(x)
+			#self.playlist.add(name, listitem=xbmcgui.ListItem(''))
 			x += 1
 		print "Added "+str(x)+"tracks to playlist for "+album_list[pos]["album_id"]
 		win.current_playlist_albumId = album_list[pos]["album_id"]
@@ -941,7 +934,12 @@ class Player(xbmc.Player):
 		#print "-----------Current playlist albumID: "+str(win.current_playlist_albumId)
 		#print "-----------Current dialog albumId:   "+str(win.current_list[win.alb_dialog.pos]["album_id"])
 		self.sync_current_list_pos()
-
+		#info = xbmc.InfoTagMusic()
+		#print "--------- Infotags ---------"
+		#print info.getAlbum()
+		#print info.getArtist()
+		#print info.getTitle()
+		#print str(info.getTrack())
 
 	def sync_current_list_pos(self):
 		print "-------------checking if we need to  sync list position"
