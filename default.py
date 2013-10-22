@@ -287,6 +287,10 @@ class MainWin(xbmcgui.WindowXML):
 				self.main()
 			if self.getFocusId() == 1001:
 				app.set_var('logged_in', False)
+				try:
+					os.remove(mem.filename)
+				except OSError, e:  ## if failed, report it back to the user ##
+					print ("Error: %s - %s." % (e.filename,e.strerror))
 				#player.stop()
 				#playlist.clear()
 				self.close()
@@ -488,6 +492,7 @@ class Member():
 		#else:
 		#print "Saved creds have expired. Generating new ones."
 		self.login_member(self.username, self.password)
+		return True
 
 	def save_user_info(self):
 		#print "Adding data to user_info object"
@@ -1065,6 +1070,9 @@ while app.get_var('running'):
 			logwin.doModal()
 			loadwin.getControl(10).setLabel('Logging you in...')
 			del logwin
+			time.sleep(1)
+		else:
+			loadwin.getControl(10).setLabel('Logging you in...')
 			time.sleep(1)
 	win = MainWin("main.xml", __addon_path__, 'Default', '720p')
 	win.doModal()
