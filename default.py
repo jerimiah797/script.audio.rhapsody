@@ -133,19 +133,6 @@ class Application():
 		except:
 			print "Couldn't read top albums cache file. Skipping..."
 
-		#print "current time: "+str(time.time())
-		#print "creds time: "+str(self.timestamp)
-		#if time.time() - self.timestamp < self.expires_in:
-		#	print "Saved creds look good. Automatic login successful!"
-		#	app.set_var('logged_in', True)
-		#	return True
-		#else:
-		#	print "Saved creds have expired. Generating new ones."
-		#	self.login_member(self.username, self.password)
-
-
-
-
 
 class LoginWin(xbmcgui.WindowXML):
 	def __init__(self, xmlName, thescriptPath, defaultname, forceFallback):
@@ -492,15 +479,15 @@ class Member():
 		except:
 			print "Couldn't read saved user data. Login please"
 			return False
-		print "current time: "+str(time.time())
-		print "creds time: "+str(self.timestamp)
-		if time.time() - self.timestamp < self.expires_in:
-			print "Saved creds look good. Automatic login successful!"
-			app.set_var('logged_in', True)
-			return True
-		else:
-			print "Saved creds have expired. Generating new ones."
-			self.login_member(self.username, self.password)
+		#print "current time: "+str(time.time())
+		#print "creds time: "+str(self.timestamp)
+		#if time.time() - self.timestamp < self.expires_in:
+		#	print "Saved creds look good. Automatic login successful!"
+		#	app.set_var('logged_in', True)
+		#	return True
+		#else:
+		#print "Saved creds have expired. Generating new ones."
+		self.login_member(self.username, self.password)
 
 	def save_user_info(self):
 		#print "Adding data to user_info object"
@@ -881,8 +868,6 @@ class Album():
 		win.current_playlist_albumId = album_list[pos]["album_id"]
 
 
-
-
 class Genres():
 	def __init__(self):
 		#self.get_genre_tree()
@@ -912,8 +897,6 @@ class Genres():
 			if 'subgenres' in item:
 				#print "found subgenres. Calling self recursively"
 				self.flatten_genre_keys(item['subgenres'])
-
-
 
 
 class Player(xbmc.Player):
