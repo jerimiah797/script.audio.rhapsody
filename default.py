@@ -237,6 +237,7 @@ class MainWin(xbmcgui.WindowXML):
 	def __init__(self, xmlName, thescriptPath, defaultname, forceFallback):
 		self.setup = False
 		self.pos = ""
+		self.playing_pos = None
 		self.view = ""
 		self.current_playlist_albumId = None
 		#self.mem = Member()
@@ -300,20 +301,20 @@ class MainWin(xbmcgui.WindowXML):
 			if self.getFocusId() == 1001:
 				app.set_var('logged_in', False)
 				#player.stop()
-				#alb.playlist.clear()
+				#playlist.clear()
 				self.close()
 		if action.getId() == 10:
 			#app.save_album_data()
 			app.set_var('running',False)
 			#player.stop()
-			#alb.playlist.clear()
+			#playlist.clear()
 			self.close()
 		elif action.getId() == 92:
 			#app.save_album_data()
 			#xbmc.executebuiltin("ActivateWindow(yesnodialog)")
 			app.set_var('running',False)
 			#player.stop()
-			#alb.playlist.clear()
+			#playlist.clear()
 			self.close()
 		else:
 			pass
@@ -381,51 +382,45 @@ class AlbumDialog(DialogBase):
 		if action.getId() == 7:
 			# ---Play Button ---
 			if self.getFocusId() == 21:
-				alb.get_album_playlist(self.current_list, self.pos, self)
-				player.add_playable_track(0,0)
+				win.playing_pos = self.pos
+				alb.populate_album_playlist(self.current_list, self.pos)
+				add_playable_track(0,0)
 				player.playselected(0)
-				self.setCurrentListPosition(alb.playlist.getposition())
+				self.setCurrentListPosition(playlist.getposition())
 				self.setFocusId(51)
-				player.add_playable_track(self.getCurrentListPosition(),1)
-				#player.play(alb.playlist)
-				#print "---------------Started playlist from dialog play button. Current playlist position is: "+str(alb.playlist.getposition())
+				#add_playable_track(self.getCurrentListPosition(),1)
+				#player.play(playlist)
+				#print "---------------Started playlist from dialog play button. Current playlist position is: "+str(playlist.getposition())
 				#print "---------------Current window list position is: "+str(self.getCurrentListPosition())
 				#print "---------------Current playlist album is: "+win.current_playlist_albumId
 				#print "---------------Current dialog album is: "+self.current_list[self.pos]["album_id"]
 			# --- Next Button---
 			elif self.getFocusId() == 27:
 				self.clearList()
-				#print "self.pos before: "+str(self.pos)
-				#print "Album_id before: "+self.current_list[self.pos]["album_id"]
 				self.pos = (self.pos+1) % len(self.current_list)
-				win.pos = self.pos
-				#print "self.pos after:  "+str(self.pos)
-				#print "Album_id after: "+self.current_list[self.pos]["album_id"]
-				#player.sync_current_list_pos()
 				self.show_info()
 			# --- Prev Button ---
 			elif self.getFocusId() == 26:
 				self.clearList()
 				self.pos = (self.pos-1) % len(self.current_list)
-				win.pos = self.pos
-				#player.sync_current_list_pos()
 				self.show_info()
 			# --- tracklist ---
 			elif self.getFocusId() == 51:
 				#print "Clicked on track # "+str(self.getCurrentListPosition()+1)
 				#print "track_id is: "+self.current_list[self.pos]['tracks'][self.getCurrentListPosition()]['trackId']
 				if win.current_playlist_albumId != self.current_list[self.pos]["album_id"]:
-					alb.get_album_playlist(self.current_list, self.pos, self)
+					alb.populate_album_playlist(self.current_list, self.pos)
 					#print "updating playlist with selected album"
-				print "Playlist has "+str(len(alb.playlist))+" songs"
-				player.add_playable_track(self.getCurrentListPosition(),0)
+				print "Playlist has "+str(len(playlist))+" songs"
+				win.playing_pos = self.pos
+				add_playable_track(self.getCurrentListPosition(),0)
 				player.playselected(self.getCurrentListPosition())
-				if self.getCurrentListPosition()+1 < len(alb.playlist):
-					player.add_playable_track(self.getCurrentListPosition(),1)
-				else:
-					print "At end of tracklist. Prefetch first song in case repeat is on"
-					player.add_playable_track(0,0)
-				print "Playlist still has "+str(len(alb.playlist))+" songs"
+				#if self.getCurrentListPosition()+1 < len(playlist):
+				#	add_playable_track(self.getCurrentListPosition(),1)
+				#else:
+				#	print "At end of tracklist. Prefetch first song in case repeat is on"
+				#	add_playable_track(0,0)
+				print "Playlist still has "+str(len(playlist))+" songs"
 
 			else: pass
 		elif action.getId() == 10:
@@ -562,9 +557,6 @@ class Member():
 
 
 class Album():
-
-	def __init__(self):
-		self.playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
 
 	def get_big_image(self, albumid, img_dir):
 		results = []
@@ -876,16 +868,14 @@ class Album():
 			albumdialog.addItem(newlistitem)
 			x += 1
 		print "Added "+str(x)+"tracks to list"
-		player.sync_current_list_pos()
+		sync_current_list_pos()
 
-	def get_album_playlist(self, album_list, pos, albumdialog):
+	def populate_album_playlist(self, album_list, pos):
 
-		self.playlist.clear()
+		playlist.clear()
 		x = 0
 		for item in album_list[pos]["tracks"]:
-			self.playlist.add(album_list[pos]["tracks"][x]["previewURL"], listitem=xbmcgui.ListItem(''))
-			#name = "track"+str(x)
-			#self.playlist.add(name, listitem=xbmcgui.ListItem(''))
+			playlist.add(album_list[pos]["tracks"][x]["previewURL"], listitem=xbmcgui.ListItem(''))
 			x += 1
 		print "Added "+str(x)+"tracks to playlist for "+album_list[pos]["album_id"]
 		win.current_playlist_albumId = album_list[pos]["album_id"]
@@ -924,72 +914,82 @@ class Genres():
 				self.flatten_genre_keys(item['subgenres'])
 
 
+
+
 class Player(xbmc.Player):
 
-	def onQueueNextItem(self):
-		print "Rhapsody knows the next track has been queued"
-
 	def onPlayBackStarted(self):
-		#print "-----------OnPlaybackStarted: Attempting to set albdialog list focus---------------"
-		#print "-----------Current playlist albumID: "+str(win.current_playlist_albumId)
-		#print "-----------Current dialog albumId:   "+str(win.current_list[win.alb_dialog.pos]["album_id"])
-		self.sync_current_list_pos()
-		#info = xbmc.InfoTagMusic()
-		#print "--------- Infotags ---------"
-		#print info.getAlbum()
-		#print info.getArtist()
-		#print info.getTitle()
-		#print str(info.getTrack())
+		pos = playlist.getposition()
+		print "Fetching playable track for position "+str(pos)
+		add_playable_track(pos, 1)
+		add_playable_track(pos, -1)
+		sync_current_list_pos()
 
-	def sync_current_list_pos(self):
-		#print "-------------checking if we need to  sync list position"
-		#print "playlist: "+win.current_playlist_albumId+"  dialoglist: "+win.alb_dialog.current_list[win.alb_dialog.pos]["album_id"]
-		try:
-			if win.current_playlist_albumId == win.alb_dialog.current_list[win.alb_dialog.pos]["album_id"]:
-				#print "albums match. let's try to sync"
-				#print "Current focused song position: "+str(win.alb_dialog.getCurrentListPosition()+1)
-				win.alb_dialog.setCurrentListPosition(alb.playlist.getposition())
-				#win.alb_dialog.setFocusId(51)
-				#print "sync complete. Should have worked! Set position to track "+str(alb.playlist.getposition()+1)
-			#else:
-			#	print "albums don't match - no list sync necessary"
-		except:
-			print "No dialog window open, so don't need to sync dialog list"
 
-	def get_playback_session(self):
-		print 'curl -v -H "Authorization: Bearer 1l1iEkDO0hV9sjLJlSAmmH1Auw4B" https://api.rhapsody.com/v1/play/Tra.44464021'
+	def onPlayBackResumed(self):
+		pos = playlist.getposition()
+		print "Fetching playable track for position "+str(pos)
+		add_playable_track(pos, 1)
+		add_playable_track(pos, -1)
 
-	def get_playable_url(self, track_id):
-		url = "%splay/%s" %(app.get_var('S_BASEURL'), track_id)
-		#print "Trying to get this track url: "+url
-		header = b'Bearer ' + mem.access_token
-		req = urllib2.Request(url)
-		req.add_header('Authorization', header)
 
-		#print "getting playable URL for track"
-		try:
-			response = urllib2.urlopen(req)
-			#print "got response!"
-			if response:
-				#print "got results!"
-				results = json.load(response)
-				#print "------------------"+results['url']
-				#print "------------------"+results['format']
-				#print "------------------"+str(results['bitrate'])
-				return results['url']
-		except urllib2.HTTPError, e:
-			print "------------------  Bad server response getting playable URL"
-			print e.headers
-			print e
-			return None
+def sync_current_list_pos():
+	#print "-------------checking if we need to  sync list position"
+	#print "playlist: "+win.current_playlist_albumId+"  dialoglist: "+win.alb_dialog.current_list[win.alb_dialog.pos]["album_id"]
+	try:
+		if win.current_playlist_albumId == win.alb_dialog.current_list[win.alb_dialog.pos]["album_id"]:
+			#print "albums match. let's try to sync"
+			#print "Current focused song position: "+str(win.alb_dialog.getCurrentListPosition()+1)
+			win.alb_dialog.setCurrentListPosition(playlist.getposition())
+			#win.alb_dialog.setFocusId(51)
+			#print "sync complete. Should have worked! Set position to track "+str(playlist.getposition()+1)
+		#else:
+		#	print "albums don't match - no list sync necessary"
+	except:
+		print "No dialog window open, so don't need to sync dialog list"
 
-	def add_playable_track(self, pos, offset):
-		#print "!!!! -------- Current playlist item filename: "+alb.playlist.__getitem__(pos+offset).getfilename()
-		tid = app.get_var(list)[win.pos]['tracks'][pos+offset]['trackId']
-		tname = alb.playlist.__getitem__(pos+offset).getfilename()
-		playurl = player.get_playable_url(tid)
-		alb.playlist.remove(tname)
-		alb.playlist.add(playurl, listitem=xbmcgui.ListItem(''), index=pos+offset)
+def get_playback_session():
+	print 'curl -v -H "Authorization: Bearer 1l1iEkDO0hV9sjLJlSAmmH1Auw4B" https://api.rhapsody.com/v1/play/Tra.44464021'
+
+def get_playable_url(track_id):
+	url = "%splay/%s" %(app.get_var('S_BASEURL'), track_id)
+	#print "Trying to get this track url: "+url
+	header = b'Bearer ' + mem.access_token
+	req = urllib2.Request(url)
+	req.add_header('Authorization', header)
+
+	print "getting playable URL for track"
+	try:
+		response = urllib2.urlopen(req)
+		print "got response!"
+		if response:
+			print "got results!"
+			results = json.load(response)
+			print "------------------"+results['url']
+			print "------------------"+results['format']
+			print "------------------"+str(results['bitrate'])
+			return results['url']
+	except urllib2.HTTPError, e:
+		print "------------------  Bad server response getting playable URL"
+		print e.headers
+		print e
+		return None
+
+
+def add_playable_track(pos, offset):
+	#print "!!!! -------- Current playlist item filename: "+playlist.__getitem__(pos+offset).getfilename()
+	circ_pos = (pos+offset)%playlist.size()
+	print "Corrected list position: "+str(circ_pos)
+	tid = app.get_var(list)[win.playing_pos]['tracks'][circ_pos]['trackId']
+	tname = playlist.__getitem__(circ_pos).getfilename()
+	playurl = get_playable_url(tid)
+	print "list position: "+str(pos)
+	print "Track Id: "+tid
+	print "Current track filename: "+tname
+	print "Playable url: "+playurl
+	print "Playlist length is "+str(playlist.size())
+	playlist.remove(tname)
+	playlist.add(playurl, listitem=xbmcgui.ListItem(''), index=circ_pos)
 
 def GetStringFromUrl(encurl):
 	doc = ""
@@ -1056,6 +1056,7 @@ mem = Member()
 alb = Album()
 genres = Genres()
 player = Player()
+playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
 
 
 app.set_var("BASEURL", "http://api.rhapsody.com/v1/")
