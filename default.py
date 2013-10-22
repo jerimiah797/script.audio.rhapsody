@@ -921,6 +921,8 @@ class Player(xbmc.Player):
 		add_playable_track(pos, -1)
 
 
+
+
 def sync_current_list_pos():
 	#print "-------------checking if we need to  sync list position"
 	#print "playlist: "+win.current_playlist_albumId+"  dialoglist: "+win.alb_dialog.current_list[win.alb_dialog.pos]["album_id"]
@@ -936,8 +938,10 @@ def sync_current_list_pos():
 	except:
 		print "No dialog window open, so don't need to sync dialog list"
 
+
 def get_playback_session():
 	print 'curl -v -H "Authorization: Bearer 1l1iEkDO0hV9sjLJlSAmmH1Auw4B" https://api.rhapsody.com/v1/play/Tra.44464021'
+
 
 def get_playable_url(track_id):
 	url = "%splay/%s" %(app.get_var('S_BASEURL'), track_id)
@@ -978,6 +982,7 @@ def add_playable_track(pos, offset):
 	print "Playlist length is "+str(playlist.size())
 	playlist.remove(tname)
 	playlist.add(playurl, listitem=xbmcgui.ListItem(''), index=circ_pos)
+
 
 def GetStringFromUrl(encurl):
 	doc = ""
@@ -1023,19 +1028,6 @@ def remove_html_markup(s):
 		elif not tag:
 			out = out + c
 	return out
-
-
-def main(win, loadwin):
-	print "creating main window"
-	print "going modal with main window"
-	win.doModal()
-	del win
-	print "main window has closed"
-	#app.save_album_data()
-	del loadwin
-	print "loading window has closed"
-	gc.collect()
-	print "Collecting garbage"
 
 
 
