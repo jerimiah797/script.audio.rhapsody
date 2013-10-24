@@ -225,7 +225,6 @@ class MainWin(xbmcgui.WindowXML):
 		self.setup = False
 		self.pos = ""
 		self.playing_pos = None
-		self.view = ""
 		self.current_playlist_albumId = None
 		self.browse_list = ["Browse_newreleases","Browse_topalbums","Browse_topartists","Browse_toptracks"]
 		print "Script path: " + __addon_path__
@@ -237,11 +236,10 @@ class MainWin(xbmcgui.WindowXML):
 		self.clist.addItem('Top Albums')
 		self.clist.addItem('Top Artists')
 		self.clist.addItem('Top Tracks')
-		self.view = "Browse_newreleases"
 		self.win = xbmcgui.Window(xbmcgui.getCurrentWindowId())
-		self.win.setProperty("view", self.view)
-		print "onInit(): Window initialized"
-		print "Starting the engines"
+		self.win.setProperty("view", app.get_var('view'))
+		#print "onInit(): Window initialized"
+		#print "Starting the engines"
 		self.main()
 
 	def main(self):
@@ -257,18 +255,7 @@ class MainWin(xbmcgui.WindowXML):
 		self.win.setProperty("country", mem.catalog)
 		self.win.setProperty("logged_in", "true")
 		self.alb_dialog = None
-		if self.view == "Browse_newreleases":
-			#app.save_album_data()
-			app.set_var(list, app.newreleases__)
-			self.getControl(300).setVisible(True)
-			self.getControl(50).setVisible(True)
-			alb.get_newreleases()
-		if self.view == "Browse_topalbums":
-			#app.save_album_data()
-			app.set_var(list, app.topalbums__)
-			self.getControl(300).setVisible(True)
-			self.getControl(50).setVisible(True)
-			alb.get_topalbums()
+		self.draw_mainwin_browse()
 
 
 	def onAction(self, action):
@@ -279,8 +266,8 @@ class MainWin(xbmcgui.WindowXML):
 				print "onAction(): Clicked a menu item!"
 				print "onAction(): Item: " + str(self.getFocus(201).getSelectedPosition())
 				menuitem = self.getFocus(201).getSelectedPosition()
-				self.view = self.browse_list[menuitem]
-				self.win.setProperty("view", self.view)
+				app.set_var('view', self.browse_list[menuitem])
+				self.win.setProperty("view", app.get_var('view'))
 				self.main()
 			if self.getFocusId() == 1001:
 				app.set_var('logged_in', False)
@@ -318,6 +305,7 @@ class MainWin(xbmcgui.WindowXML):
 			                         pos=self.pos)
 			self.alb_dialog.setProperty("review", "has_review")
 			self.alb_dialog.doModal()
+			self.draw_mainwin_browse()
 			del self.alb_dialog
 		if control == 201:
 			print "I see you've clicked the nav menu"
@@ -326,6 +314,27 @@ class MainWin(xbmcgui.WindowXML):
 		#print("onfocus(): control %i" % control)
 		pass
 
+	def draw_newreleases(self):
+		app.set_var(list, app.newreleases__)
+		self.getControl(300).setVisible(True)
+		self.getControl(50).setVisible(True)
+		alb.get_newreleases()
+
+	def draw_topalbums(self):
+		app.set_var(list, app.topalbums__)
+		self.getControl(300).setVisible(True)
+		self.getControl(50).setVisible(True)
+		alb.get_topalbums()
+
+	def draw_mainwin_browse(self):
+		if app.get_var('view') == "Browse_newreleases":
+			#app.save_album_data()
+			self.draw_newreleases()
+			self.setFocusId(50)
+		if app.get_var('view') == "Browse_topalbums":
+			#app.save_album_data()
+			self.draw_topalbums()
+			self.setFocusId(50)
 
 class DialogBase(xbmcgui.WindowXMLDialog):
 	def __init__(self, xmlName, thescriptPath, defaultname, forceFallback):
@@ -887,7 +896,6 @@ class Player(xbmc.Player):
 		sync_current_list_pos()
 		pos = playlist.getposition()
 		print "Player thinks we're playing track "+str(pos+1)
-		#print "Fetching playable track for position "+str(pos)
 		add_playable_track(pos, 1)
 		add_playable_track(pos, -1)
 		sync_current_list_pos()
@@ -904,6 +912,12 @@ class Player(xbmc.Player):
 		#print "Fetching playable track for position "+str(pos)
 		add_playable_track(pos, 1)
 		add_playable_track(pos, -1)
+
+	def onPlayBackEnded(self):
+		print "onPlaybackEnded was detected!"
+
+	def onQueueNextItem(self):
+		print "onQueueNextItem was detected!"
 
 
 
@@ -950,7 +964,7 @@ def get_playable_url(track_id):
 		print "------------------  Bad server response getting playable URL"
 		print e.headers
 		print e
-		return None
+		return "nofile"
 
 
 def add_playable_track(pos, offset):
@@ -1033,6 +1047,7 @@ app.set_var("SECRET",  "Z1AAYBC1JEtnMJGm")
 app.set_var('running', True)
 app.set_var('logged_in', False)
 app.set_var('bad_creds', False)
+app.set_var('view', "Browse_newreleases")
 
 loadwin = xbmcgui.WindowXML("loading.xml", __addon_path__, 'Default', '720p')
 loadwin.show()
