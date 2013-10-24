@@ -61,6 +61,8 @@ class Application():
 		self.genre = {}  #object to store cached data
 		self.genre_file = __addon_path__+'/resources/.genres.obj'  #picklefile
 
+		self.now_playing = {'pos': 0, 'album_id': None,'track':[]}
+
 
 	def set_var(self, name, value):
 		self.__vars[name] = value
@@ -243,7 +245,7 @@ class MainWin(xbmcgui.WindowXML):
 		self.main()
 
 	def main(self):
-		print "self.win view property is "+self.win.getProperty("view")
+		#print "self.win view property is "+self.win.getProperty("view")
 		# set window properties
 		self.win.setProperty("username", mem.username)
 		self.win.setProperty("password", mem.password)
@@ -263,8 +265,8 @@ class MainWin(xbmcgui.WindowXML):
 		#print type(action)
 		if action.getId() == 7:
 			if self.getFocusId() == 201:
-				print "onAction(): Clicked a menu item!"
-				print "onAction(): Item: " + str(self.getFocus(201).getSelectedPosition())
+				#print "onAction(): Clicked a menu item!"
+				#print "onAction(): Item: " + str(self.getFocus(201).getSelectedPosition())
 				menuitem = self.getFocus(201).getSelectedPosition()
 				app.set_var('view', self.browse_list[menuitem])
 				self.win.setProperty("view", app.get_var('view'))
@@ -296,7 +298,7 @@ class MainWin(xbmcgui.WindowXML):
 
 
 	def onClick(self, control):
-		print "onclick(): control %i" % control
+		#print "onclick(): control %i" % control
 		self.pos = self.getCurrentListPosition()
 		if control == 50:
 			print "Opening album detail dialog"
@@ -307,8 +309,8 @@ class MainWin(xbmcgui.WindowXML):
 			self.alb_dialog.doModal()
 			self.draw_mainwin_browse()
 			del self.alb_dialog
-		if control == 201:
-			print "I see you've clicked the nav menu"
+		#if control == 201:
+		#	print "I see you've clicked the nav menu"
 
 	def onFocus(self, control):
 		#print("onfocus(): control %i" % control)
@@ -335,6 +337,7 @@ class MainWin(xbmcgui.WindowXML):
 			#app.save_album_data()
 			self.draw_topalbums()
 			self.setFocusId(50)
+
 
 class DialogBase(xbmcgui.WindowXMLDialog):
 	def __init__(self, xmlName, thescriptPath, defaultname, forceFallback):
@@ -653,7 +656,7 @@ class Album():
 			#print "Big Thumb: " + newreleases[pos]["bigthumb"]
 
 	def get_newreleases(self):
-		print "entered get_newreleases"
+		print "Fetching New Releases"
 		if (len(app.newreleases_listitems)) > 2:
 			#rebuild window list from topalbums_listitems
 			self.rebuild_window_list_from_listitems(app.newreleases_listitems)
@@ -707,6 +710,7 @@ class Album():
 
 
 	def get_topalbums(self):
+		print "Fetching Top Albums"
 		if (len(app.topalbums_listitems)) > 2:
 			#rebuild window list from topalbums_listitems
 			self.rebuild_window_list_from_listitems(app.topalbums_listitems)
@@ -747,9 +751,9 @@ class Album():
 						win.addItem(data['listitem'])
 						if not app.album.has_key(item["id"]):
 							app.album[item["id"]] = data['album']
-							print 'added an album to app.album'
-						else:
-							print 'album already in app.album'
+						#	print 'added an album to app.album'
+						#else:
+						#	print 'album already in app.album'
 						count += 1
 					#print "saving topalbumsdata"
 					#app.save_topalbums_data()
@@ -836,6 +840,7 @@ class Album():
 	def get_album_tracklist(self, album_list, pos, albumdialog):
 
 		x = 0
+		#prettyprint(album_list[pos]["tracks"])
 		for item in album_list[pos]["tracks"]:
 			newlistitem = xbmcgui.ListItem(path="http://dummyurl.org")
 			newlistitem.setInfo('music', { 'tracknumber':   int(album_list[pos]["tracks"][x]["trackIndex"]),
@@ -856,6 +861,20 @@ class Album():
 			x += 1
 		print "Added "+str(x)+"tracks to playlist for "+album_list[pos]["album_id"]
 		win.current_playlist_albumId = album_list[pos]["album_id"]
+
+		app.now_playing['track'] = []
+		x = 0
+		for item in album_list[pos]['tracks']:
+			app.now_playing['track'].append({'trackindex':int(album_list[pos]["tracks"][x]["trackIndex"]),
+			                                  'discindex':int(album_list[pos]["tracks"][x]["discIndex"]),
+			                                  'trackname':album_list[pos]["tracks"][x]["name"],
+			                                  'track_id':album_list[pos]["tracks"][x]['trackId'],
+			                                  'duration':album_list[pos]["tracks"][x]['playbackSeconds'],
+			                                  'artistname':album_list[pos]["tracks"][x]['displayArtistName']})
+			x += 1
+		print "Added "+str(x)+"tracks to nowplaying list for "+album_list[pos]["album_id"]
+		app.now_playing['album_id'] = album_list[pos]["album_id"]
+		prettyprint(app.now_playing)
 
 
 class Genres():
@@ -1009,8 +1028,8 @@ def verify_image_dir():
 	if (not os.path.isdir(img_dir)):
 		os.mkdir(img_dir)
 		print ("Created the missing album image directory at " + img_dir)
-	else:
-		print "Image directory is present!"
+	#else:
+	#	print "Image directory is present!"
 	return img_dir
 
 
@@ -1027,6 +1046,7 @@ def remove_html_markup(s):
 			quote = not quote
 		elif not tag:
 			out = out + c
+	out = out.replace("\n", " ")
 	return out
 
 

@@ -132,7 +132,7 @@
                     <posy>0</posy>
                     <texturenofocus>-</texturenofocus>
                     <texturefocus>-</texturefocus>
-                    <onfocus>SetFocus(50)</onfocus>
+                    <!--onfocus>SetFocus(50)</onfocus-->
                     <ondown>50</ondown>
                     <onup>201</onup>
                     <onleft>50</onleft>
