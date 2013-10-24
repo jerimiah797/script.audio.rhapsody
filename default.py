@@ -849,7 +849,7 @@ class Album():
 			                               })
 			albumdialog.addItem(newlistitem)
 			x += 1
-		print "Added "+str(x)+"tracks to list"
+		print "Added "+str(x)+" tracks to list"
 		sync_current_list_pos()
 
 	def populate_album_playlist(self, album_list, pos):
