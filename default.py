@@ -184,8 +184,8 @@ class InputDialog(xbmcgui.WindowXMLDialog):
 
 
 	def onAction(self, action):
-		print str(action.getId())
-		print type(action)
+		#print str(action.getId())
+		#print type(action)
 		if action.getId() == 7:
 			if self.getFocus() == self.name:
 				self.setFocus(self.pswd)
@@ -272,8 +272,8 @@ class MainWin(xbmcgui.WindowXML):
 
 
 	def onAction(self, action):
-		print str(action.getId())
-		print type(action)
+		#print str(action.getId())
+		#print type(action)
 		if action.getId() == 7:
 			if self.getFocusId() == 201:
 				print "onAction(): Clicked a menu item!"
@@ -366,6 +366,7 @@ class AlbumDialog(DialogBase):
 			if self.getFocusId() == 21:
 				win.playing_pos = self.pos
 				alb.populate_album_playlist(self.current_list, self.pos)
+				print "Playing track 1"
 				add_playable_track(0,0)
 				player.playselected(0)
 				self.setCurrentListPosition(playlist.getposition())
@@ -386,11 +387,12 @@ class AlbumDialog(DialogBase):
 				#print "track_id is: "+self.current_list[self.pos]['tracks'][self.getCurrentListPosition()]['trackId']
 				if win.current_playlist_albumId != self.current_list[self.pos]["album_id"]:
 					alb.populate_album_playlist(self.current_list, self.pos)
-				print "Playlist has "+str(len(playlist))+" songs"
+				#print "Playlist has "+str(len(playlist))+" songs"
 				win.playing_pos = self.pos
 				add_playable_track(self.getCurrentListPosition(),0)
+				print "Playing track "+str(self.getCurrentListPosition()+1)
 				player.playselected(self.getCurrentListPosition())
-				print "Playlist still has "+str(len(playlist))+" songs"
+				#print "Playlist still has "+str(len(playlist))+" songs"
 			else: pass
 		elif action.getId() == 10:
 			self.close()
@@ -441,8 +443,8 @@ class Member():
 		print "checking saved creds"
 		try:
 			self.user_info = pickle.load(open(self.filename, 'rb'))
-			print "I see the cred file. Here's the contents:"
-			prettyprint(self.user_info)
+			print "Using saved user credentials for "+self.user_info['username']
+			#prettyprint(self.user_info)
 			self.username = self.user_info['username']
 			self.password = base64.b64decode(self.user_info['password'])
 			self.guid = self.user_info['guid']
@@ -881,16 +883,25 @@ class Genres():
 class Player(xbmc.Player):
 
 	def onPlayBackStarted(self):
+		#xbmc.sleep(5)
+		sync_current_list_pos()
 		pos = playlist.getposition()
-		print "Fetching playable track for position "+str(pos)
+		print "Player thinks we're playing track "+str(pos+1)
+		#print "Fetching playable track for position "+str(pos)
 		add_playable_track(pos, 1)
 		add_playable_track(pos, -1)
 		sync_current_list_pos()
+		pos2 = playlist.getposition()
+		if pos != pos2:
+			print "Tracking error... fetching tracks again with correct current track"
+			add_playable_track(pos2, 1)
+			add_playable_track(pos2, -1)
 
 
 	def onPlayBackResumed(self):
+		xbmc.sleep(2)
 		pos = playlist.getposition()
-		print "Fetching playable track for position "+str(pos)
+		#print "Fetching playable track for position "+str(pos)
 		add_playable_track(pos, 1)
 		add_playable_track(pos, -1)
 
@@ -924,16 +935,16 @@ def get_playable_url(track_id):
 	req = urllib2.Request(url)
 	req.add_header('Authorization', header)
 
-	print "getting playable URL for track"
+	#print "getting playable URL for track"
 	try:
 		response = urllib2.urlopen(req)
-		print "got response!"
+		#print "got response!"
 		if response:
-			print "got results!"
+			#print "got results!"
 			results = json.load(response)
-			print "------------------"+results['url']
-			print "------------------"+results['format']
-			print "------------------"+str(results['bitrate'])
+			#print "------------------"+results['url']
+			#print "------------------"+results['format']
+			#print "------------------"+str(results['bitrate'])
 			return results['url']
 	except urllib2.HTTPError, e:
 		print "------------------  Bad server response getting playable URL"
@@ -944,16 +955,17 @@ def get_playable_url(track_id):
 
 def add_playable_track(pos, offset):
 	#print "!!!! -------- Current playlist item filename: "+playlist.__getitem__(pos+offset).getfilename()
+	#print "pos: "+str(pos)+"   offset: "+str(offset)
 	circ_pos = (pos+offset)%playlist.size()
-	print "Corrected list position: "+str(circ_pos)
+	print "Fetching track "+str(circ_pos+1)
 	tid = app.get_var(list)[win.playing_pos]['tracks'][circ_pos]['trackId']
 	tname = playlist.__getitem__(circ_pos).getfilename()
 	playurl = get_playable_url(tid)
-	print "list position: "+str(pos)
-	print "Track Id: "+tid
-	print "Current track filename: "+tname
-	print "Playable url: "+playurl
-	print "Playlist length is "+str(playlist.size())
+	#print "list position: "+str(pos)
+	#print "Track Id: "+tid
+	#print "Current track filename: "+tname
+	#print "Playable url: "+playurl
+	#print "Playlist length is "+str(playlist.size())
 	playlist.remove(tname)
 	playlist.add(playurl, listitem=xbmcgui.ListItem(''), index=circ_pos)
 
