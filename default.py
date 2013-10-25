@@ -63,6 +63,7 @@ class Application():
 
 		self.now_playing = {'pos': 0, 'album_id': None,'track':[]}
 		self.onplay_lock = False
+		self.album_art_path = __addon_path__+"/resources/skins/Default/media/"
 
 
 	def set_var(self, name, value):
@@ -278,21 +279,21 @@ class MainWin(xbmcgui.WindowXML):
 					os.remove(mem.filename)
 				except OSError, e:  ## if failed, report it back to the user ##
 					print ("Error: %s - %s." % (e.filename,e.strerror))
-				#player.stop()
-				#playlist.clear()
+				player.stop()
+				playlist.clear()
 				self.close()
 		if action.getId() == 10:
 			#app.save_album_data()
 			app.set_var('running',False)
-			#player.stop()
-			#playlist.clear()
+			player.stop()
+			playlist.clear()
 			self.close()
 		elif action.getId() == 92:
 			#app.save_album_data()
 			#xbmc.executebuiltin("ActivateWindow(yesnodialog)")
 			app.set_var('running',False)
-			#player.stop()
-			#playlist.clear()
+			player.stop()
+			playlist.clear()
 			self.close()
 		else:
 			pass
@@ -379,10 +380,7 @@ class AlbumDialog(DialogBase):
 			if self.getFocusId() == 21:
 				win.playing_pos = self.pos
 				alb.populate_album_playlist(self.current_list, self.pos)
-				#print "Playing track 1"
 				add_playable_track(0,0)
-				player.stop()
-				xbmc.sleep(2)
 				player.playselected(0)
 				self.setCurrentListPosition(playlist.getposition())
 				self.setFocusId(51)
@@ -398,16 +396,11 @@ class AlbumDialog(DialogBase):
 				self.show_info()
 			# --- tracklist ---
 			elif self.getFocusId() == 51:
-				#print "Clicked on track # "+str(self.getCurrentListPosition()+1)
-				#print "track_id is: "+self.current_list[self.pos]['tracks'][self.getCurrentListPosition()]['trackId']
 				if win.current_playlist_albumId != self.current_list[self.pos]["album_id"]:
 					alb.populate_album_playlist(self.current_list, self.pos)
-				#print "Playlist has "+str(len(playlist))+" songs"
 				win.playing_pos = self.pos
 				add_playable_track(self.getCurrentListPosition(),0)
-				#print "Playing track "+str(self.getCurrentListPosition()+1)
 				player.playselected(self.getCurrentListPosition())
-				#print "Playlist still has "+str(len(playlist))+" songs"
 			else: pass
 		elif action.getId() == 10:
 			self.close()
@@ -647,7 +640,7 @@ class Album():
 	def get_large_art(self, list, pos):
 		image_dir = verify_image_dir()
 		alb_id = list[pos]["album_id"]
-		print "Thumb value: "+app.album[alb_id]['bigthumb']
+		print "Exiesting BigThumb value: "+app.album[alb_id]['bigthumb']
 		if os.path.isfile(image_dir + app.album[alb_id]['bigthumb'][6:]):
 			print "Using cached image for cover art: " + app.album[alb_id]['bigthumb']
 			list[pos]["bigthumb"] = app.album[alb_id]['bigthumb']
@@ -656,7 +649,8 @@ class Album():
 			print "Getting album art with API call"
 			file = self.get_big_image(list[pos]["album_id"], image_dir)
 			list[pos]["bigthumb"] = file
-			#print "Big Thumb: " + newreleases[pos]["bigthumb"]
+			app.album[alb_id]['bigthumb'] = file
+			print "New Big Thumb: " + app.album[alb_id]['bigthumb']
 
 	def get_newreleases(self):
 		print "Fetching New Releases"
@@ -852,7 +846,7 @@ class Album():
 			                               })
 			albumdialog.addItem(newlistitem)
 			x += 1
-		print "Added "+str(x)+"tracks to list"
+		print "Added "+str(x)+" tracks to list"
 		sync_current_list_pos()
 
 	def populate_album_playlist(self, album_list, pos):
@@ -860,24 +854,11 @@ class Album():
 		playlist.clear()
 		x = 0
 		for item in album_list[pos]["tracks"]:
-			playlist.add(album_list[pos]["tracks"][x]["previewURL"], listitem=xbmcgui.ListItem(''))
+			playlist.add("dummy"+str(x)+".mp3", listitem=xbmcgui.ListItem(''))
 			x += 1
-		print "Added "+str(x)+"tracks to playlist for "+album_list[pos]["album_id"]
+		print "Added "+str(x)+" tracks to playlist for "+album_list[pos]["album_id"]
 		win.current_playlist_albumId = album_list[pos]["album_id"]
 
-		app.now_playing['track'] = []
-		x = 0
-		for item in album_list[pos]['tracks']:
-			app.now_playing['track'].append({'trackindex':int(album_list[pos]["tracks"][x]["trackIndex"]),
-			                                  'discindex':int(album_list[pos]["tracks"][x]["discIndex"]),
-			                                  'trackname':album_list[pos]["tracks"][x]["name"],
-			                                  'track_id':album_list[pos]["tracks"][x]['trackId'],
-			                                  'duration':album_list[pos]["tracks"][x]['playbackSeconds'],
-			                                  'artistname':album_list[pos]["tracks"][x]['displayArtistName']})
-			x += 1
-		print "Added "+str(x)+"tracks to nowplaying list for "+album_list[pos]["album_id"]
-		app.now_playing['album_id'] = album_list[pos]["album_id"]
-		prettyprint(app.now_playing)
 
 
 class Genres():
@@ -919,14 +900,14 @@ class Player(xbmc.Player):
 			sync_current_list_pos()
 			pos = playlist.getposition()
 			print "Playing track "+str(pos+1)
-			#add_playable_track(pos, 1)
-			#add_playable_track(pos, -1)
-			#sync_current_list_pos()
-			#pos2 = playlist.getposition()
-			#if pos != pos2:
-			#	print "Tracking error... fetching tracks again with correct current track"
-			#	add_playable_track(pos2, 1)
-			#	add_playable_track(pos2, -1)
+			add_playable_track(pos, 1)
+			add_playable_track(pos, -1)
+			sync_current_list_pos()
+			pos2 = playlist.getposition()
+			if pos != pos2:
+				print "Tracking error... fetching tracks again with correct current track"
+				add_playable_track(pos2, 1)
+				add_playable_track(pos2, -1)
 			xbmc.sleep(2)
 			app.onplay_lock = False
 		else:
@@ -934,11 +915,18 @@ class Player(xbmc.Player):
 
 
 	def onPlayBackResumed(self):
-		xbmc.sleep(2)
-		pos = playlist.getposition()
-		#print "Fetching playable track for position "+str(pos)
-		add_playable_track(pos, 1)
-		add_playable_track(pos, -1)
+		if app.onplay_lock == False:
+			app.onplay_lock = True
+			sync_current_list_pos()
+			pos = playlist.getposition()
+			print "Playing track "+str(pos+1)
+			add_playable_track(pos, 1)
+			add_playable_track(pos, -1)
+			xbmc.sleep(2)
+			app.onplay_lock = False
+		else:
+			print "---------onplay lock invoked --------"
+
 
 	def onPlayBackEnded(self):
 		print "onPlaybackEnded was detected!"
@@ -994,24 +982,36 @@ def get_playable_url(track_id):
 		print "------------------  Bad server response getting playable URL"
 		print e.headers
 		print e
-		return "nofile"
+		return False
 
 
 def add_playable_track(pos, offset):
-	#print "!!!! -------- Current playlist item filename: "+playlist.__getitem__(pos+offset).getfilename()
-	#print "pos: "+str(pos)+"   offset: "+str(offset)
 	circ_pos = (pos+offset)%playlist.size()
 	print "Fetching track "+str(circ_pos+1)
 	tid = app.get_var(list)[win.playing_pos]['tracks'][circ_pos]['trackId']
 	tname = playlist.__getitem__(circ_pos).getfilename()
-	playurl = get_playable_url(tid)
-	#print "list position: "+str(pos)
-	#print "Track Id: "+tid
-	#print "Current track filename: "+tname
-	#print "Playable url: "+playurl
-	#print "Playlist length is "+str(playlist.size())
+	for x in range(1,5,1):
+		#print "trying to get playable url"
+		playurl = get_playable_url(tid)
+		if playurl:
+			#print "Got it!"
+			break
 	playlist.remove(tname)
-	playlist.add(playurl, listitem=xbmcgui.ListItem(''), index=circ_pos)
+	li = xbmcgui.ListItem(
+            app.get_var(list)[win.playing_pos]["tracks"][circ_pos]["name"],
+            path=app.get_var(list)[win.playing_pos]["tracks"][circ_pos]["previewURL"],
+            iconImage=app.album_art_path+app.get_var(list)[win.playing_pos]["thumb"],
+            thumbnailImage=app.album_art_path+app.get_var(list)[win.playing_pos]["thumb"]
+			)
+	info = {
+            "title": app.get_var(list)[win.playing_pos]["tracks"][circ_pos]["name"],
+            "album": app.get_var(list)[win.playing_pos]["album"],
+            "artist": app.get_var(list)[win.playing_pos]["artist"],
+            "duration": app.get_var(list)[win.playing_pos]["tracks"][circ_pos]["playbackSeconds"],
+            "tracknumber": int(app.get_var(list)[win.playing_pos]["tracks"][circ_pos]["trackIndex"]),
+			}
+	li.setInfo("music", info)
+	playlist.add(playurl, listitem=li, index=circ_pos)
 
 
 def GetStringFromUrl(encurl):
