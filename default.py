@@ -62,6 +62,7 @@ class Application():
 		self.genre_file = __addon_path__+'/resources/.genres.obj'  #picklefile
 
 		self.now_playing = {'pos': 0, 'album_id': None,'track':[]}
+		self.onplay_lock = False
 
 
 	def set_var(self, name, value):
@@ -378,8 +379,10 @@ class AlbumDialog(DialogBase):
 			if self.getFocusId() == 21:
 				win.playing_pos = self.pos
 				alb.populate_album_playlist(self.current_list, self.pos)
-				print "Playing track 1"
+				#print "Playing track 1"
 				add_playable_track(0,0)
+				player.stop()
+				xbmc.sleep(2)
 				player.playselected(0)
 				self.setCurrentListPosition(playlist.getposition())
 				self.setFocusId(51)
@@ -402,7 +405,7 @@ class AlbumDialog(DialogBase):
 				#print "Playlist has "+str(len(playlist))+" songs"
 				win.playing_pos = self.pos
 				add_playable_track(self.getCurrentListPosition(),0)
-				print "Playing track "+str(self.getCurrentListPosition()+1)
+				#print "Playing track "+str(self.getCurrentListPosition()+1)
 				player.playselected(self.getCurrentListPosition())
 				#print "Playlist still has "+str(len(playlist))+" songs"
 			else: pass
@@ -479,7 +482,7 @@ class Member():
 		#	return True
 		#else:
 		#print "Saved creds have expired. Generating new ones."
-		self.login_member(self.username, self.password)
+		#self.login_member(self.username, self.password)
 		return True
 
 	def save_user_info(self):
@@ -700,8 +703,8 @@ class Album():
 						#else:
 						#	print 'album already in app.album'
 						count += 1
-					#print "saving newreleasesdata"
-					#app.save_newreleases_data()
+					print "saving newreleasesdata"
+					app.save_newreleases_data()
 					app.save_album_data()
 
 
@@ -755,8 +758,8 @@ class Album():
 						#else:
 						#	print 'album already in app.album'
 						count += 1
-					#print "saving topalbumsdata"
-					#app.save_topalbums_data()
+					print "saving topalbumsdata"
+					app.save_topalbums_data()
 					app.save_album_data()
 
 	def get_alb_and_build_listitem(self, img_path, img_file, count, item, default_album_img):
@@ -911,18 +914,23 @@ class Genres():
 class Player(xbmc.Player):
 
 	def onPlayBackStarted(self):
-		#xbmc.sleep(5)
-		sync_current_list_pos()
-		pos = playlist.getposition()
-		print "Player thinks we're playing track "+str(pos+1)
-		add_playable_track(pos, 1)
-		add_playable_track(pos, -1)
-		sync_current_list_pos()
-		pos2 = playlist.getposition()
-		if pos != pos2:
-			print "Tracking error... fetching tracks again with correct current track"
-			add_playable_track(pos2, 1)
-			add_playable_track(pos2, -1)
+		if app.onplay_lock == False:
+			app.onplay_lock = True
+			sync_current_list_pos()
+			pos = playlist.getposition()
+			print "Playing track "+str(pos+1)
+			#add_playable_track(pos, 1)
+			#add_playable_track(pos, -1)
+			#sync_current_list_pos()
+			#pos2 = playlist.getposition()
+			#if pos != pos2:
+			#	print "Tracking error... fetching tracks again with correct current track"
+			#	add_playable_track(pos2, 1)
+			#	add_playable_track(pos2, -1)
+			xbmc.sleep(2)
+			app.onplay_lock = False
+		else:
+			print "---------onplay lock invoked --------"
 
 
 	def onPlayBackResumed(self):
@@ -934,6 +942,9 @@ class Player(xbmc.Player):
 
 	def onPlayBackEnded(self):
 		print "onPlaybackEnded was detected!"
+
+	def onPlayBackStopped(self):
+		print "onPlaybackStopped was detected!"
 
 	def onQueueNextItem(self):
 		print "onQueueNextItem was detected!"
