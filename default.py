@@ -488,16 +488,19 @@ class Member():
 		except:
 			print "Couldn't read saved user data. Login please"
 			return False
-		#print "current time: "+str(time.time())
-		#print "creds time: "+str(self.timestamp)
-		#if time.time() - self.timestamp < self.expires_in:
-		#	print "Saved creds look good. Automatic login successful!"
-		#	app.set_var('logged_in', True)
-		#	return True
-		#else:
-		#print "Saved creds have expired. Generating new ones."
-		#self.login_member(self.username, self.password)
-		return True
+		print "current time: "+str(time.time())
+		print "creds time: "+str(self.timestamp)
+		print "Expires in: "+str(self.expires_in)
+		print "Difference: "+str(time.time()-self.timestamp)
+		diff = time.time()-self.timestamp
+		if diff < self.expires_in:
+			print "Saved creds look good. Automatic login successful!"
+			app.set_var('logged_in', True)
+			return True
+		else:
+			print "Saved creds have expired. Generating new ones."
+			self.login_member(self.username, self.password)
+			return True
 
 	def save_user_info(self):
 		#print "Adding data to user_info object"
