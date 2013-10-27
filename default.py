@@ -665,13 +665,16 @@ class Album():
 
 	def get_large_art(self, list, pos):
 		image_dir = verify_image_dir('large/')
-		print image_dir
+		print "Image dir: "+image_dir
 		alb_id = list[pos]["album_id"]
-		print alb_id
+		#print alb_id
 		print "Existing BigThumb value: "+app.album[alb_id]['bigthumb']
-		if os.path.isfile(image_dir + app.album[alb_id]['bigthumb'][12:]):
-			print "Using image from cached album data"# + app.album[alb_id]['bigthumb']
+		print "Testing for "+app.album[alb_id]['bigthumb']
+		if os.path.isfile(app.album[alb_id]['bigthumb']):
+			print "Using image from cached album data at " + app.album[alb_id]['bigthumb']
 			list[pos]["bigthumb"] = app.album[alb_id]['bigthumb']
+			print "local list value:"+ list[pos]['bigthumb']
+			print "album dialog bigthumb value: "+win.alb_dialog.current_list[pos]['bigthumb']
 			#pass
 		else:
 			print "Getting album art from Rhapsody"
