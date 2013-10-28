@@ -1,6 +1,7 @@
 resources/skins/Default/media/album/
-.DS_Store
+*.DS_Store
 .*.obj
 .idea/*
+lib/*.pyc
 
 
