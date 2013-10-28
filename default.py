@@ -10,7 +10,7 @@ import pickle
 import base64
 import os
 import gc
-
+from lib import rhapapi
 
 
 #Set global addon information first
@@ -599,30 +599,21 @@ class Album():
 
 
 	def get_album_review(self, list, pos):
-		results = []
 		alb_id = list[pos]["album_id"]
-		out = ""
 		if not (app.album[alb_id]["review"] == ""):
 			list[pos]["review"] = app.album[alb_id]["review"]
 			print "Using review from cached album data"
-			return out
+			return
 		elif list[pos]["review"] == "":
-			try:
-				#url = "http://direct.rhapsody.com/metadata/data/methods/getAlbumReview.js?developerKey=9H9H9E6G1E4I5E0I&albumId=%s&cobrandId=40134" % (newreleases[pos]["album_id"])
-				url = "%salbums/%s/reviews?apikey=%s" % (app.get_var('BASEURL'), list[pos]["album_id"], app.get_var('APIKEY'))
-				response = urllib2.urlopen(url)
-				results = json.load(response)
-			except:
-				print "Review api not returning response"
-			if results:
-				print "Getting review from Rhapsody"
-				list[pos]["review"] = remove_html_markup(results[0]["body"])
-				app.album[alb_id]["review"] = remove_html_markup(results[0]["body"])
-				return out
+			print "Getting review from Rhapsody"
+			review = api.get_album_review(alb_id)
+			if review:
+				list[pos]["review"] = review
+				app.album[alb_id]["review"] = review
 			else:
 				print "No review available for this album"
 				list[pos]["review"] = ""
-				return out
+				app.album[alb_id]['review'] = ""
 		else:
 			print "Already have the review in memory for this album"
 
@@ -1033,29 +1024,29 @@ def populate_playlist():
 		print "Okay let's play some music! Added "+str(x)+" tracks to the playlist for "+app.now_playing['item']["album_id"]
 		win.current_playlist_albumId = app.now_playing['item']["album_id"]  #can probably eliminate this variable
 
-def get_playable_url(track_id):
-	url = "%splay/%s" %(app.get_var('S_BASEURL'), track_id)
-	#print "Trying to get this track url: "+url
-	header = b'Bearer ' + mem.access_token
-	req = urllib2.Request(url)
-	req.add_header('Authorization', header)
-
-	#print "getting playable URL for track"
-	try:
-		response = urllib2.urlopen(req)
-		#print "got response!"
-		if response:
-			#print "got results!"
-			results = json.load(response)
-			#print "------------------"+results['url']
-			#print "------------------"+results['format']
-			#print "------------------"+str(results['bitrate'])
-			return results['url']
-	except urllib2.HTTPError, e:
-		print "------------------  Bad server response getting playable URL"
-		print e.headers
-		print e
-		return False
+#def get_playable_url(track_id):
+#	url = "%splay/%s" %(app.get_var('S_BASEURL'), track_id)
+#	#print "Trying to get this track url: "+url
+#	header = b'Bearer ' + mem.access_token
+#	req = urllib2.Request(url)
+#	req.add_header('Authorization', header)
+#
+#	#print "getting playable URL for track"
+#	try:
+#		response = urllib2.urlopen(req)
+#		#print "got response!"
+#		if response:
+#			#print "got results!"
+#			results = json.load(response)
+#			#print "------------------"+results['url']
+#			#print "------------------"+results['format']
+#			#print "------------------"+str(results['bitrate'])
+#			return results['url']
+#	except urllib2.HTTPError, e:
+#		print "------------------  Bad server response getting playable URL"
+#		print e.headers
+#		print e
+#		return False
 
 
 def add_playable_track(offset):
@@ -1063,13 +1054,7 @@ def add_playable_track(offset):
 	print "Fetching track "+str(circ_pos+1)
 	tid = app.now_playing['item']['tracks'][circ_pos]['trackId']
 	tname = playlist.__getitem__(circ_pos).getfilename()
-	for x in range(1,5,1):
-		#print "trying to get playable url"
-		playurl = get_playable_url(tid)
-		if playurl:
-			#print "Got it!"
-			break
-		#print "get playable url call failed "+str(x)+" tries"
+	playurl = api.get_playable_url(tid, mem.access_token)
 	playlist.remove(tname)
 	li = xbmcgui.ListItem(
             app.now_playing['item']["tracks"][circ_pos]["name"],
@@ -1122,21 +1107,21 @@ def verify_image_dir(ext):
 
 
 
-def remove_html_markup(s):
-	tag = False
-	quote = False
-	out = ""
-	for c in s:
-		if c == '<' and not quote:
-			tag = True
-		elif c == '>' and not quote:
-			tag = False
-		elif (c == '"' or c == "'") and tag:
-			quote = not quote
-		elif not tag:
-			out = out + c
-	out = out.replace("\n", " ")
-	return out
+#def remove_html_markup(s):
+#	tag = False
+#	quote = False
+#	out = ""
+#	for c in s:
+#		if c == '<' and not quote:
+#			tag = True
+#		elif c == '>' and not quote:
+#			tag = False
+#		elif (c == '"' or c == "'") and tag:
+#			quote = not quote
+#		elif not tag:
+#			out = out + c
+#	out = out.replace("\n", " ")
+#	return out
 
 
 
@@ -1146,6 +1131,7 @@ alb = Album()
 genres = Genres()
 player = Player()
 playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
+api = rhapapi.Api()
 
 
 app.set_var("BASEURL", "http://api.rhapsody.com/v1/")
