@@ -1054,13 +1054,7 @@ def add_playable_track(offset):
 	print "Fetching track "+str(circ_pos+1)
 	tid = app.now_playing['item']['tracks'][circ_pos]['trackId']
 	tname = playlist.__getitem__(circ_pos).getfilename()
-	for x in range(1,5,1):
-		#print "trying to get playable url"
-		playurl = api.get_playable_url(tid, mem.access_token)
-		if playurl:
-			#print "Got it!"
-			break
-		#print "get playable url call failed "+str(x)+" tries"
+	playurl = api.get_playable_url(tid, mem.access_token)
 	playlist.remove(tname)
 	li = xbmcgui.ListItem(
             app.now_playing['item']["tracks"][circ_pos]["name"],
