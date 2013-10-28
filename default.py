@@ -11,20 +11,14 @@ import base64
 import os
 import gc
 from lib import rhapapi
+from lib import image
 
 
 #Set global addon information first
 __addon_id__ = 'script.audio.rhapsody'
-addon_cfg = xbmcaddon.Addon(__addon_id__)
-__addon_path__ = addon_cfg.getAddonInfo('path')
-__addon_version__ = addon_cfg.getAddonInfo('version')
-
-
-#__newreleases__ = []
-__toptracks__ = []
-#__topalbums__ = []
-__topartists__ = []
-
+__addon_cfg__ = xbmcaddon.Addon(__addon_id__)
+__addon_path__ = __addon_cfg__.getAddonInfo('path')
+__addon_version__ = __addon_cfg__.getAddonInfo('version')
 
 
 class Application():
@@ -643,7 +637,7 @@ class Album():
 
 
 	def get_large_art(self, list, pos):
-		image_dir = verify_image_dir('large/')
+		image_dir = img.album_large_path
 		#print "Image dir: "+image_dir
 		alb_id = list[pos]["album_id"]
 		print alb_id
@@ -682,15 +676,16 @@ class Album():
 				return
 			else:
 				win.clearList()
-				img_dir = verify_image_dir('')
+				img_dir = img.album_small_path
 				default_album_img = __addon_path__+'/resources/skins/Default/media/'+"AlbumPlaceholder.png"
 				results = api.get_new_releases()
 				count = 0
 				if results:
 					for item in results:
-						img_file = item["images"][0]["url"].split('/')[(len(item["images"][0]["url"].split('/'))) - 1]
-						img_path = img_dir + img_file
-						data = self.get_alb_and_build_listitem(img_path, img_file, count, item, default_album_img)
+						img_filename = item["images"][0]["url"].split('/')[(len(item["images"][0]["url"].split('/'))) - 1]
+						print img_filename #rename this image_filename
+						img_path = img_dir + img_filename
+						data = self.get_alb_and_build_listitem(img_dir, count, item, default_album_img)
 						app.newreleases__.append(data['album'])
 						app.newreleases_listitems.append(data['listitem'])
 						win.addItem(data['listitem'])
@@ -723,7 +718,7 @@ class Album():
 				return
 			else:
 				#start from scratch with API call for newreleases
-				img_dir = verify_image_dir('')
+				img_dir = img.album_small_path
 				default_album_img = __addon_path__+'/resources/skins/Default/media/'+"AlbumPlaceholder.png"
 				results = api.get_top_albums()
 				count = 0
@@ -732,7 +727,7 @@ class Album():
 					for item in results:
 						img_file = item["images"][0]["url"].split('/')[(len(item["images"][0]["url"].split('/'))) - 1]
 						img_path = img_dir + img_file
-						data = self.get_alb_and_build_listitem(img_path, img_file, count, item, default_album_img)
+						data = self.get_alb_and_build_listitem(img_dir, count, item, default_album_img)
 						app.topalbums__.append(data['album'])
 						app.topalbums_listitems.append(data['listitem'])
 						win.addItem(data['listitem'])
@@ -746,8 +741,14 @@ class Album():
 					print("Error when fetching Rhapsody data from net")
 
 
-	def get_alb_and_build_listitem(self, img_path, img_file, count, item, default_album_img):
+	def get_alb_and_build_listitem(self, img_dir, count, item, default_album_img):
 		data = {}
+		img_url = item["images"][0]["url"]
+		print img_url
+		img_filename = item["images"][0]["url"].split('/')[(len(item["images"][0]["url"].split('/'))) - 1]
+		print img_filename #rename this image_filename
+		img_path = img_dir + img_filename
+		print img_path
 		if not os.path.isfile(img_path):
 			try :
 				print ("We need to get album art for " + item["name"] + ". Starting download")
@@ -756,11 +757,11 @@ class Album():
 			#xbmc.log(msg=mess, level=xbmc.LOGDEBUG)
 			try:
 				while not os.path.isfile(img_path):
-					urllib.urlretrieve(item["images"][0]["url"], img_path)
-					print("Downloaded " + img_file)
+					urllib.urlretrieve(img_url, img_path)
+					print("Downloaded " + img_filename)
 					album = {'album_id': item["id"],
 					         'album': item["name"],
-					         'thumb': "album/" + img_file,
+					         'thumb': "album/" + img_filename,
 					         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
 					         'orig_date': "",
 					         'label': "",
@@ -771,7 +772,7 @@ class Album():
 					         'artist': item["artist"]["name"],
 					         'list_id': count,
 					         'artist_id': item["artist"]["id"]}
-					listitem = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', "album/" + img_file)
+					listitem = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', "album/" + img_filename)
 			except:
 				try:
 					print("Album art not available for " + item["name"] + ". Using default album image")
@@ -795,7 +796,7 @@ class Album():
 			#print("Already have album art for " + item["name"] + ". Moving on...")
 			album = {'album_id': item["id"],
 			         'album': item["name"],
-			         'thumb': "album/" + img_file,
+			         'thumb': "album/" + img_filename,
 			         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
 			         'orig_date': "",
 			         'label': "",
@@ -806,7 +807,7 @@ class Album():
 			         'artist': item["artist"]["name"],
 			         'list_id': count,
 			         'artist_id': item["artist"]["id"]}
-			listitem = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', "album/" + img_file)
+			listitem = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', "album/" + img_filename)
 		data['album'] = album
 		data['listitem'] = listitem
 		return data
@@ -960,29 +961,6 @@ def populate_playlist():
 		print "Okay let's play some music! Added "+str(x)+" tracks to the playlist for "+app.now_playing['item']["album_id"]
 		win.current_playlist_albumId = app.now_playing['item']["album_id"]  #can probably eliminate this variable
 
-#def get_playable_url(track_id):
-#	url = "%splay/%s" %(app.get_var('S_BASEURL'), track_id)
-#	#print "Trying to get this track url: "+url
-#	header = b'Bearer ' + mem.access_token
-#	req = urllib2.Request(url)
-#	req.add_header('Authorization', header)
-#
-#	#print "getting playable URL for track"
-#	try:
-#		response = urllib2.urlopen(req)
-#		#print "got response!"
-#		if response:
-#			#print "got results!"
-#			results = json.load(response)
-#			#print "------------------"+results['url']
-#			#print "------------------"+results['format']
-#			#print "------------------"+str(results['bitrate'])
-#			return results['url']
-#	except urllib2.HTTPError, e:
-#		print "------------------  Bad server response getting playable URL"
-#		print e.headers
-#		print e
-#		return False
 
 
 def add_playable_track(offset):
@@ -1030,15 +1008,15 @@ def prettyprint(string):
 	print(json.dumps(string, sort_keys=True, indent=4, separators=(',', ': ')))
 
 
-def verify_image_dir(ext):
-	img_dir = __addon_path__+'/resources/skins/Default/media/album/'+ext
-	if not os.path.isdir(img_dir):
-		os.mkdir(img_dir)
-		print ("Created the missing album image directory at " + img_dir)
-
-	#else:
-	#	print "Image directory is present!"
-	return img_dir
+#def verify_image_dir(ext):
+#	img_dir = __addon_path__+'/resources/skins/Default/media/album/'+ext
+#	if not os.path.isdir(img_dir):
+#		os.mkdir(img_dir)
+#		print ("Created the missing album image directory at " + img_dir)
+#
+#	#else:
+#	#	print "Image directory is present!"
+#	return img_dir
 
 
 
@@ -1068,13 +1046,8 @@ genres = Genres()
 player = Player()
 playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
 api = rhapapi.Api()
+img = image.Images(__addon_path__)
 
-
-app.set_var("BASEURL", "http://api.rhapsody.com/v1/")
-app.set_var("S_BASEURL", "https://api.rhapsody.com/v1/")
-app.set_var("AUTHURL", "https://api.rhapsody.com/oauth/token")
-app.set_var("APIKEY",  "22Q1bFiwGxYA2eaG4vVAGsJqi3SQWzmd")
-app.set_var("SECRET",  "Z1AAYBC1JEtnMJGm")
 app.set_var('running', True)
 app.set_var('logged_in', False)
 app.set_var('bad_creds', False)
