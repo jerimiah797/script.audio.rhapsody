@@ -62,6 +62,7 @@ class Application():
 		self.genre_file = __addon_path__+'/resources/.genres.obj'  #picklefile
 
 		self.now_playing = {'pos': 0, 'type': None,'item':[]}
+		#self.now_playing['item']['album_id'] = 'blank'
 		self.onplay_lock = False
 		self.album_art_path = __addon_path__+"/resources/skins/Default/media/"
 
@@ -411,10 +412,16 @@ class AlbumDialog(DialogBase):
 				self.show_info()
 			# --- tracklist ---
 			elif self.getFocusId() == 51:
-				if app.now_playing['item']['album_id'] != self.current_list[win.pos]["album_id"]:
+				try:
+					if app.now_playing['item']['album_id'] != self.current_list[win.pos]["album_id"]:
+						app.now_playing['type'] = "album"
+						app.now_playing['item'] = self.current_list[win.pos]
+						app.now_playing['pos'] = self.getCurrentListPosition()
+						populate_playlist()
+				except:
 					app.now_playing['type'] = "album"
 					app.now_playing['item'] = self.current_list[win.pos]
-					app.now_playing['pos'] = 0
+					app.now_playing['pos'] = self.getCurrentListPosition()
 					populate_playlist()
 				#win.playing_pos = win.pos
 				app.now_playing['pos'] = self.getCurrentListPosition()
@@ -558,15 +565,9 @@ class Member():
 
 class Album():
 
-	def get_big_image(self, albumid, img_dir):
-		results = []
+	def get_big_image(self, album_id, img_dir):
 		print "finding largest image with API call"
-		try:
-			url = "%salbums/%s/images?apikey=%s" %(app.get_var('BASEURL'), albumid, app.get_var('APIKEY'))
-			response = urllib2.urlopen(url)
-			results = json.load(response)
-		except:
-			print "Bad server response getting large art info"
+		results = api.get_album_images(album_id)
 		if results:
 			#prettyprint(results)
 			biggest = 0
@@ -619,7 +620,6 @@ class Album():
 
 
 	def get_album_details(self, list, pos):
-		data = []
 		alb_id = list[pos]["album_id"]
 		#print alb_id
 		if list[pos]["label"] == "":
@@ -632,25 +632,22 @@ class Album():
 				#prettyprint(list[pos]["tracks"])
 			else:
 				print "Getting genre, tracks and label from Rhapsody"
-				try:
-					url = "http://direct.rhapsody.com/metadata/data/methods/getAlbum.js?developerKey=9H9H9E6G1E4I5E0I&albumId=%s&cobrandId=40134&filterRightsKey=0" % (list[pos]["album_id"])
-					#url = "%salbums/%s?apikey=%s" %(app.get_var('BASEURL'), newreleases[pos]["album_id"], app.get_var('APIKEY'))
-					response = urllib2.urlopen(url)
-					data = json.load(response)
-				except:
-					print "Album Detail api not returning response"
-				if data:
+				results = api.get_album_details(alb_id)
+
+				if results:
 					#prettyprint(data)
 					#orig_date = time.strftime('%B %Y', time.localtime(int(data["originalReleaseDate"]["time"]) / 1000))
 					#if newreleases[pos]["album_date"] != orig_date:
 						#newreleases[pos]["orig_date"] = orig_date
-					list[pos]["label"] = data["label"]
-					app.album[alb_id]['label'] = data['label']
-					list[pos]["tracks"] = data["trackMetadatas"]
-					app.album[alb_id]["tracks"] = data["trackMetadatas"]
-					list[pos]["style"] = data["primaryStyle"]
-					app.album[alb_id]["style"] = data["primaryStyle"]
+					list[pos]["label"] = results["label"]
+					app.album[alb_id]['label'] = results['label']
+					list[pos]["tracks"] = results["trackMetadatas"]
+					app.album[alb_id]["tracks"] = results["trackMetadatas"]
+					list[pos]["style"] = results["primaryStyle"]
+					app.album[alb_id]["style"] = results["primaryStyle"]
 					#print "Got label and original date for album"
+				else:
+					print "Album Detail api not returning response"
 				#prettyprint(list[pos]["tracks"])
 		else:
 			print "Using genre, track, and label from cached album data"
@@ -690,60 +687,33 @@ class Album():
 			if app.newreleases__:
 				#iterate through newreleases__ and build newreleases_list
 				print "building window list items"
-
-
-				#x = 0
-				#for item in app.newreleases__:
-				#	if app.album[app.newreleases__[x]['album_id']]['bigthumb'] != "":
-				#		thumb = app.album[app.newreleases__[x]['album_id']]['bigthumb']
-				#	else:
-				#		thumb = item['thumb']
-				#	listitem = xbmcgui.ListItem(item["album"], item["artist"], '', thumb)
-				#	app.newreleases_listitems.append(listitem)
-				#	x += 1
-
-
 				for item in app.newreleases__:
 					listitem = xbmcgui.ListItem(item["album"], item["artist"], '', item['thumb'])
 					app.newreleases_listitems.append(listitem)
 				self.rebuild_window_list_from_listitems(app.newreleases_listitems)
-				#print "rebuilt list of newreleases listitems and populated win list"
 				return
 			else:
 				win.clearList()
 				img_dir = verify_image_dir('')
 				default_album_img = __addon_path__+'/resources/skins/Default/media/'+"AlbumPlaceholder.png"
-				results = ""
+				results = api.get_new_releases()
 				count = 0
-				try:
-					url = '%salbums/new?apikey=%s&limit=100' % (app.get_var('BASEURL'), app.get_var('APIKEY'))
-					response = urllib2.urlopen(url)
-					results = json.load(response)
-				except:
-					print("Error when fetching Rhapsody data from net")
 				if results:
-					#print results["albums"][3]
 					for item in results:
 						img_file = item["images"][0]["url"].split('/')[(len(item["images"][0]["url"].split('/'))) - 1]
 						img_path = img_dir + img_file
 						data = self.get_alb_and_build_listitem(img_path, img_file, count, item, default_album_img)
 						app.newreleases__.append(data['album'])
 						app.newreleases_listitems.append(data['listitem'])
-						#print "Added album to list control"
 						win.addItem(data['listitem'])
 						if not app.album.has_key(item["id"]):
 							app.album[item["id"]] = data['album']
-							#print 'added an album to app.album'
-						#else:
-						#	print 'album already in app.album'
 						count += 1
-					print "saving newreleasesdata"
-					app.save_newreleases_data()
+					#print "saving newreleasesdata"
+					#app.save_newreleases_data()
 					app.save_album_data()
-
-
-				#prettyprint(app.album["Alb.122693202"])
-				#prettyprint(app.album.keys())
+				else:
+					print("Error when fetching Rhapsody data from net")
 
 
 	def get_topalbums(self):
@@ -767,16 +737,9 @@ class Album():
 				#start from scratch with API call for newreleases
 				img_dir = verify_image_dir('')
 				default_album_img = __addon_path__+'/resources/skins/Default/media/'+"AlbumPlaceholder.png"
-				results = ""
+				results = api.get_top_albums()
 				count = 0
-				try:
-					url = '%salbums/top?apikey=%s&limit=100' % (app.get_var('BASEURL'), app.get_var('APIKEY'))
-					response = urllib2.urlopen(url)
-					results = json.load(response)
-				except:
-					print("Error when fetching Rhapsody data from net")
 				if results:
-					#print results["albums"][3]
 					win.clearList()
 					for item in results:
 						img_file = item["images"][0]["url"].split('/')[(len(item["images"][0]["url"].split('/'))) - 1]
@@ -784,17 +747,16 @@ class Album():
 						data = self.get_alb_and_build_listitem(img_path, img_file, count, item, default_album_img)
 						app.topalbums__.append(data['album'])
 						app.topalbums_listitems.append(data['listitem'])
-						#print "Added album to list control"
 						win.addItem(data['listitem'])
 						if not app.album.has_key(item["id"]):
 							app.album[item["id"]] = data['album']
-						#	print 'added an album to app.album'
-						#else:
-						#	print 'album already in app.album'
 						count += 1
-					print "saving topalbumsdata"
-					app.save_topalbums_data()
+					#print "saving topalbumsdata"
+					#app.save_topalbums_data()
 					app.save_album_data()
+				else:
+					print("Error when fetching Rhapsody data from net")
+
 
 	def get_alb_and_build_listitem(self, img_path, img_file, count, item, default_album_img):
 		data = {}
@@ -874,6 +836,7 @@ class Album():
 	def get_toptracks(self, mainwin, member):
 		pass
 
+
 	def get_album_tracklist(self, album_list, pos, albumdialog):
 
 		x = 0
@@ -889,15 +852,7 @@ class Album():
 		print "Album has "+str(x)+" tracks"
 		sync_current_list_pos()
 
-	#def populate_album_playlist(self, album_list, pos):
-	#
-	#	playlist.clear()
-	#	x = 0
-	#	for item in album_list[pos]["tracks"]:
-	#		playlist.add("dummy"+str(x)+".mp3", listitem=xbmcgui.ListItem(''))
-	#		x += 1
-	#	print "Okay let's play some music! Added "+str(x)+" tracks to the playlist"# for "+album_list[pos]["album_id"]
-	#	win.current_playlist_albumId = album_list[pos]["album_id"]
+
 
 
 
@@ -910,14 +865,7 @@ class Genres():
 
 
 	def get_genre_tree(self):
-		results = None
-		try:
-			url = "%sgenres?apikey=%s" % (app.get_var('BASEURL'), app.get_var('APIKEY'))
-			response = urllib2.urlopen(url)
-			results = json.load(response)
-		except:
-			print "Genres api not returning response"
-
+		results = api.get_genres()
 		if results:
 			app.genre_tree__ = results
 		else:
