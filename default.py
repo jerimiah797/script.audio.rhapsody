@@ -123,19 +123,19 @@ class Application():
 			genres.flatten_genre_keys(app.genre_tree__)
 			self.save_genre_data()
 
-		try:
-			self.newreleases = pickle.load(open(self.newreleases_file, 'rb'))
-			self.newreleases__ = self.newreleases['newreleases']
-			print "Loaded New Releases cache"
-		except:
-			print "Couldn't read new releases cache file. Skipping..."
-
-		try:
-			self.topalbums = pickle.load(open(self.topalbums_file, 'rb'))
-			self.topalbums__ = self.topalbums['topalbums']
-			print "Loaded Top Albums cache"
-		except:
-			print "Couldn't read top albums cache file. Skipping..."
+		#try:
+		#	self.newreleases = pickle.load(open(self.newreleases_file, 'rb'))
+		#	self.newreleases__ = self.newreleases['newreleases']
+		#	print "Loaded New Releases cache"
+		#except:
+		#	print "Couldn't read new releases cache file. Skipping..."
+		#
+		#try:
+		#	self.topalbums = pickle.load(open(self.topalbums_file, 'rb'))
+		#	self.topalbums__ = self.topalbums['topalbums']
+		#	print "Loaded Top Albums cache"
+		#except:
+		#	print "Couldn't read top albums cache file. Skipping..."
 
 
 class LoginWin(xbmcgui.WindowXML):
@@ -488,10 +488,10 @@ class Member():
 		except:
 			print "Couldn't read saved user data. Login please"
 			return False
-		print "current time: "+str(time.time())
-		print "creds time: "+str(self.timestamp)
-		print "Expires in: "+str(self.expires_in)
-		print "Difference: "+str(time.time()-self.timestamp)
+		#print "current time: "+str(time.time())
+		#print "creds time: "+str(self.timestamp)
+		#print "Expires in: "+str(self.expires_in)
+		#print "Difference: "+str(time.time()-self.timestamp)
 		diff = time.time()-self.timestamp
 		if diff < self.expires_in:
 			print "Saved creds look good. Automatic login successful!"
@@ -668,13 +668,13 @@ class Album():
 
 	def get_large_art(self, list, pos):
 		image_dir = verify_image_dir('large/')
-		print "Image dir: "+image_dir
+		#print "Image dir: "+image_dir
 		alb_id = list[pos]["album_id"]
-		#print alb_id
+		print alb_id
 		print "Existing BigThumb value: "+app.album[alb_id]['bigthumb']
 		print "Testing for "+app.album[alb_id]['bigthumb']
 		if os.path.isfile(app.album[alb_id]['bigthumb']):
-			print "Using image from cached album data at " + app.album[alb_id]['bigthumb']
+			print "Using image from cached album data" # at " + app.album[alb_id]['bigthumb']
 			list[pos]["bigthumb"] = app.album[alb_id]['bigthumb']
 			print "local list value:"+ list[pos]['bigthumb']
 			print "album dialog bigthumb value: "+win.alb_dialog.current_list[pos]['bigthumb']
@@ -898,15 +898,15 @@ class Album():
 		print "Album has "+str(x)+" tracks"
 		sync_current_list_pos()
 
-	def populate_album_playlist(self, album_list, pos):
-
-		playlist.clear()
-		x = 0
-		for item in album_list[pos]["tracks"]:
-			playlist.add("dummy"+str(x)+".mp3", listitem=xbmcgui.ListItem(''))
-			x += 1
-		print "Okay let's play some music! Added "+str(x)+" tracks to the playlist"# for "+album_list[pos]["album_id"]
-		win.current_playlist_albumId = album_list[pos]["album_id"]
+	#def populate_album_playlist(self, album_list, pos):
+	#
+	#	playlist.clear()
+	#	x = 0
+	#	for item in album_list[pos]["tracks"]:
+	#		playlist.add("dummy"+str(x)+".mp3", listitem=xbmcgui.ListItem(''))
+	#		x += 1
+	#	print "Okay let's play some music! Added "+str(x)+" tracks to the playlist"# for "+album_list[pos]["album_id"]
+	#	win.current_playlist_albumId = album_list[pos]["album_id"]
 
 
 
@@ -954,7 +954,7 @@ class Player(xbmc.Player):
 			add_playable_track(-1)
 			sync_current_list_pos()
 			pos2 = playlist.getposition()
-			print "pos: "+str(pos)+" pos2: "+str(pos2)
+			#print "pos: "+str(pos)+" pos2: "+str(pos2)
 			if pos != pos2:
 				print "Oh wait! We're not playing track "+str(pos+1)+"!"
 				print "Playing track "+str(pos2+1)
@@ -979,7 +979,7 @@ class Player(xbmc.Player):
 			add_playable_track(-1)
 			sync_current_list_pos()
 			pos2 = playlist.getposition()
-			print "pos: "+str(pos)+" pos2: "+str(pos2)
+			#print "pos: "+str(pos)+" pos2: "+str(pos2)
 			if pos != pos2:
 				print "Oh wait! We're not playing track "+str(pos+1)+"!"
 				print "Playing track "+str(pos2+1)
@@ -1064,12 +1064,12 @@ def add_playable_track(offset):
 	tid = app.now_playing['item']['tracks'][circ_pos]['trackId']
 	tname = playlist.__getitem__(circ_pos).getfilename()
 	for x in range(1,5,1):
-		print "trying to get playable url"
+		#print "trying to get playable url"
 		playurl = get_playable_url(tid)
 		if playurl:
-			print "Got it!"
+			#print "Got it!"
 			break
-		print "get playable url call failed "+str(x)+" tries"
+		#print "get playable url call failed "+str(x)+" tries"
 	playlist.remove(tname)
 	li = xbmcgui.ListItem(
             app.now_playing['item']["tracks"][circ_pos]["name"],
@@ -1086,7 +1086,7 @@ def add_playable_track(offset):
 			}
 	li.setInfo("music", info)
 	playlist.add(playurl, listitem=li, index=circ_pos)
-	print "Replaced dummy list item with real track info"
+	#print "Replaced dummy list item with real track info"
 
 
 def GetStringFromUrl(encurl):
