@@ -1,8 +1,6 @@
 import xbmc
 import urllib2
 import json
-import base64
-import os
 from utils import *
 
 
@@ -17,9 +15,9 @@ class Api():
 		self.SECRET = "Z1AAYBC1JEtnMJGm"
 
 	def get_playable_url(self, track_id, access_token):
-		url = "%splay/%s" %(self.BASEURL, track_id)
-		print "Getting playable url for track "+track_id
-		print url
+		url = "%splay/%s" %(self.S_BASEURL, track_id)
+		#print "Getting playable url for track "+track_id
+		#print url
 		req = self.__build_member_req(url, access_token)
 		results = self.__get_data_from_rhapsody(req)
 		if results:
