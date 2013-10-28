@@ -1,6 +1,8 @@
 import xbmc
+import urllib
 import urllib2
 import json
+import base64
 from utils import *
 
 
@@ -19,6 +21,17 @@ class Api():
 		req = urllib2.Request(url)
 		req.add_header('Authorization', header)
 		return req
+
+	def login_member(self, username, password):
+		data = urllib.urlencode({'username': username, 'password': password, 'grant_type': 'password'})
+		header = b'Basic ' + base64.b64encode(self.APIKEY + b':' + self.SECRET)
+		req = urllib2.Request(self.AUTHURL, data)
+		req.add_header('Authorization', header)
+		results = self.__get_data_from_rhapsody(req)
+		if results:
+			return results
+		else:
+			return False
 
 	def __get_data_from_rhapsody(self, req):
 		succeed = 0

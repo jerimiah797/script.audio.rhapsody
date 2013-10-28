@@ -532,35 +532,23 @@ class Member():
 		print "attempting login..."
 		self.username = name
 		self.password = pswd
-		data = urllib.urlencode({'username': self.username, 'password': self.password, 'grant_type': 'password'})
-		header = b'Basic ' + base64.b64encode(app.get_var('APIKEY') + b':' + app.get_var('SECRET'))
-		result = "Bad username/password combination"
-
-		req = urllib2.Request(app.get_var('AUTHURL'), data)
-		req.add_header('Authorization', header)
-		try:
-			response = urllib2.urlopen(req)
-			print "got response from login server"
-			if response:
-				result = json.load(response)
-				self.access_token =     result["access_token"]
-				self.catalog =          result["catalog"]
-				self.expires_in =       result["expires_in"]
-				self.first_name =       result["first_name"]
-				self.guid =             result["guid"]
-				self.issued_at =        result["issued_at"]
-				self.last_name =        result["last_name"]
-				self.refresh_token =    result["refresh_token"]
-				app.set_var('logged_in', True)
-				app.set_var('bad_creds', False)
-				self.save_user_info()
-		except: #urllib2.HTTPError, e:
+		result = api.login_member(name, pswd)
+		if result:
+			self.access_token =     result["access_token"]
+			self.catalog =          result["catalog"]
+			self.expires_in =       result["expires_in"]
+			self.first_name =       result["first_name"]
+			self.guid =             result["guid"]
+			self.issued_at =        result["issued_at"]
+			self.last_name =        result["last_name"]
+			self.refresh_token =    result["refresh_token"]
+			app.set_var('logged_in', True)
+			app.set_var('bad_creds', False)
+			self.save_user_info()
+		else:
 			print "login failed"
-			#print e.headers
-			#print e
 			app.set_var('logged_in', False)
 			app.set_var('bad_creds', True)
-		#prettyprint(result)
 
 
 class Album():
