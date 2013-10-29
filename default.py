@@ -12,6 +12,7 @@ import os
 import gc
 from lib import rhapapi
 from lib import image
+from lib import member
 
 
 #Set global addon information first
@@ -55,8 +56,8 @@ class Application():
 		self.genre = {}  #object to store cached data
 		self.genre_file = __addon_path__+'/resources/.genres.obj'  #picklefile
 
-		self.now_playing = {'pos': 0, 'type': None,'item':[]}
-		#self.now_playing['item']['album_id'] = 'blank'
+		self.now_playing = {'pos': 0, 'type': None,'item':{}}
+		self.now_playing['item']['album_id'] = 'blank'
 		self.onplay_lock = False
 		self.album_art_path = __addon_path__+"/resources/skins/Default/media/"
 
@@ -118,20 +119,6 @@ class Application():
 			genres.flatten_genre_keys(app.genre_tree__)
 			self.save_genre_data()
 
-		#try:
-		#	self.newreleases = pickle.load(open(self.newreleases_file, 'rb'))
-		#	self.newreleases__ = self.newreleases['newreleases']
-		#	print "Loaded New Releases cache"
-		#except:
-		#	print "Couldn't read new releases cache file. Skipping..."
-		#
-		#try:
-		#	self.topalbums = pickle.load(open(self.topalbums_file, 'rb'))
-		#	self.topalbums__ = self.topalbums['topalbums']
-		#	print "Loaded Top Albums cache"
-		#except:
-		#	print "Couldn't read top albums cache file. Skipping..."
-
 
 class LoginWin(xbmcgui.WindowXML):
 	def __init__(self, xmlName, thescriptPath, defaultname, forceFallback):
@@ -146,7 +133,9 @@ class LoginWin(xbmcgui.WindowXML):
 				print "Set fail label message"
 			self.inputwin = InputDialog("input.xml", __addon_path__, 'Default', '720p')
 			self.inputwin.doModal()
-			mem.login_member(self.inputwin.name_txt, self.inputwin.pswd_txt)
+			data = mem.login_member(self.inputwin.name_txt, self.inputwin.pswd_txt)
+			app.set_var('logged_in', data['logged_in'])
+			app.set_var('bad_creds', data['bad_creds'])
 			del self.inputwin
 			print "Logged_in value: " + str(app.get_var('logged_in'))
 			print "Bad Creds value: " + str(app.get_var('bad_creds'))
@@ -446,147 +435,8 @@ class AlbumDialog(DialogBase):
 		self.getControl(14).setText(self.current_list[win.pos]["review"])
 
 
-class Member():
-	def __init__(self):
-		self.info = []
-		self.filename = __addon_path__+'/resources/.rhapuser.obj'
-		self.picklefile = ''
-		self.olddevkey = "5C8F8G9G8B4D0E5J"
-		self.cobrandId = "40134"
-		self.user_info = {}
-		self.username = ""
-		self.password = ""
-		self.access_token = ""
-		self.refresh_token = ""
-		self.issued_at = ""
-		self.expires_in = ""
-		self.guid = ""
-		self.account_type = "Not available"
-		self.date_created = "Not available"
-		self.first_name = ""
-		self.last_name = ""
-		self.catalog = ""
-		self.timestamp = ""
-
-
-	def has_saved_creds(self):
-		print "checking saved creds"
-		try:
-			self.user_info = pickle.load(open(self.filename, 'rb'))
-			print "Using saved user credentials for "+self.user_info['username']
-			#prettyprint(self.user_info)
-			self.username = self.user_info['username']
-			self.password = base64.b64decode(self.user_info['password'])
-			self.guid = self.user_info['guid']
-			self.access_token = self.user_info['access_token']
-			self.refresh_token = self.user_info['refresh_token']
-			self.issued_at = self.user_info['issued_at']
-			self.expires_in = self.user_info['expires_in']
-			self.first_name = self.user_info['first_name']
-			self.last_name = self.user_info['last_name']
-			self.catalog = self.user_info['catalog']
-			self.timestamp = self.user_info['timestamp']
-		except:
-			print "Couldn't read saved user data. Login please"
-			return False
-		#print "current time: "+str(time.time())
-		#print "creds time: "+str(self.timestamp)
-		#print "Expires in: "+str(self.expires_in)
-		#print "Difference: "+str(time.time()-self.timestamp)
-		diff = time.time()-self.timestamp
-		if diff < self.expires_in:
-			print "Saved creds look good. Automatic login successful!"
-			app.set_var('logged_in', True)
-			return True
-		else:
-			print "Saved creds have expired. Generating new ones."
-			self.login_member(self.username, self.password)
-			return True
-
-	def save_user_info(self):
-		#print "Adding data to user_info object"
-		self.user_info['username'] = self.username
-		self.user_info['password'] = base64.b64encode(self.password)
-		self.user_info['guid'] = self.guid
-		self.user_info['access_token'] = self.access_token
-		self.user_info['refresh_token'] = self.refresh_token
-		self.user_info['issued_at'] = self.issued_at
-		self.user_info['expires_in'] = self.expires_in
-		self.user_info['first_name'] = self.first_name
-		self.user_info['last_name'] = self.last_name
-		self.user_info['catalog'] = self.catalog
-		self.user_info['timestamp'] = time.time()
-		#prettyprint(self.user_info)
-		print "Saving userdata..."
-		pickle.dump(self.user_info, open(self.filename, 'wb'))
-		#print "Userdata saved!"
-
-
-	def login_member(self, name, pswd):
-		print "attempting login..."
-		self.username = name
-		self.password = pswd
-		result = api.login_member(name, pswd)
-		if result:
-			self.access_token =     result["access_token"]
-			self.catalog =          result["catalog"]
-			self.expires_in =       result["expires_in"]
-			self.first_name =       result["first_name"]
-			self.guid =             result["guid"]
-			self.issued_at =        result["issued_at"]
-			self.last_name =        result["last_name"]
-			self.refresh_token =    result["refresh_token"]
-			app.set_var('logged_in', True)
-			app.set_var('bad_creds', False)
-			self.save_user_info()
-		else:
-			print "login failed"
-			app.set_var('logged_in', False)
-			app.set_var('bad_creds', True)
-
 
 class Album():
-
-	def get_big_image(self, album_id):
-		#print "finding largest image with API call"
-		url = img.identify_largest_image(album_id)
-		#print "get_big_image url value:"+url
-		bigthumb = img.handler(url, 'large', 'album')
-		#print "get_big_image bigthumb value: "+bigthumb
-		return bigthumb
-
-
-		#results = api.get_album_images(album_id)
-		#if results:
-		#	#prettyprint(results)
-		#	biggest = 0
-		#	biggest_index = 0
-		#	for y in xrange(0, len(results)):
-		#		s = results[y]["width"]
-		#		if (s > biggest):
-		#			biggest = s
-		#			biggest_index = y
-		#	biggest_image = results[biggest_index]["url"].split('/')[
-		#		(len(results[biggest_index]["url"].split('/'))) - 1]
-		#	img_url = results[biggest_index]["url"]
-		#	img_file = img_dir + biggest_image
-		#	if not os.path.isfile(img_file):
-		#		print ("We need to get this file! Starting download")
-		#		while not os.path.isfile(img_file):
-		#			try:
-		#				urllib.urlretrieve(img_url, img_file)
-		#				print ("Downloaded the file :-)")
-		#				#return img_dir+img_file
-		#			except:
-		#				print "File download failed"
-		#				album_img = "AlbumPlaceholder.png"
-		#				return album_img
-		#	else:
-		#		print ("Already have that file! Moving on...")
-		#	return img_dir + biggest_image
-		#else:
-		#	return "AlbumPlaceholder.png"
-
 
 	def get_album_review(self, list, pos):
 		alb_id = list[pos]["album_id"]
@@ -644,24 +494,29 @@ class Album():
 
 
 	def get_large_art(self, list, pos):
-		image_dir = img.album_large_path
-		#print "Image dir: "+image_dir
 		alb_id = list[pos]["album_id"]
 		#print alb_id
 		#print "Existing BigThumb value: "+app.album[alb_id]['bigthumb']
 		#print "Testing for "+app.album[alb_id]['bigthumb']
 		if os.path.isfile(app.album[alb_id]['bigthumb']):
-			print "Using image from cached album data" # at " + app.album[alb_id]['bigthumb']
+			#print "Using image from cached album data" # at " + app.album[alb_id]['bigthumb']
 			list[pos]["bigthumb"] = app.album[alb_id]['bigthumb']
 			#print "local list value:"+ list[pos]['bigthumb']
 			#print "album dialog bigthumb value: "+win.alb_dialog.current_list[pos]['bigthumb']
-			#pass
 		else:
-			print "Getting album art from Rhapsody"
+			#print "Getting album art from Rhapsody"
 			file = img.base_path+self.get_big_image(list[pos]["album_id"])
 			list[pos]["bigthumb"] = file
 			app.album[alb_id]['bigthumb'] = file
 			#print "New Big Thumb: " + app.album[alb_id]['bigthumb']
+
+	def get_big_image(self, album_id):
+		#print "finding largest image with API call"
+		url = img.identify_largest_image(album_id)
+		#print "get_big_image url value:"+url
+		bigthumb = img.handler(url, 'large', 'album')
+		#print "get_big_image bigthumb value: "+bigthumb
+		return bigthumb
 
 	def get_newreleases(self):
 		print "Fetching New Releases"
@@ -894,8 +749,8 @@ def populate_playlist():
 
 		playlist.clear()
 		x = 0
-		for item in app.now_playing['item']['tracks']:
-			playlist.add("dummy"+str(x)+".mp3", listitem=xbmcgui.ListItem(''))
+		for track in app.now_playing['item']['tracks']:
+			playlist.add(track['previewURL'], listitem=xbmcgui.ListItem(''))
 			x += 1
 		print "Okay let's play some music! Added "+str(x)+" tracks to the playlist for "+app.now_playing['item']["album_id"]
 		win.current_playlist_albumId = app.now_playing['item']["album_id"]  #can probably eliminate this variable
@@ -927,59 +782,14 @@ def add_playable_track(offset):
 	#print "Replaced dummy list item with real track info"
 
 
-def GetStringFromUrl(encurl):
-	doc = ""
-	succeed = 0
-	while succeed < 5:
-		try:
-			f = urllib.urlopen(encurl)
-			doc = f.read()
-			f.close()
-			return str(doc)
-		except:
-			xbmc.log("could not get data from %s" % encurl)
-			xbmc.sleep(1000)
-			succeed += 1
-	return ""
-
-
 def prettyprint(string):
 	print(json.dumps(string, sort_keys=True, indent=4, separators=(',', ': ')))
 
 
-#def verify_image_dir(ext):
-#	img_dir = __addon_path__+'/resources/skins/Default/media/album/'+ext
-#	if not os.path.isdir(img_dir):
-#		os.mkdir(img_dir)
-#		print ("Created the missing album image directory at " + img_dir)
-#
-#	#else:
-#	#	print "Image directory is present!"
-#	return img_dir
-
-
-
-
-#def remove_html_markup(s):
-#	tag = False
-#	quote = False
-#	out = ""
-#	for c in s:
-#		if c == '<' and not quote:
-#			tag = True
-#		elif c == '>' and not quote:
-#			tag = False
-#		elif (c == '"' or c == "'") and tag:
-#			quote = not quote
-#		elif not tag:
-#			out = out + c
-#	out = out.replace("\n", " ")
-#	return out
-
-
 
 app = Application()
-mem = Member()
+mem = member.Member()
+mem.set_addon_path(__addon_path__)
 alb = Album()
 genres = Genres()
 player = Player()
@@ -1007,9 +817,12 @@ while app.get_var('running'):
 			loadwin.getControl(10).setLabel('Logging you in...')
 			del logwin
 			time.sleep(1)
-		else:
+		elif mem.has_saved_creds():
 			loadwin.getControl(10).setLabel('Logging you in...')
+			app.set_var('logged_in', True)
 			time.sleep(1)
+		else:
+			break
 	win = MainWin("main.xml", __addon_path__, 'Default', '720p')
 	win.doModal()
 	if app.get_var('logged_in') == False:
@@ -1022,9 +835,9 @@ while app.get_var('running'):
 	t2 = time.time()
 	print "Album data save operation took "+str(t2-t1)
 	time.sleep(1)
-	print "Saved album data to cachefile"
+	#print "Saved album data to cachefile"
 del loadwin
 gc.collect()
-print "App has been exited"
+print "Rhapsody addon has exited"
 
 

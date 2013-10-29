@@ -26,25 +26,27 @@ class Images():
 		        self.base_path+self.album_large_path,
 		        self.base_path+self.artist_small_path,
 		        self.base_path+self.artist_large_path]
-		#print "Verifying all image directories"
 		for path in dirs:
 			if not os.path.isdir(path):
 				os.mkdir(path)
 				print "created image directory at "+path
+
 
 	def handler(self, url, size, kind):
 		prefix_path = self.get_prefix_path(size, kind)
 		img_filename = url.split('/')[(len(url.split('/'))) - 1]
 		#print "Handling "+prefix_path+img_filename
 		full_path = self.base_path+prefix_path+img_filename
-		self.download_image(url, full_path)
+		if not os.path.isfile(full_path):
+			self.download_image(url, full_path)
+			print "downloaded "+prefix_path+img_filename
 		return prefix_path+img_filename
+
 
 	def identify_largest_image(self, album_id):
 		api = Api()
 		results = api.get_album_images(album_id)
 		if results:
-			#prettyprint(results)
 			biggest = 0
 			biggest_index = 0
 			for y in xrange(0, len(results)):
@@ -53,10 +55,8 @@ class Images():
 					biggest = s
 					biggest_index = y
 			url = results[biggest_index]["url"]
-			#del api
-			print "identified biggest image as: "+url
+			#print "identified biggest image as: "+url
 			return url
-
 
 
 	def get_prefix_path(self, size, kind):
