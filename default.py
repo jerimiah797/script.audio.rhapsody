@@ -11,20 +11,15 @@ import base64
 import os
 import gc
 from lib import rhapapi
+from lib import image
+from lib import member
 
 
 #Set global addon information first
 __addon_id__ = 'script.audio.rhapsody'
-addon_cfg = xbmcaddon.Addon(__addon_id__)
-__addon_path__ = addon_cfg.getAddonInfo('path')
-__addon_version__ = addon_cfg.getAddonInfo('version')
-
-
-#__newreleases__ = []
-__toptracks__ = []
-#__topalbums__ = []
-__topartists__ = []
-
+__addon_cfg__ = xbmcaddon.Addon(__addon_id__)
+__addon_path__ = __addon_cfg__.getAddonInfo('path')
+__addon_version__ = __addon_cfg__.getAddonInfo('version')
 
 
 class Application():
@@ -61,7 +56,8 @@ class Application():
 		self.genre = {}  #object to store cached data
 		self.genre_file = __addon_path__+'/resources/.genres.obj'  #picklefile
 
-		self.now_playing = {'pos': 0, 'type': None,'item':[]}
+		self.now_playing = {'pos': 0, 'type': None,'item':{}}
+		self.now_playing['item']['album_id'] = 'blank'
 		self.onplay_lock = False
 		self.album_art_path = __addon_path__+"/resources/skins/Default/media/"
 
@@ -123,20 +119,6 @@ class Application():
 			genres.flatten_genre_keys(app.genre_tree__)
 			self.save_genre_data()
 
-		#try:
-		#	self.newreleases = pickle.load(open(self.newreleases_file, 'rb'))
-		#	self.newreleases__ = self.newreleases['newreleases']
-		#	print "Loaded New Releases cache"
-		#except:
-		#	print "Couldn't read new releases cache file. Skipping..."
-		#
-		#try:
-		#	self.topalbums = pickle.load(open(self.topalbums_file, 'rb'))
-		#	self.topalbums__ = self.topalbums['topalbums']
-		#	print "Loaded Top Albums cache"
-		#except:
-		#	print "Couldn't read top albums cache file. Skipping..."
-
 
 class LoginWin(xbmcgui.WindowXML):
 	def __init__(self, xmlName, thescriptPath, defaultname, forceFallback):
@@ -151,7 +133,9 @@ class LoginWin(xbmcgui.WindowXML):
 				print "Set fail label message"
 			self.inputwin = InputDialog("input.xml", __addon_path__, 'Default', '720p')
 			self.inputwin.doModal()
-			mem.login_member(self.inputwin.name_txt, self.inputwin.pswd_txt)
+			data = mem.login_member(self.inputwin.name_txt, self.inputwin.pswd_txt)
+			app.set_var('logged_in', data['logged_in'])
+			app.set_var('bad_creds', data['bad_creds'])
 			del self.inputwin
 			print "Logged_in value: " + str(app.get_var('logged_in'))
 			print "Bad Creds value: " + str(app.get_var('bad_creds'))
@@ -411,10 +395,16 @@ class AlbumDialog(DialogBase):
 				self.show_info()
 			# --- tracklist ---
 			elif self.getFocusId() == 51:
-				if app.now_playing['item']['album_id'] != self.current_list[win.pos]["album_id"]:
+				try:
+					if app.now_playing['item']['album_id'] != self.current_list[win.pos]["album_id"]:
+						app.now_playing['type'] = "album"
+						app.now_playing['item'] = self.current_list[win.pos]
+						app.now_playing['pos'] = self.getCurrentListPosition()
+						populate_playlist()
+				except:
 					app.now_playing['type'] = "album"
 					app.now_playing['item'] = self.current_list[win.pos]
-					app.now_playing['pos'] = 0
+					app.now_playing['pos'] = self.getCurrentListPosition()
 					populate_playlist()
 				#win.playing_pos = win.pos
 				app.now_playing['pos'] = self.getCurrentListPosition()
@@ -445,158 +435,8 @@ class AlbumDialog(DialogBase):
 		self.getControl(14).setText(self.current_list[win.pos]["review"])
 
 
-class Member():
-	def __init__(self):
-		self.info = []
-		self.filename = __addon_path__+'/resources/.rhapuser.obj'
-		self.picklefile = ''
-		self.olddevkey = "5C8F8G9G8B4D0E5J"
-		self.cobrandId = "40134"
-		self.user_info = {}
-		self.username = ""
-		self.password = ""
-		self.access_token = ""
-		self.refresh_token = ""
-		self.issued_at = ""
-		self.expires_in = ""
-		self.guid = ""
-		self.account_type = "Not available"
-		self.date_created = "Not available"
-		self.first_name = ""
-		self.last_name = ""
-		self.catalog = ""
-		self.timestamp = ""
-
-
-	def has_saved_creds(self):
-		print "checking saved creds"
-		try:
-			self.user_info = pickle.load(open(self.filename, 'rb'))
-			print "Using saved user credentials for "+self.user_info['username']
-			#prettyprint(self.user_info)
-			self.username = self.user_info['username']
-			self.password = base64.b64decode(self.user_info['password'])
-			self.guid = self.user_info['guid']
-			self.access_token = self.user_info['access_token']
-			self.refresh_token = self.user_info['refresh_token']
-			self.issued_at = self.user_info['issued_at']
-			self.expires_in = self.user_info['expires_in']
-			self.first_name = self.user_info['first_name']
-			self.last_name = self.user_info['last_name']
-			self.catalog = self.user_info['catalog']
-			self.timestamp = self.user_info['timestamp']
-		except:
-			print "Couldn't read saved user data. Login please"
-			return False
-		#print "current time: "+str(time.time())
-		#print "creds time: "+str(self.timestamp)
-		#print "Expires in: "+str(self.expires_in)
-		#print "Difference: "+str(time.time()-self.timestamp)
-		diff = time.time()-self.timestamp
-		if diff < self.expires_in:
-			print "Saved creds look good. Automatic login successful!"
-			app.set_var('logged_in', True)
-			return True
-		else:
-			print "Saved creds have expired. Generating new ones."
-			self.login_member(self.username, self.password)
-			return True
-
-	def save_user_info(self):
-		#print "Adding data to user_info object"
-		self.user_info['username'] = self.username
-		self.user_info['password'] = base64.b64encode(self.password)
-		self.user_info['guid'] = self.guid
-		self.user_info['access_token'] = self.access_token
-		self.user_info['refresh_token'] = self.refresh_token
-		self.user_info['issued_at'] = self.issued_at
-		self.user_info['expires_in'] = self.expires_in
-		self.user_info['first_name'] = self.first_name
-		self.user_info['last_name'] = self.last_name
-		self.user_info['catalog'] = self.catalog
-		self.user_info['timestamp'] = time.time()
-		#prettyprint(self.user_info)
-		print "Saving userdata..."
-		pickle.dump(self.user_info, open(self.filename, 'wb'))
-		#print "Userdata saved!"
-
-
-	def login_member(self, name, pswd):
-		print "attempting login..."
-		self.username = name
-		self.password = pswd
-		data = urllib.urlencode({'username': self.username, 'password': self.password, 'grant_type': 'password'})
-		header = b'Basic ' + base64.b64encode(app.get_var('APIKEY') + b':' + app.get_var('SECRET'))
-		result = "Bad username/password combination"
-
-		req = urllib2.Request(app.get_var('AUTHURL'), data)
-		req.add_header('Authorization', header)
-		try:
-			response = urllib2.urlopen(req)
-			print "got response from login server"
-			if response:
-				result = json.load(response)
-				self.access_token =     result["access_token"]
-				self.catalog =          result["catalog"]
-				self.expires_in =       result["expires_in"]
-				self.first_name =       result["first_name"]
-				self.guid =             result["guid"]
-				self.issued_at =        result["issued_at"]
-				self.last_name =        result["last_name"]
-				self.refresh_token =    result["refresh_token"]
-				app.set_var('logged_in', True)
-				app.set_var('bad_creds', False)
-				self.save_user_info()
-		except: #urllib2.HTTPError, e:
-			print "login failed"
-			#print e.headers
-			#print e
-			app.set_var('logged_in', False)
-			app.set_var('bad_creds', True)
-		#prettyprint(result)
-
 
 class Album():
-
-	def get_big_image(self, albumid, img_dir):
-		results = []
-		print "finding largest image with API call"
-		try:
-			url = "%salbums/%s/images?apikey=%s" %(app.get_var('BASEURL'), albumid, app.get_var('APIKEY'))
-			response = urllib2.urlopen(url)
-			results = json.load(response)
-		except:
-			print "Bad server response getting large art info"
-		if results:
-			#prettyprint(results)
-			biggest = 0
-			biggest_index = 0
-			for y in xrange(0, len(results)):
-				s = results[y]["width"]
-				if (s > biggest):
-					biggest = s
-					biggest_index = y
-			biggest_image = results[biggest_index]["url"].split('/')[
-				(len(results[biggest_index]["url"].split('/'))) - 1]
-			img_url = results[biggest_index]["url"]
-			img_file = img_dir + biggest_image
-			if not os.path.isfile(img_file):
-				print ("We need to get this file! Starting download")
-				while not os.path.isfile(img_file):
-					try:
-						urllib.urlretrieve(img_url, img_file)
-						print ("Downloaded the file :-)")
-						#return img_dir+img_file
-					except:
-						print "File download failed"
-						album_img = "AlbumPlaceholder.png"
-						return album_img
-			else:
-				print ("Already have that file! Moving on...")
-			return img_dir + biggest_image
-		else:
-			return "AlbumPlaceholder.png"
-
 
 	def get_album_review(self, list, pos):
 		alb_id = list[pos]["album_id"]
@@ -619,7 +459,6 @@ class Album():
 
 
 	def get_album_details(self, list, pos):
-		data = []
 		alb_id = list[pos]["album_id"]
 		#print alb_id
 		if list[pos]["label"] == "":
@@ -632,25 +471,22 @@ class Album():
 				#prettyprint(list[pos]["tracks"])
 			else:
 				print "Getting genre, tracks and label from Rhapsody"
-				try:
-					url = "http://direct.rhapsody.com/metadata/data/methods/getAlbum.js?developerKey=9H9H9E6G1E4I5E0I&albumId=%s&cobrandId=40134&filterRightsKey=0" % (list[pos]["album_id"])
-					#url = "%salbums/%s?apikey=%s" %(app.get_var('BASEURL'), newreleases[pos]["album_id"], app.get_var('APIKEY'))
-					response = urllib2.urlopen(url)
-					data = json.load(response)
-				except:
-					print "Album Detail api not returning response"
-				if data:
+				results = api.get_album_details(alb_id)
+
+				if results:
 					#prettyprint(data)
 					#orig_date = time.strftime('%B %Y', time.localtime(int(data["originalReleaseDate"]["time"]) / 1000))
 					#if newreleases[pos]["album_date"] != orig_date:
 						#newreleases[pos]["orig_date"] = orig_date
-					list[pos]["label"] = data["label"]
-					app.album[alb_id]['label'] = data['label']
-					list[pos]["tracks"] = data["trackMetadatas"]
-					app.album[alb_id]["tracks"] = data["trackMetadatas"]
-					list[pos]["style"] = data["primaryStyle"]
-					app.album[alb_id]["style"] = data["primaryStyle"]
+					list[pos]["label"] = results["label"]
+					app.album[alb_id]['label'] = results['label']
+					list[pos]["tracks"] = results["trackMetadatas"]
+					app.album[alb_id]["tracks"] = results["trackMetadatas"]
+					list[pos]["style"] = results["primaryStyle"]
+					app.album[alb_id]["style"] = results["primaryStyle"]
 					#print "Got label and original date for album"
+				else:
+					print "Album Detail api not returning response"
 				#prettyprint(list[pos]["tracks"])
 		else:
 			print "Using genre, track, and label from cached album data"
@@ -658,24 +494,29 @@ class Album():
 
 
 	def get_large_art(self, list, pos):
-		image_dir = verify_image_dir('large/')
-		#print "Image dir: "+image_dir
 		alb_id = list[pos]["album_id"]
-		print alb_id
-		print "Existing BigThumb value: "+app.album[alb_id]['bigthumb']
-		print "Testing for "+app.album[alb_id]['bigthumb']
+		#print alb_id
+		#print "Existing BigThumb value: "+app.album[alb_id]['bigthumb']
+		#print "Testing for "+app.album[alb_id]['bigthumb']
 		if os.path.isfile(app.album[alb_id]['bigthumb']):
-			print "Using image from cached album data" # at " + app.album[alb_id]['bigthumb']
+			#print "Using image from cached album data" # at " + app.album[alb_id]['bigthumb']
 			list[pos]["bigthumb"] = app.album[alb_id]['bigthumb']
-			print "local list value:"+ list[pos]['bigthumb']
-			print "album dialog bigthumb value: "+win.alb_dialog.current_list[pos]['bigthumb']
-			#pass
+			#print "local list value:"+ list[pos]['bigthumb']
+			#print "album dialog bigthumb value: "+win.alb_dialog.current_list[pos]['bigthumb']
 		else:
-			print "Getting album art from Rhapsody"
-			file = self.get_big_image(list[pos]["album_id"], image_dir)
+			#print "Getting album art from Rhapsody"
+			file = img.base_path+self.get_big_image(list[pos]["album_id"])
 			list[pos]["bigthumb"] = file
 			app.album[alb_id]['bigthumb'] = file
-			print "New Big Thumb: " + app.album[alb_id]['bigthumb']
+			#print "New Big Thumb: " + app.album[alb_id]['bigthumb']
+
+	def get_big_image(self, album_id):
+		#print "finding largest image with API call"
+		url = img.identify_largest_image(album_id)
+		#print "get_big_image url value:"+url
+		bigthumb = img.handler(url, 'large', 'album')
+		#print "get_big_image bigthumb value: "+bigthumb
+		return bigthumb
 
 	def get_newreleases(self):
 		print "Fetching New Releases"
@@ -690,60 +531,25 @@ class Album():
 			if app.newreleases__:
 				#iterate through newreleases__ and build newreleases_list
 				print "building window list items"
-
-
-				#x = 0
-				#for item in app.newreleases__:
-				#	if app.album[app.newreleases__[x]['album_id']]['bigthumb'] != "":
-				#		thumb = app.album[app.newreleases__[x]['album_id']]['bigthumb']
-				#	else:
-				#		thumb = item['thumb']
-				#	listitem = xbmcgui.ListItem(item["album"], item["artist"], '', thumb)
-				#	app.newreleases_listitems.append(listitem)
-				#	x += 1
-
-
 				for item in app.newreleases__:
 					listitem = xbmcgui.ListItem(item["album"], item["artist"], '', item['thumb'])
 					app.newreleases_listitems.append(listitem)
 				self.rebuild_window_list_from_listitems(app.newreleases_listitems)
-				#print "rebuilt list of newreleases listitems and populated win list"
 				return
 			else:
 				win.clearList()
-				img_dir = verify_image_dir('')
-				default_album_img = __addon_path__+'/resources/skins/Default/media/'+"AlbumPlaceholder.png"
-				results = ""
+				results = api.get_new_releases()
 				count = 0
-				try:
-					url = '%salbums/new?apikey=%s&limit=100' % (app.get_var('BASEURL'), app.get_var('APIKEY'))
-					response = urllib2.urlopen(url)
-					results = json.load(response)
-				except:
-					print("Error when fetching Rhapsody data from net")
 				if results:
-					#print results["albums"][3]
 					for item in results:
-						img_file = item["images"][0]["url"].split('/')[(len(item["images"][0]["url"].split('/'))) - 1]
-						img_path = img_dir + img_file
-						data = self.get_alb_and_build_listitem(img_path, img_file, count, item, default_album_img)
+						data = self.get_alb_and_build_listitem(count, item)
 						app.newreleases__.append(data['album'])
 						app.newreleases_listitems.append(data['listitem'])
-						#print "Added album to list control"
 						win.addItem(data['listitem'])
 						if not app.album.has_key(item["id"]):
 							app.album[item["id"]] = data['album']
-							#print 'added an album to app.album'
-						#else:
-						#	print 'album already in app.album'
 						count += 1
-					print "saving newreleasesdata"
-					app.save_newreleases_data()
 					app.save_album_data()
-
-
-				#prettyprint(app.album["Alb.122693202"])
-				#prettyprint(app.album.keys())
 
 
 	def get_topalbums(self):
@@ -765,100 +571,39 @@ class Album():
 				return
 			else:
 				#start from scratch with API call for newreleases
-				img_dir = verify_image_dir('')
-				default_album_img = __addon_path__+'/resources/skins/Default/media/'+"AlbumPlaceholder.png"
-				results = ""
+				results = api.get_top_albums()
 				count = 0
-				try:
-					url = '%salbums/top?apikey=%s&limit=100' % (app.get_var('BASEURL'), app.get_var('APIKEY'))
-					response = urllib2.urlopen(url)
-					results = json.load(response)
-				except:
-					print("Error when fetching Rhapsody data from net")
 				if results:
-					#print results["albums"][3]
 					win.clearList()
 					for item in results:
-						img_file = item["images"][0]["url"].split('/')[(len(item["images"][0]["url"].split('/'))) - 1]
-						img_path = img_dir + img_file
-						data = self.get_alb_and_build_listitem(img_path, img_file, count, item, default_album_img)
+						data = self.get_alb_and_build_listitem(count, item)
 						app.topalbums__.append(data['album'])
 						app.topalbums_listitems.append(data['listitem'])
-						#print "Added album to list control"
 						win.addItem(data['listitem'])
 						if not app.album.has_key(item["id"]):
 							app.album[item["id"]] = data['album']
-						#	print 'added an album to app.album'
-						#else:
-						#	print 'album already in app.album'
 						count += 1
-					print "saving topalbumsdata"
-					app.save_topalbums_data()
 					app.save_album_data()
 
-	def get_alb_and_build_listitem(self, img_path, img_file, count, item, default_album_img):
+
+	def get_alb_and_build_listitem(self, count, item):
 		data = {}
-		if not os.path.isfile(img_path):
-			try :
-				print ("We need to get album art for " + item["name"] + ". Starting download")
-			except:
-				print "We need to get album art for a non-ascii album title. Starting download"
-			#xbmc.log(msg=mess, level=xbmc.LOGDEBUG)
-			try:
-				while not os.path.isfile(img_path):
-					urllib.urlretrieve(item["images"][0]["url"], img_path)
-					print("Downloaded " + img_file)
-					album = {'album_id': item["id"],
-					         'album': item["name"],
-					         'thumb': "album/" + img_file,
-					         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
-					         'orig_date': "",
-					         'label': "",
-					         'review': "",
-					         'bigthumb': "",
-					         'tracks': "",
-					         'style': '',
-					         'artist': item["artist"]["name"],
-					         'list_id': count,
-					         'artist_id': item["artist"]["id"]}
-					listitem = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', "album/" + img_file)
-			except:
-				try:
-					print("Album art not available for " + item["name"] + ". Using default album image")
-				except:
-					print "Album art not available for non-ascii album title. Using default album image"
-				album = {'album_id': item["id"],
-				         'album': item["name"],
-				         'thumb': default_album_img,
-				         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
-				         'orig_date': "",
-				         'label': "",
-				         'review': "",
-				         'bigthumb': "",
-				         'tracks': "",
-				         'style': '',
-				         'artist': item["artist"]["name"],
-				         'list_id': count,
-				         'artist_id': item["artist"]["id"]}
-				listitem = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', default_album_img)
-		else:
-			#print("Already have album art for " + item["name"] + ". Moving on...")
-			album = {'album_id': item["id"],
-			         'album': item["name"],
-			         'thumb': "album/" + img_file,
-			         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
-			         'orig_date': "",
-			         'label': "",
-			         'review': "",
-			         'bigthumb': "",
-			         'tracks': "",
-			         'style': '',
-			         'artist': item["artist"]["name"],
-			         'list_id': count,
-			         'artist_id': item["artist"]["id"]}
-			listitem = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', "album/" + img_file)
-		data['album'] = album
-		data['listitem'] = listitem
+		thumb = img.handler(item["images"][0]["url"], 'small', 'album')
+		data['album'] = {'album_id': item["id"],
+		         'album': item["name"],
+		         'thumb': thumb,
+		         'thumb_url': item["images"][0]["url"],
+		         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
+		         'orig_date': "",
+		         'label': "",
+		         'review': "",
+		         'bigthumb': "",
+		         'tracks': "",
+		         'style': '',
+		         'artist': item["artist"]["name"],
+		         'list_id': count,
+		         'artist_id': item["artist"]["id"]}
+		data['listitem'] = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', thumb)
 		return data
 
 
@@ -873,6 +618,7 @@ class Album():
 
 	def get_toptracks(self, mainwin, member):
 		pass
+
 
 	def get_album_tracklist(self, album_list, pos, albumdialog):
 
@@ -889,15 +635,7 @@ class Album():
 		print "Album has "+str(x)+" tracks"
 		sync_current_list_pos()
 
-	#def populate_album_playlist(self, album_list, pos):
-	#
-	#	playlist.clear()
-	#	x = 0
-	#	for item in album_list[pos]["tracks"]:
-	#		playlist.add("dummy"+str(x)+".mp3", listitem=xbmcgui.ListItem(''))
-	#		x += 1
-	#	print "Okay let's play some music! Added "+str(x)+" tracks to the playlist"# for "+album_list[pos]["album_id"]
-	#	win.current_playlist_albumId = album_list[pos]["album_id"]
+
 
 
 
@@ -910,14 +648,7 @@ class Genres():
 
 
 	def get_genre_tree(self):
-		results = None
-		try:
-			url = "%sgenres?apikey=%s" % (app.get_var('BASEURL'), app.get_var('APIKEY'))
-			response = urllib2.urlopen(url)
-			results = json.load(response)
-		except:
-			print "Genres api not returning response"
-
+		results = api.get_genres()
 		if results:
 			app.genre_tree__ = results
 		else:
@@ -1018,35 +749,12 @@ def populate_playlist():
 
 		playlist.clear()
 		x = 0
-		for item in app.now_playing['item']['tracks']:
-			playlist.add("dummy"+str(x)+".mp3", listitem=xbmcgui.ListItem(''))
+		for track in app.now_playing['item']['tracks']:
+			playlist.add(track['previewURL'], listitem=xbmcgui.ListItem(''))
 			x += 1
 		print "Okay let's play some music! Added "+str(x)+" tracks to the playlist for "+app.now_playing['item']["album_id"]
 		win.current_playlist_albumId = app.now_playing['item']["album_id"]  #can probably eliminate this variable
 
-#def get_playable_url(track_id):
-#	url = "%splay/%s" %(app.get_var('S_BASEURL'), track_id)
-#	#print "Trying to get this track url: "+url
-#	header = b'Bearer ' + mem.access_token
-#	req = urllib2.Request(url)
-#	req.add_header('Authorization', header)
-#
-#	#print "getting playable URL for track"
-#	try:
-#		response = urllib2.urlopen(req)
-#		#print "got response!"
-#		if response:
-#			#print "got results!"
-#			results = json.load(response)
-#			#print "------------------"+results['url']
-#			#print "------------------"+results['format']
-#			#print "------------------"+str(results['bitrate'])
-#			return results['url']
-#	except urllib2.HTTPError, e:
-#		print "------------------  Bad server response getting playable URL"
-#		print e.headers
-#		print e
-#		return False
 
 
 def add_playable_track(offset):
@@ -1074,71 +782,21 @@ def add_playable_track(offset):
 	#print "Replaced dummy list item with real track info"
 
 
-def GetStringFromUrl(encurl):
-	doc = ""
-	succeed = 0
-	while succeed < 5:
-		try:
-			f = urllib.urlopen(encurl)
-			doc = f.read()
-			f.close()
-			return str(doc)
-		except:
-			xbmc.log("could not get data from %s" % encurl)
-			xbmc.sleep(1000)
-			succeed += 1
-	return ""
-
-
 def prettyprint(string):
 	print(json.dumps(string, sort_keys=True, indent=4, separators=(',', ': ')))
 
 
-def verify_image_dir(ext):
-	img_dir = __addon_path__+'/resources/skins/Default/media/album/'+ext
-	if not os.path.isdir(img_dir):
-		os.mkdir(img_dir)
-		print ("Created the missing album image directory at " + img_dir)
-
-	#else:
-	#	print "Image directory is present!"
-	return img_dir
-
-
-
-
-#def remove_html_markup(s):
-#	tag = False
-#	quote = False
-#	out = ""
-#	for c in s:
-#		if c == '<' and not quote:
-#			tag = True
-#		elif c == '>' and not quote:
-#			tag = False
-#		elif (c == '"' or c == "'") and tag:
-#			quote = not quote
-#		elif not tag:
-#			out = out + c
-#	out = out.replace("\n", " ")
-#	return out
-
-
 
 app = Application()
-mem = Member()
+mem = member.Member()
+mem.set_addon_path(__addon_path__)
 alb = Album()
 genres = Genres()
 player = Player()
 playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
 api = rhapapi.Api()
+img = image.Images(__addon_path__)
 
-
-app.set_var("BASEURL", "http://api.rhapsody.com/v1/")
-app.set_var("S_BASEURL", "https://api.rhapsody.com/v1/")
-app.set_var("AUTHURL", "https://api.rhapsody.com/oauth/token")
-app.set_var("APIKEY",  "22Q1bFiwGxYA2eaG4vVAGsJqi3SQWzmd")
-app.set_var("SECRET",  "Z1AAYBC1JEtnMJGm")
 app.set_var('running', True)
 app.set_var('logged_in', False)
 app.set_var('bad_creds', False)
@@ -1159,9 +817,12 @@ while app.get_var('running'):
 			loadwin.getControl(10).setLabel('Logging you in...')
 			del logwin
 			time.sleep(1)
-		else:
+		elif mem.has_saved_creds():
 			loadwin.getControl(10).setLabel('Logging you in...')
+			app.set_var('logged_in', True)
 			time.sleep(1)
+		else:
+			break
 	win = MainWin("main.xml", __addon_path__, 'Default', '720p')
 	win.doModal()
 	if app.get_var('logged_in') == False:
@@ -1174,9 +835,9 @@ while app.get_var('running'):
 	t2 = time.time()
 	print "Album data save operation took "+str(t2-t1)
 	time.sleep(1)
-	print "Saved album data to cachefile"
+	#print "Saved album data to cachefile"
 del loadwin
 gc.collect()
-print "App has been exited"
+print "Rhapsody addon has exited"
 
 
