@@ -3,11 +3,8 @@ import xbmc
 import xbmcaddon
 import xbmcplugin
 import time
-import urllib
-import urllib2
 import json
 import pickle
-import base64
 import os
 import gc
 from lib import rhapapi
@@ -435,7 +432,6 @@ class AlbumDialog(DialogBase):
 		self.getControl(14).setText(self.current_list[win.pos]["review"])
 
 
-
 class Album():
 
 	def get_album_review(self, list, pos):
@@ -495,27 +491,16 @@ class Album():
 
 	def get_large_art(self, list, pos):
 		alb_id = list[pos]["album_id"]
-		#print alb_id
-		#print "Existing BigThumb value: "+app.album[alb_id]['bigthumb']
-		#print "Testing for "+app.album[alb_id]['bigthumb']
 		if os.path.isfile(app.album[alb_id]['bigthumb']):
-			#print "Using image from cached album data" # at " + app.album[alb_id]['bigthumb']
 			list[pos]["bigthumb"] = app.album[alb_id]['bigthumb']
-			#print "local list value:"+ list[pos]['bigthumb']
-			#print "album dialog bigthumb value: "+win.alb_dialog.current_list[pos]['bigthumb']
 		else:
-			#print "Getting album art from Rhapsody"
 			file = img.base_path+self.get_big_image(list[pos]["album_id"])
 			list[pos]["bigthumb"] = file
 			app.album[alb_id]['bigthumb'] = file
-			#print "New Big Thumb: " + app.album[alb_id]['bigthumb']
 
 	def get_big_image(self, album_id):
-		#print "finding largest image with API call"
 		url = img.identify_largest_image(album_id)
-		#print "get_big_image url value:"+url
 		bigthumb = img.handler(url, 'large', 'album')
-		#print "get_big_image bigthumb value: "+bigthumb
 		return bigthumb
 
 	def get_newreleases(self):
@@ -636,9 +621,6 @@ class Album():
 		sync_current_list_pos()
 
 
-
-
-
 class Genres():
 	def __init__(self):
 		#self.get_genre_tree()
@@ -724,8 +706,6 @@ class Player(xbmc.Player):
 		print "onQueueNextItem was detected!"
 
 
-
-
 def sync_current_list_pos():
 	#print "-------------checking if we need to  sync list position"
 	#print "playlist: "+win.current_playlist_albumId+"  dialoglist: "+win.alb_dialog.current_list[win.alb_dialog.pos]["album_id"]
@@ -742,8 +722,6 @@ def sync_current_list_pos():
 		#print "No dialog window open, so don't need to sync dialog list"
 		pass
 
-def get_playback_session():
-	print 'curl -v -H "Authorization: Bearer 1l1iEkDO0hV9sjLJlSAmmH1Auw4B" https://api.rhapsody.com/v1/play/Tra.44464021'
 
 def populate_playlist():
 
@@ -754,7 +732,6 @@ def populate_playlist():
 			x += 1
 		print "Okay let's play some music! Added "+str(x)+" tracks to the playlist for "+app.now_playing['item']["album_id"]
 		win.current_playlist_albumId = app.now_playing['item']["album_id"]  #can probably eliminate this variable
-
 
 
 def add_playable_track(offset):
@@ -779,7 +756,6 @@ def add_playable_track(offset):
 			}
 	li.setInfo("music", info)
 	playlist.add(playurl, listitem=li, index=circ_pos)
-	#print "Replaced dummy list item with real track info"
 
 
 def prettyprint(string):
