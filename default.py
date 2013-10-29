@@ -547,38 +547,45 @@ class Member():
 
 class Album():
 
-	def get_big_image(self, album_id, img_dir):
-		print "finding largest image with API call"
-		results = api.get_album_images(album_id)
-		if results:
-			#prettyprint(results)
-			biggest = 0
-			biggest_index = 0
-			for y in xrange(0, len(results)):
-				s = results[y]["width"]
-				if (s > biggest):
-					biggest = s
-					biggest_index = y
-			biggest_image = results[biggest_index]["url"].split('/')[
-				(len(results[biggest_index]["url"].split('/'))) - 1]
-			img_url = results[biggest_index]["url"]
-			img_file = img_dir + biggest_image
-			if not os.path.isfile(img_file):
-				print ("We need to get this file! Starting download")
-				while not os.path.isfile(img_file):
-					try:
-						urllib.urlretrieve(img_url, img_file)
-						print ("Downloaded the file :-)")
-						#return img_dir+img_file
-					except:
-						print "File download failed"
-						album_img = "AlbumPlaceholder.png"
-						return album_img
-			else:
-				print ("Already have that file! Moving on...")
-			return img_dir + biggest_image
-		else:
-			return "AlbumPlaceholder.png"
+	def get_big_image(self, album_id):
+		#print "finding largest image with API call"
+		url = img.identify_largest_image(album_id)
+		#print "get_big_image url value:"+url
+		bigthumb = img.handler(url, 'large', 'album')
+		#print "get_big_image bigthumb value: "+bigthumb
+		return bigthumb
+
+
+		#results = api.get_album_images(album_id)
+		#if results:
+		#	#prettyprint(results)
+		#	biggest = 0
+		#	biggest_index = 0
+		#	for y in xrange(0, len(results)):
+		#		s = results[y]["width"]
+		#		if (s > biggest):
+		#			biggest = s
+		#			biggest_index = y
+		#	biggest_image = results[biggest_index]["url"].split('/')[
+		#		(len(results[biggest_index]["url"].split('/'))) - 1]
+		#	img_url = results[biggest_index]["url"]
+		#	img_file = img_dir + biggest_image
+		#	if not os.path.isfile(img_file):
+		#		print ("We need to get this file! Starting download")
+		#		while not os.path.isfile(img_file):
+		#			try:
+		#				urllib.urlretrieve(img_url, img_file)
+		#				print ("Downloaded the file :-)")
+		#				#return img_dir+img_file
+		#			except:
+		#				print "File download failed"
+		#				album_img = "AlbumPlaceholder.png"
+		#				return album_img
+		#	else:
+		#		print ("Already have that file! Moving on...")
+		#	return img_dir + biggest_image
+		#else:
+		#	return "AlbumPlaceholder.png"
 
 
 	def get_album_review(self, list, pos):
@@ -640,21 +647,21 @@ class Album():
 		image_dir = img.album_large_path
 		#print "Image dir: "+image_dir
 		alb_id = list[pos]["album_id"]
-		print alb_id
-		print "Existing BigThumb value: "+app.album[alb_id]['bigthumb']
-		print "Testing for "+app.album[alb_id]['bigthumb']
+		#print alb_id
+		#print "Existing BigThumb value: "+app.album[alb_id]['bigthumb']
+		#print "Testing for "+app.album[alb_id]['bigthumb']
 		if os.path.isfile(app.album[alb_id]['bigthumb']):
 			print "Using image from cached album data" # at " + app.album[alb_id]['bigthumb']
 			list[pos]["bigthumb"] = app.album[alb_id]['bigthumb']
-			print "local list value:"+ list[pos]['bigthumb']
-			print "album dialog bigthumb value: "+win.alb_dialog.current_list[pos]['bigthumb']
+			#print "local list value:"+ list[pos]['bigthumb']
+			#print "album dialog bigthumb value: "+win.alb_dialog.current_list[pos]['bigthumb']
 			#pass
 		else:
 			print "Getting album art from Rhapsody"
-			file = self.get_big_image(list[pos]["album_id"], image_dir)
+			file = img.base_path+self.get_big_image(list[pos]["album_id"])
 			list[pos]["bigthumb"] = file
 			app.album[alb_id]['bigthumb'] = file
-			print "New Big Thumb: " + app.album[alb_id]['bigthumb']
+			#print "New Big Thumb: " + app.album[alb_id]['bigthumb']
 
 	def get_newreleases(self):
 		print "Fetching New Releases"

@@ -1,5 +1,6 @@
 import urllib
 import os
+from rhapapi import Api
 
 class Images():
 
@@ -39,8 +40,22 @@ class Images():
 		self.download_image(url, full_path)
 		return prefix_path+img_filename
 
-
-
+	def identify_largest_image(self, album_id):
+		api = Api()
+		results = api.get_album_images(album_id)
+		if results:
+			#prettyprint(results)
+			biggest = 0
+			biggest_index = 0
+			for y in xrange(0, len(results)):
+				s = results[y]["width"]
+				if (s > biggest):
+					biggest = s
+					biggest_index = y
+			url = results[biggest_index]["url"]
+			#del api
+			print "identified biggest image as: "+url
+			return url
 
 
 
