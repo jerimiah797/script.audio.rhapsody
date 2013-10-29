@@ -222,7 +222,8 @@ class MainWin(xbmcgui.WindowXML):
 		self.clist.addItem('Top Artists')
 		self.clist.addItem('Top Tracks')
 		self.win = xbmcgui.Window(xbmcgui.getCurrentWindowId())
-		self.win.setProperty("view", app.get_var('view'))
+		self.win.setProperty("browseview", app.get_var('view'))
+		self.win.setProperty("view", "Browse")
 		#print "onInit(): Window initialized"
 		#print "Starting the engines"
 		self.main()
@@ -252,7 +253,7 @@ class MainWin(xbmcgui.WindowXML):
 				#print "onAction(): Item: " + str(self.getFocus(201).getSelectedPosition())
 				menuitem = self.getFocus(201).getSelectedPosition()
 				app.set_var('view', self.browse_list[menuitem])
-				self.win.setProperty("view", app.get_var('view'))
+				self.win.setProperty("browseview", app.get_var('view'))
 				self.main()
 			if self.getFocusId() == 1001:
 				app.set_var('logged_in', False)
@@ -315,12 +316,14 @@ class MainWin(xbmcgui.WindowXML):
 
 	def draw_mainwin_browse(self):
 		if app.get_var('view') == "Browse_newreleases":
+			print "draw mainwin with new releases"
 			#app.save_album_data()
 			self.draw_newreleases()
 			self.setFocusId(50)
 			if self.pos:
 				self.setCurrentListPosition(self.pos)
 		if app.get_var('view') == "Browse_topalbums":
+			print "draw mainwin with top albums"
 			#app.save_album_data()
 			self.draw_topalbums()
 			self.setFocusId(50)
@@ -793,12 +796,10 @@ while app.get_var('running'):
 			loadwin.getControl(10).setLabel('Logging you in...')
 			del logwin
 			time.sleep(1)
-		elif mem.has_saved_creds():
+		else:
 			loadwin.getControl(10).setLabel('Logging you in...')
 			app.set_var('logged_in', True)
 			time.sleep(1)
-		else:
-			break
 	win = MainWin("main.xml", __addon_path__, 'Default', '720p')
 	win.doModal()
 	if app.get_var('logged_in') == False:

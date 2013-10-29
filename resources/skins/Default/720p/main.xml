@@ -84,9 +84,7 @@
                     </item>
                     <item id="103">
                         <label>Browse</label>
-                        <!--onclick>RunScript(script.rhapsodyinfo,info=NewReleases)</onclick-->
-                        <onclick>SetProperty(view,Browse_newreleases)</onclick>
-                        <onclick>Window.SetFocus(202)</onclick>
+                        <onclick>SetProperty(view,Browse)</onclick>
                     </item>
                     <item id="104">
                         <label>My Music</label>
@@ -125,7 +123,8 @@
             <posx>70</posx>
             <control type="group" id="300">
                 <description>Browse, new releases - default view</description>
-                <visible>SubString(Window.Property(view),Browse)</visible>
+                <!--visible>SubString(Window.Property(view),Browse)</visible-->
+                <visible>StringCompare(Window.Property(view),Browse)</visible>
                 <control type="button" id="202">
                     <description>dummy button to set initial view</description>
                     <posx>0</posx>
@@ -210,7 +209,7 @@
                 </control>
                 <!-- Albums Panel View, New Releases -->
                 <control type="panel" id="50">
-                    <visible>StringCompare(Window.Property(view),Browse_newreleases)</visible>
+                    <visible>StringCompare(Window.Property(browseview),Browse_newreleases)</visible>
                     <onup>201</onup>
                     <ondown>-</ondown>
                     <onright>-</onright>
@@ -318,7 +317,7 @@
                 </control>
                 <!-- Albums Panel View , Top Albums-->
                 <control type="panel" id="50">
-                    <visible>StringCompare(Window.Property(view),Browse_topalbums)</visible>
+                    <visible>StringCompare(Window.Property(browseview),Browse_topalbums)</visible>
                     <onup>201</onup>
                     <ondown>-</ondown>
                     <onright>-</onright>
@@ -426,7 +425,7 @@
                 </control>
                 <!-- Top Artists View -->
                 <control type="panel" id="50">
-                    <visible>StringCompare(Window.Property(view),Browse_topartists)</visible>
+                    <visible>StringCompare(Window.Property(browseview),Browse_topartists)</visible>
                     <onup>201</onup>
                     <ondown>-</ondown>
                     <onright>-</onright>
@@ -536,7 +535,7 @@
                 </control>
                 <!-- Top Tracks View -->
                 <control type="panel" id="50">
-                    <visible>StringCompare(Window.Property(view),Browse_toptracks)</visible>
+                    <visible>StringCompare(Window.Property(browseview),Browse_toptracks)</visible>
                     <onup>201</onup>
                     <ondown>-</ondown>
                     <onright>-</onright>
