@@ -3,11 +3,8 @@ import xbmc
 import xbmcaddon
 import xbmcplugin
 import time
-import urllib
-import urllib2
 import json
 import pickle
-import base64
 import os
 import gc
 from lib import rhapapi
@@ -29,26 +26,29 @@ class Application():
 		self.__vars = {}  #dict for app vars
 		self.user_data = {} #object to store cached data
 
-		self.newreleases__ = []  #json data from rhapsody
+		self.newreleases = {'data':[], 'liz':[], 'built':False}
+		self.newreleases__ = []  #processed data from rhapsody
 		self.newreleases_listitems = []  #listitems for album window list
-		self.newreleases = {} #object to store cached data
-		self.newreleases_file = __addon_path__+'/resources/.newreleases.obj' #picklefile
+		self.newreleases_list_built = False
 
-		self.toptracks__ = []  #json data from rhapsody
+		self.toptracks__ = []  #processed data from rhapsody
 		self.toptracks_listitems = []  #listitems for album window list
+		self.toptracks_list_built = False
 
-		self.topalbums__ = []  #json data from rhapsody
+		self.topalbums = {'data':[], 'liz':[], 'built':False}
+		self.topalbums__ = []  #processed data from rhapsody
 		self.topalbums_listitems = []  #listitems for album window list
-		self.topalbums = {}  #object to store cached data
-		self.topalbums_file = __addon_path__+'/resources/.topalbums.obj'  #picklefile
+		self.topalbums_list_built = False
 
-		self.topartists__ = []  #json data from rhapsody
+		self.topartists__ = []  #processed data from rhapsody
 		self.topartists_listitems = []  #listitems for album window list
+		self.topartists_list_built = False
 
 		self.genre_tree__ = []  #json data from rhapsody
 		self.genre_dict__ = {}  #object to store cached data
 
 		self.artist = {}  #object to store cached data
+		self.artist_file = __addon_path__+'/resources/.artistdb.obj'  #picklefile
 
 		self.album = {}  #object to store cached data
 		self.album_file = __addon_path__+'/resources/.albumdb.obj'  #picklefile
@@ -56,9 +56,6 @@ class Application():
 		self.genre = {}  #object to store cached data
 		self.genre_file = __addon_path__+'/resources/.genres.obj'  #picklefile
 
-		self.now_playing = {'pos': 0, 'type': None,'item':{}}
-		self.now_playing['item']['album_id'] = 'blank'
-		self.onplay_lock = False
 		self.album_art_path = __addon_path__+"/resources/skins/Default/media/"
 
 
@@ -84,21 +81,11 @@ class Application():
 		pickle.dump(self.genre, open(self.genre_file, 'wb'))
 		print "Genre data saved!"
 
-	def save_newreleases_data(self):
-		self.newreleases['newreleases'] = self.newreleases__
-		self.newreleases['timestamp'] = time.time()
-		pickle.dump(self.newreleases, open(self.newreleases_file, 'wb'))
-		print "New Releases data saved!"
-
-	def save_topalbums_data(self):
-		self.topalbums['topalbums'] = self.topalbums__
-		self.topalbums['timestamp'] = time.time()
-		pickle.dump(self.topalbums, open(self.topalbums_file, 'wb'))
-		print "Top Albums data saved!"
 
 	def save_album_data(self):
 		pickle.dump(self.album, open(self.album_file, 'wb'))
 		print "Album info saved in cachefile!"
+
 
 	def load_cached_data(self):
 		print "checking cached data"
@@ -145,6 +132,7 @@ class LoginWin(xbmcgui.WindowXML):
 
 
 class InputDialog(xbmcgui.WindowXMLDialog):
+
 	def __init__(self, xmlFilename, scriptPath, defaultSkin, defaultRes):
 		self.name = xbmcgui.ControlEdit(530, 320, 400, 120, '', 'rhapsody_font16', '0xDD171717', focusTexture="none.png")
 		self.pswd = xbmcgui.ControlEdit(530, 320, 400, 120, '', font='rhapsody_font16', textColor='0xDD171717', focusTexture="none.png", isPassword=1)
@@ -209,6 +197,7 @@ class InputDialog(xbmcgui.WindowXMLDialog):
 
 
 class MainWin(xbmcgui.WindowXML):
+
 	def __init__(self, xmlName, thescriptPath, defaultname, forceFallback):
 		self.setup = False
 		self.pos = None
@@ -225,7 +214,8 @@ class MainWin(xbmcgui.WindowXML):
 		self.clist.addItem('Top Artists')
 		self.clist.addItem('Top Tracks')
 		self.win = xbmcgui.Window(xbmcgui.getCurrentWindowId())
-		self.win.setProperty("view", app.get_var('view'))
+		self.win.setProperty("browseview", app.get_var('view'))
+		self.win.setProperty("view", "Browse")
 		#print "onInit(): Window initialized"
 		#print "Starting the engines"
 		self.main()
@@ -255,7 +245,7 @@ class MainWin(xbmcgui.WindowXML):
 				#print "onAction(): Item: " + str(self.getFocus(201).getSelectedPosition())
 				menuitem = self.getFocus(201).getSelectedPosition()
 				app.set_var('view', self.browse_list[menuitem])
-				self.win.setProperty("view", app.get_var('view'))
+				self.win.setProperty("browseview", app.get_var('view'))
 				self.main()
 			if self.getFocusId() == 1001:
 				app.set_var('logged_in', False)
@@ -267,20 +257,19 @@ class MainWin(xbmcgui.WindowXML):
 				playlist.clear()
 				self.close()
 		if action.getId() == 10:
-			#app.save_album_data()
-			app.set_var('running',False)
-			player.stop()
-			playlist.clear()
-			self.close()
+			self.goodbye()
 		elif action.getId() == 92:
-			#app.save_album_data()
-			#xbmc.executebuiltin("ActivateWindow(yesnodialog)")
-			app.set_var('running',False)
-			player.stop()
-			playlist.clear()
-			self.close()
+			self.goodbye()
 		else:
 			pass
+
+	def goodbye(self):
+		dialog = xbmcgui.Dialog()
+		if dialog.yesno("Quit Rhapsody?", "Nobody like a quitter. Nobody. "):
+			app.set_var('running',False)
+			player.stop()
+			playlist.clear()
+			self.close()
 
 
 	def onClick(self, control):
@@ -318,12 +307,14 @@ class MainWin(xbmcgui.WindowXML):
 
 	def draw_mainwin_browse(self):
 		if app.get_var('view') == "Browse_newreleases":
+			print "draw mainwin with new releases"
 			#app.save_album_data()
 			self.draw_newreleases()
 			self.setFocusId(50)
 			if self.pos:
 				self.setCurrentListPosition(self.pos)
 		if app.get_var('view') == "Browse_topalbums":
+			print "draw mainwin with top albums"
 			#app.save_album_data()
 			self.draw_topalbums()
 			self.setFocusId(50)
@@ -338,6 +329,7 @@ class DialogBase(xbmcgui.WindowXMLDialog):
 
 
 class AlbumDialog(DialogBase):
+
 	def __init__(self, *args, **kwargs):
 		DialogBase.__init__(self, *args)
 		self.current_list = kwargs.get('current_list')
@@ -371,11 +363,11 @@ class AlbumDialog(DialogBase):
 		if action.getId() == 7:
 			# ---Play Button ---
 			if self.getFocusId() == 21:
-				print "Assigning album "+self.current_list[win.pos]['album_id']+" to app.now_playing"
-				app.now_playing['type'] = "album"
-				app.now_playing['item'] = self.current_list[win.pos]
-				app.now_playing['pos'] = 0
-				#prettyprint(app.now_playing)
+				print "Assigning album "+self.current_list[win.pos]['album_id']+" to player.now_playing"
+				player.now_playing['type'] = "album"
+				player.now_playing['item'] = self.current_list[win.pos]
+				player.now_playing['pos'] = 0
+				#prettyprint(player.now_playing)
 				#win.playing_pos = win.pos
 				#alb.populate_album_playlist(self.current_list, win.pos)
 				populate_playlist()
@@ -396,20 +388,20 @@ class AlbumDialog(DialogBase):
 			# --- tracklist ---
 			elif self.getFocusId() == 51:
 				try:
-					if app.now_playing['item']['album_id'] != self.current_list[win.pos]["album_id"]:
-						app.now_playing['type'] = "album"
-						app.now_playing['item'] = self.current_list[win.pos]
-						app.now_playing['pos'] = self.getCurrentListPosition()
+					if player.now_playing['item']['album_id'] != self.current_list[win.pos]["album_id"]:
+						player.now_playing['type'] = "album"
+						player.now_playing['item'] = self.current_list[win.pos]
+						player.now_playing['pos'] = self.getCurrentListPosition()
 						populate_playlist()
 				except:
-					app.now_playing['type'] = "album"
-					app.now_playing['item'] = self.current_list[win.pos]
-					app.now_playing['pos'] = self.getCurrentListPosition()
+					player.now_playing['type'] = "album"
+					player.now_playing['item'] = self.current_list[win.pos]
+					player.now_playing['pos'] = self.getCurrentListPosition()
 					populate_playlist()
 				#win.playing_pos = win.pos
-				app.now_playing['pos'] = self.getCurrentListPosition()
+				player.now_playing['pos'] = self.getCurrentListPosition()
 				add_playable_track(0)
-				player.playselected(app.now_playing['pos'])
+				player.playselected(player.now_playing['pos'])
 			else: pass
 		elif action.getId() == 10:
 			self.close()
@@ -433,7 +425,6 @@ class AlbumDialog(DialogBase):
 		self.getControl(11).setText(self.current_list[win.pos]["album"])
 		self.getControl(13).setLabel(self.current_list[win.pos]["artist"])
 		self.getControl(14).setText(self.current_list[win.pos]["review"])
-
 
 
 class Album():
@@ -492,35 +483,24 @@ class Album():
 			print "Using genre, track, and label from cached album data"
 
 
-
 	def get_large_art(self, list, pos):
 		alb_id = list[pos]["album_id"]
-		#print alb_id
-		#print "Existing BigThumb value: "+app.album[alb_id]['bigthumb']
-		#print "Testing for "+app.album[alb_id]['bigthumb']
 		if os.path.isfile(app.album[alb_id]['bigthumb']):
-			#print "Using image from cached album data" # at " + app.album[alb_id]['bigthumb']
 			list[pos]["bigthumb"] = app.album[alb_id]['bigthumb']
-			#print "local list value:"+ list[pos]['bigthumb']
-			#print "album dialog bigthumb value: "+win.alb_dialog.current_list[pos]['bigthumb']
 		else:
-			#print "Getting album art from Rhapsody"
 			file = img.base_path+self.get_big_image(list[pos]["album_id"])
 			list[pos]["bigthumb"] = file
 			app.album[alb_id]['bigthumb'] = file
-			#print "New Big Thumb: " + app.album[alb_id]['bigthumb']
 
 	def get_big_image(self, album_id):
-		#print "finding largest image with API call"
 		url = img.identify_largest_image(album_id)
-		#print "get_big_image url value:"+url
 		bigthumb = img.handler(url, 'large', 'album')
-		#print "get_big_image bigthumb value: "+bigthumb
 		return bigthumb
 
 	def get_newreleases(self):
 		print "Fetching New Releases"
-		if (len(app.newreleases_listitems)) > 2:
+		#if (len(app.newreleases_listitems)) > 2:
+		if app.newreleases_list_built:
 			#rebuild window list from topalbums_listitems
 			print "already have the list of listitems, so we're using that"
 			self.rebuild_window_list_from_listitems(app.newreleases_listitems)
@@ -550,11 +530,12 @@ class Album():
 							app.album[item["id"]] = data['album']
 						count += 1
 					app.save_album_data()
+					app.newreleases_list_built = True
 
 
 	def get_topalbums(self):
 		print "Fetching Top Albums"
-		if (len(app.topalbums_listitems)) > 2:
+		if app.topalbums_list_built:
 			#rebuild window list from topalbums_listitems
 			self.rebuild_window_list_from_listitems(app.topalbums_listitems)
 			return
@@ -584,6 +565,7 @@ class Album():
 							app.album[item["id"]] = data['album']
 						count += 1
 					app.save_album_data()
+					app.topalbums_list_built = True
 
 
 	def get_alb_and_build_listitem(self, count, item):
@@ -636,8 +618,32 @@ class Album():
 		sync_current_list_pos()
 
 
+class AlbumList():
+	#handle new releases, top albums, artist discography, library album list,
+	def __init__(self):
+		pass
 
+	def download_list(self):
+		pass
 
+	def add_albums_to_cache(self):
+		pass
+
+	def build_listitems_for_window(self):
+		pass
+
+	def get_winlist(self):
+		pass
+
+class TrackList():
+	def __init__(self):
+		pass
+	#handle albums, playlists, radio, queue, listening history
+
+class ArtistList():
+	def __init__(self):
+		pass
+	#handle top artists, artist library list, editorial artist lists, etc.
 
 class Genres():
 	def __init__(self):
@@ -665,12 +671,17 @@ class Genres():
 
 class Player(xbmc.Player):
 
+	def __init__(self):
+		self.now_playing = {'pos': 0, 'type': None,'item':{}}
+		self.now_playing['item']['album_id'] = 'blank'
+		self.onplay_lock = False
+
 	def onPlayBackStarted(self):
-		if not app.onplay_lock:
-			app.onplay_lock = True
+		if not player.onplay_lock:
+			player.onplay_lock = True
 			sync_current_list_pos()
 			pos = playlist.getposition()
-			app.now_playing['pos'] = pos
+			self.now_playing['pos'] = pos
 			print "Playing track "+str(pos+1)
 			add_playable_track(1)
 			add_playable_track(-1)
@@ -681,21 +692,21 @@ class Player(xbmc.Player):
 				print "Oh wait! We're not playing track "+str(pos+1)+"!"
 				print "Playing track "+str(pos2+1)
 				print "There, fixed it for ya. "
-				app.now_playing['pos'] = pos2
+				self.now_playing['pos'] = pos2
 				add_playable_track(1)
 				add_playable_track(-1)
 			xbmc.sleep(2)
-			app.onplay_lock = False
+			player.onplay_lock = False
 		else:
 			print "--------- blocked an extra play action from XBMC --------"
 
 
 	def onPlayBackResumed(self):
-		if not app.onplay_lock:
-			app.onplay_lock = True
+		if not player.onplay_lock:
+			player.onplay_lock = True
 			sync_current_list_pos()
 			pos = playlist.getposition()
-			app.now_playing['pos'] = pos
+			self.now_playing['pos'] = pos
 			print "Playing track "+str(pos+1)
 			add_playable_track(1)
 			add_playable_track(-1)
@@ -706,11 +717,11 @@ class Player(xbmc.Player):
 				print "Oh wait! We're not playing track "+str(pos+1)+"!"
 				print "Playing track "+str(pos2+1)
 				print "There, fixed it for ya. "
-				app.now_playing['pos'] = pos2
+				self.now_playing['pos'] = pos2
 				add_playable_track(1)
 				add_playable_track(-1)
 			xbmc.sleep(2)
-			app.onplay_lock = False
+			player.onplay_lock = False
 		else:
 			print "--------- blocked an extra play action from XBMC --------"
 
@@ -722,8 +733,6 @@ class Player(xbmc.Player):
 
 	def onQueueNextItem(self):
 		print "onQueueNextItem was detected!"
-
-
 
 
 def sync_current_list_pos():
@@ -742,44 +751,42 @@ def sync_current_list_pos():
 		#print "No dialog window open, so don't need to sync dialog list"
 		pass
 
-def get_playback_session():
-	print 'curl -v -H "Authorization: Bearer 1l1iEkDO0hV9sjLJlSAmmH1Auw4B" https://api.rhapsody.com/v1/play/Tra.44464021'
 
 def populate_playlist():
 
 		playlist.clear()
 		x = 0
-		for track in app.now_playing['item']['tracks']:
+		for track in player.now_playing['item']['tracks']:
 			playlist.add(track['previewURL'], listitem=xbmcgui.ListItem(''))
 			x += 1
-		print "Okay let's play some music! Added "+str(x)+" tracks to the playlist for "+app.now_playing['item']["album_id"]
-		win.current_playlist_albumId = app.now_playing['item']["album_id"]  #can probably eliminate this variable
-
+		print "Okay let's play some music! Added "+str(x)+" tracks to the playlist for "+player.now_playing['item']["album_id"]
+		#xbmc.executebuiltin("XBMC.Notification("+ __scriptname__ +",Event Has been triggered,60)")
+		#xbmc.executebuiltin("XBMC.Notification(Added tracks to playlist for ya, Thank me later)")
+		win.current_playlist_albumId = player.now_playing['item']["album_id"]  #can probably eliminate this variable
 
 
 def add_playable_track(offset):
-	circ_pos = (app.now_playing['pos']+offset)%playlist.size()
+	circ_pos = (player.now_playing['pos']+offset)%playlist.size()
 	print "Fetching track "+str(circ_pos+1)
-	tid = app.now_playing['item']['tracks'][circ_pos]['trackId']
+	tid = player.now_playing['item']['tracks'][circ_pos]['trackId']
 	tname = playlist.__getitem__(circ_pos).getfilename()
 	playurl = api.get_playable_url(tid, mem.access_token)
 	playlist.remove(tname)
 	li = xbmcgui.ListItem(
-            app.now_playing['item']["tracks"][circ_pos]["name"],
-            path=app.now_playing['item']["tracks"][circ_pos]["previewURL"],
-            iconImage=app.album_art_path+app.now_playing['item']["thumb"],
-            thumbnailImage=app.album_art_path+app.now_playing['item']["thumb"]
+            player.now_playing['item']["tracks"][circ_pos]["name"],
+            path=player.now_playing['item']["tracks"][circ_pos]["previewURL"],
+            iconImage=app.album_art_path+player.now_playing['item']["thumb"],
+            thumbnailImage=app.album_art_path+player.now_playing['item']["thumb"]
 			)
 	info = {
-            "title": app.now_playing['item']["tracks"][circ_pos]["name"],
-            "album": app.now_playing['item']["album"],
-            "artist": app.now_playing['item']["artist"],
-            "duration": app.now_playing['item']["tracks"][circ_pos]["playbackSeconds"],
-            "tracknumber": int(app.now_playing['item']["tracks"][circ_pos]["trackIndex"]),
+            "title": player.now_playing['item']["tracks"][circ_pos]["name"],
+            "album": player.now_playing['item']["album"],
+            "artist": player.now_playing['item']["artist"],
+            "duration": player.now_playing['item']["tracks"][circ_pos]["playbackSeconds"],
+            "tracknumber": int(player.now_playing['item']["tracks"][circ_pos]["trackIndex"]),
 			}
 	li.setInfo("music", info)
 	playlist.add(playurl, listitem=li, index=circ_pos)
-	#print "Replaced dummy list item with real track info"
 
 
 def prettyprint(string):
@@ -817,12 +824,10 @@ while app.get_var('running'):
 			loadwin.getControl(10).setLabel('Logging you in...')
 			del logwin
 			time.sleep(1)
-		elif mem.has_saved_creds():
+		else:
 			loadwin.getControl(10).setLabel('Logging you in...')
 			app.set_var('logged_in', True)
 			time.sleep(1)
-		else:
-			break
 	win = MainWin("main.xml", __addon_path__, 'Default', '720p')
 	win.doModal()
 	if app.get_var('logged_in') == False:
