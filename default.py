@@ -26,28 +26,10 @@ class Application():
 		self.__vars = {}  #dict for app vars
 		self.user_data = {} #object to store cached data
 
-		#self.newreleases = {'data':[], 'liz':[], 'built':False}
-		self.newreleases__ = []  #processed data from rhapsody
-		self.newreleases_listitems = []  #listitems for album window list
-		self.newreleases_list_built = False
-
-		self.toptracks__ = []  #processed data from rhapsody
-		self.toptracks_listitems = []  #listitems for album window list
-		self.toptracks_list_built = False
-
-		self.topalbums = {'data':[], 'liz':[], 'built':False}
-		self.topalbums__ = []  #processed data from rhapsody
-		self.topalbums_listitems = []  #listitems for album window list
-		self.topalbums_list_built = False
-
-		self.topartists__ = []  #processed data from rhapsody
-		self.topartists_listitems = []  #listitems for album window list
-		self.topartists_list_built = False
-
 		self.genre_tree__ = []  #json data from rhapsody
 		self.genre_dict__ = {}  #object to store cached data
 
-		self.artist = {}  #object to store cached data
+		self.artist = {}  #object to store cached data                                convert to self-managing data class instance
 		self.artist_file = __addon_path__+'/resources/.artistdb.obj'  #picklefile
 
 		self.album = {}  #object to store cached data
@@ -305,14 +287,12 @@ class MainWin(xbmcgui.WindowXML):
 		app.set_var(list, newreleases.data)
 		self.getControl(300).setVisible(True)
 		self.getControl(50).setVisible(True)
-		#alb.get_newreleases()
 		newreleases.make_active()
 
 	def draw_topalbums(self):
 		app.set_var(list, topalbums.data)
 		self.getControl(300).setVisible(True)
 		self.getControl(50).setVisible(True)
-		#alb.get_topalbums()
 		topalbums.make_active()
 
 	def draw_mainwin_browse(self):
@@ -506,110 +486,6 @@ class Album():
 		url = img.identify_largest_image(album_id)
 		bigthumb = img.handler(url, 'large', 'album')
 		return bigthumb
-
-	#def get_newreleases(self):
-	#	print "Fetching New Releases"
-	#	#if (len(app.newreleases_listitems)) > 2:
-	#	if app.newreleases_list_built:
-	#		#rebuild window list from topalbums_listitems
-	#		print "already have the list of listitems, so we're using that"
-	#		self.rebuild_window_list_from_listitems(app.newreleases_listitems)
-	#		return
-	#	else:
-	#		#need to build newreleases list
-	#		#check if newrelease__ is already present
-	#		if app.newreleases__:
-	#			#iterate through newreleases__ and build newreleases_list
-	#			print "building window list items"
-	#			for item in app.newreleases__:
-	#				listitem = xbmcgui.ListItem(item["album"], item["artist"], '', item['thumb'])
-	#				app.newreleases_listitems.append(listitem)
-	#			self.rebuild_window_list_from_listitems(app.newreleases_listitems)
-	#			return
-	#		else:
-	#			win.clearList()
-	#			results = api.get_new_releases()
-	#			count = 0
-	#			if results:
-	#				for item in results:
-	#					data = self.get_alb_and_build_listitem(count, item)
-	#					app.newreleases__.append(data['album'])
-	#					app.newreleases_listitems.append(data['listitem'])
-	#					win.addItem(data['listitem'])
-	#					if not app.album.has_key(item["id"]):
-	#						app.album[item["id"]] = data['album']
-	#					count += 1
-	#				app.save_album_data()
-	#				app.newreleases_list_built = True
-
-
-	#def get_topalbums(self):
-	#	print "Fetching Top Albums"
-	#	if app.topalbums_list_built:
-	#		#rebuild window list from topalbums_listitems
-	#		self.rebuild_window_list_from_listitems(app.topalbums_listitems)
-	#		return
-	#	else:
-	#		#need to build topalbums list
-	#		#check if topalbums__ is already present
-	#		if app.topalbums__:
-	#			#iterate through topalbum__s and build topalbums_list
-	#			for item in app.topalbums__:
-	#				listitem = xbmcgui.ListItem(item["album"], item["artist"], '', item['thumb'])
-	#				app.topalbums_listitems.append(listitem)
-	#			self.rebuild_window_list_from_listitems(app.topalbums_listitems)
-	#			print "rebuilt list of  topalbums listitems and populated win list"
-	#			return
-	#		else:
-	#			#start from scratch with API call for newreleases
-	#			results = api.get_top_albums()
-	#			count = 0
-	#			if results:
-	#				win.clearList()
-	#				for item in results:
-	#					data = self.get_alb_and_build_listitem(count, item)
-	#					app.topalbums__.append(data['album'])
-	#					app.topalbums_listitems.append(data['listitem'])
-	#					win.addItem(data['listitem'])
-	#					if not app.album.has_key(item["id"]):
-	#						app.album[item["id"]] = data['album']
-	#					count += 1
-	#				app.save_album_data()
-	#				app.topalbums_list_built = True
-
-
-	#def get_alb_and_build_listitem(self, count, item):
-	#	data = {}
-	#	thumb = img.handler(item["images"][0]["url"], 'small', 'album')
-	#	data['album'] = {'album_id': item["id"],
-	#	         'album': item["name"],
-	#	         'thumb': thumb,
-	#	         'thumb_url': item["images"][0]["url"],
-	#	         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
-	#	         'orig_date': "",
-	#	         'label': "",
-	#	         'review': "",
-	#	         'bigthumb': "",
-	#	         'tracks': "",
-	#	         'style': '',
-	#	         'artist': item["artist"]["name"],
-	#	         'list_id': count,
-	#	         'artist_id': item["artist"]["id"]}
-	#	data['listitem'] = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', thumb)
-	#	return data
-
-
-	#def rebuild_window_list_from_listitems(self, list_of_listitems):
-	#	win.clearList()
-	#	for x in range (0, len(list_of_listitems)):
-	#		win.addItem(list_of_listitems[x])
-	#	print "Using album list from cache"
-
-	#def get_topartists(self, mainwin, member):
-	#	pass
-	#
-	#def get_toptracks(self, mainwin, member):
-	#	pass
 
 	def get_album_tracklist(self, album_list, pos, albumdialog):  #make this accept album_id directly to fetch from cache or api so as not to bother syncing current list name
 
