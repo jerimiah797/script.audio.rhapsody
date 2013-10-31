@@ -1,6 +1,6 @@
 import urllib
 import os
-from rhapapi import Api
+import rhapapi
 
 class Images():
 
@@ -44,7 +44,7 @@ class Images():
 
 
 	def identify_largest_image(self, album_id):
-		api = Api()
+		api = rhapapi.Api()
 		results = api.get_album_images(album_id)
 		if results:
 			biggest = 0

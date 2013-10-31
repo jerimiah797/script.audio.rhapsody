@@ -1,7 +1,7 @@
 import base64
 import pickle
 import time
-from rhapapi import Api
+import rhapapi
 
 class Member():
 	def __init__(self):
@@ -80,7 +80,7 @@ class Member():
 		data = {}
 		self.username = name
 		self.password = pswd
-		api = Api()
+		api = rhapapi.Api()
 		result = api.login_member(name, pswd)
 		if result:
 			self.access_token =     result["access_token"]

@@ -323,7 +323,7 @@ class AlbumDialog(DialogBase):
 	def __init__(self, *args, **kwargs):
 		DialogBase.__init__(self, *args)
 		self.current_list = kwargs.get('current_list')
-		#self.pos = kwargs.get('pos')
+		self.pos = kwargs.get('pos')
 		#self.pos = win.pos
 		self.img_dir = __addon_path__+'/resources/skins/Default/media/'
 
@@ -337,13 +337,13 @@ class AlbumDialog(DialogBase):
 		self.populate_fields()
 		#alb_id = self.current_list[win.pos]['album_id']
 		#print "show_info albub id: "+alb_id
-		alb.get_large_art(self.current_list, win.pos)
+		self.get_large_art(self.current_list, self.pos)
 		self.populate_fields()
-		alb.get_album_review(self.current_list, win.pos)
+		self.get_album_review(self.current_list, self.pos)
 		self.populate_fields()
-		alb.get_album_details(self.current_list, win.pos)
+		self.get_album_details(self.current_list, self.pos)
 		self.populate_fields()
-		alb.get_album_tracklist(self.current_list, win.pos, self)
+		tracklist.get_album_tracklist(self.current_list, self.pos, self)
 
 
 	def onAction(self, action):
@@ -353,9 +353,9 @@ class AlbumDialog(DialogBase):
 		if action.getId() == 7:
 			# ---Play Button ---
 			if self.getFocusId() == 21:
-				print "Assigning album "+self.current_list[win.pos]['album_id']+" to player.now_playing"
+				print "Assigning album "+self.current_list[self.pos]['album_id']+" to player.now_playing"
 				player.now_playing['type'] = "album"
-				player.now_playing['item'] = self.current_list[win.pos]
+				player.now_playing['item'] = self.current_list[self.pos]
 				player.now_playing['pos'] = 0
 				#prettyprint(player.now_playing)
 				#win.playing_pos = win.pos
@@ -368,12 +368,12 @@ class AlbumDialog(DialogBase):
 			# --- Next Button---
 			elif self.getFocusId() == 27:
 				self.clearList()
-				win.pos = (win.pos+1) % len(self.current_list)
+				self.pos = (self.pos+1) % len(self.current_list)
 				self.show_info()
 			# --- Prev Button ---
 			elif self.getFocusId() == 26:
 				self.clearList()
-				win.pos = (win.pos-1) % len(self.current_list)
+				self.pos = (self.pos-1) % len(self.current_list)
 				self.show_info()
 			# --- tracklist ---
 			elif self.getFocusId() == 51:
@@ -406,18 +406,15 @@ class AlbumDialog(DialogBase):
 	def populate_fields(self):
 		#print "current list length: "+str(len(self.current_list))
 		#print "current self.pos: "+str(self.pos)
-		self.getControl(6).setLabel(self.current_list[win.pos]["style"])
-		self.getControl(7).setImage(self.current_list[win.pos]["bigthumb"])
-		self.getControl(8).setLabel(self.current_list[win.pos]["album_date"])
-		if self.current_list[win.pos]["orig_date"]:
-			self.getControl(9).setLabel("Original Release: " + self.current_list[win.pos]["orig_date"])
-		self.getControl(10).setLabel(self.current_list[win.pos]["label"])
-		self.getControl(11).setText(self.current_list[win.pos]["album"])
-		self.getControl(13).setLabel(self.current_list[win.pos]["artist"])
-		self.getControl(14).setText(self.current_list[win.pos]["review"])
-
-
-class Album():
+		self.getControl(6).setLabel(self.current_list[self.pos]["style"])
+		self.getControl(7).setImage(self.current_list[self.pos]["bigthumb"])
+		self.getControl(8).setLabel(self.current_list[self.pos]["album_date"])
+		if self.current_list[self.pos]["orig_date"]:
+			self.getControl(9).setLabel("Original Release: " + self.current_list[self.pos]["orig_date"])
+		self.getControl(10).setLabel(self.current_list[self.pos]["label"])
+		self.getControl(11).setText(self.current_list[self.pos]["album"])
+		self.getControl(13).setLabel(self.current_list[self.pos]["artist"])
+		self.getControl(14).setText(self.current_list[self.pos]["review"])
 
 	def get_album_review(self, list, pos):
 		alb_id = list[pos]["album_id"]
@@ -437,7 +434,6 @@ class Album():
 				app.album[alb_id]['review'] = ""
 		else:
 			print "Already have the review in memory for this album"
-
 
 	def get_album_details(self, list, pos):
 		alb_id = list[pos]["album_id"]
@@ -472,7 +468,6 @@ class Album():
 		else:
 			print "Using genre, track, and label from cached album data"
 
-
 	def get_large_art(self, list, pos):
 		alb_id = list[pos]["album_id"]
 		if os.path.isfile(app.album[alb_id]['bigthumb']):
@@ -486,21 +481,6 @@ class Album():
 		url = img.identify_largest_image(album_id)
 		bigthumb = img.handler(url, 'large', 'album')
 		return bigthumb
-
-	def get_album_tracklist(self, album_list, pos, albumdialog):  #make this accept album_id directly to fetch from cache or api so as not to bother syncing current list name
-
-		x = 0
-		#prettyprint(album_list[pos]["tracks"])
-		for item in album_list[pos]["tracks"]:
-			newlistitem = xbmcgui.ListItem(path="http://dummyurl.org")
-			newlistitem.setInfo('music', { 'tracknumber':   int(album_list[pos]["tracks"][x]["trackIndex"]),
-			                               'title':         album_list[pos]["tracks"][x]["name"],
-			                               'duration':      int(album_list[pos]["tracks"][x]["playbackSeconds"])
-			                               })
-			albumdialog.addItem(newlistitem)
-			x += 1
-		print "Album has "+str(x)+" tracks"
-		sync_current_list_pos()
 
 
 class AlbumList():
@@ -583,15 +563,33 @@ class AlbumList():
 		for x in range (0, len(self.liz)):
 			win.addItem(self.liz[x])
 
+
 class TrackList():
 	def __init__(self):
 		pass
 	#handle albums, playlists, radio, queue, listening history
 
+	def get_album_tracklist(self, album_list, pos, albumdialog):  #make this accept album_id directly to fetch from cache or api so as not to bother syncing current list name
+
+		x = 0
+		#prettyprint(album_list[pos]["tracks"])
+		for item in album_list[pos]["tracks"]:
+			newlistitem = xbmcgui.ListItem(path="http://dummyurl.org")
+			newlistitem.setInfo('music', { 'tracknumber':   int(album_list[pos]["tracks"][x]["trackIndex"]),
+			                               'title':         album_list[pos]["tracks"][x]["name"],
+			                               'duration':      int(album_list[pos]["tracks"][x]["playbackSeconds"])
+			                               })
+			albumdialog.addItem(newlistitem)
+			x += 1
+		print "Album has "+str(x)+" tracks"
+		sync_current_list_pos()
+
+
 class ArtistList():
 	def __init__(self):
 		pass
 	#handle top artists, artist library list, editorial artist lists, etc.
+
 
 class Genres():
 	def __init__(self):
@@ -745,7 +743,7 @@ def prettyprint(string):
 app = Application()
 mem = member.Member()
 mem.set_addon_path(__addon_path__)
-alb = Album()
+
 genres = Genres()
 player = Player()
 playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC)
@@ -754,6 +752,7 @@ img = image.Images(__addon_path__)
 
 newreleases = AlbumList('newreleases')
 topalbums = AlbumList('topalbums')
+tracklist = TrackList()
 
 app.set_var('running', True)
 app.set_var('logged_in', False)
