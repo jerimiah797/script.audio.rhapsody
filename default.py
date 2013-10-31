@@ -483,7 +483,6 @@ class Album():
 			print "Using genre, track, and label from cached album data"
 
 
-
 	def get_large_art(self, list, pos):
 		alb_id = list[pos]["album_id"]
 		if os.path.isfile(app.album[alb_id]['bigthumb']):
@@ -618,6 +617,33 @@ class Album():
 		print "Album has "+str(x)+" tracks"
 		sync_current_list_pos()
 
+
+class AlbumList():
+	#handle new releases, top albums, artist discography, library album list,
+	def __init__(self):
+		pass
+
+	def download_list(self):
+		pass
+
+	def add_albums_to_cache(self):
+		pass
+
+	def build_listitems_for_window(self):
+		pass
+
+	def get_winlist(self):
+		pass
+
+class TrackList():
+	def __init__(self):
+		pass
+	#handle albums, playlists, radio, queue, listening history
+
+class ArtistList():
+	def __init__(self):
+		pass
+	#handle top artists, artist library list, editorial artist lists, etc.
 
 class Genres():
 	def __init__(self):
