@@ -251,7 +251,6 @@
                             <align>left</align>
                             <info blend="false">ListItem.Thumb</info>
                             <aspectratio scalediffuse="true">scale</aspectratio>
-                            <fadetime>1500</fadetime>
                             <scrolltime>200</scrolltime>
                         </control>
                     </itemlayout>
