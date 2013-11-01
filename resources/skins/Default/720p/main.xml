@@ -250,8 +250,8 @@
                             <height>180</height>
                             <align>left</align>
                             <info blend="false">ListItem.Thumb</info>
-                            <aspectratio scalediffuse="false">scale</aspectratio>
-                            <fadetime>200</fadetime>
+                            <aspectratio scalediffuse="true">scale</aspectratio>
+                            <fadetime>1500</fadetime>
                             <scrolltime>200</scrolltime>
                         </control>
                     </itemlayout>
@@ -310,8 +310,7 @@
                             <width>180</width>
                             <height>180</height>
                             <info blend="false">ListItem.Thumb</info>
-                            <aspectratio scalediffuse="false">scale</aspectratio>
-                            <fadetime>200</fadetime>
+                            <aspectratio scalediffuse="true">scale</aspectratio>
                         </control>
                     </focusedlayout>
                 </control>

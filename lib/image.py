@@ -2,7 +2,7 @@ import urllib
 import os
 import rhapapi
 
-class Images():
+class Image():
 
 	def __init__(self, path):
 		self.base_path = path+"/resources/skins/Default/media/"

@@ -1,3 +1,5 @@
+import json
+
 def remove_html_markup(s):
 	tag = False
 	quote = False
@@ -13,3 +15,6 @@ def remove_html_markup(s):
 			out = out + c
 	out = out.replace("\n", " ")
 	return out
+
+def prettyprint(string):
+	print(json.dumps(string, sort_keys=True, indent=4, separators=(',', ': ')))
