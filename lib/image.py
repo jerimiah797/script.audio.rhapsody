@@ -1,8 +1,8 @@
 import urllib
 import os
-from rhapapi import Api
+import rhapapi
 
-class Images():
+class Image():
 
 	def __init__(self, path):
 		self.base_path = path+"/resources/skins/Default/media/"
@@ -44,7 +44,7 @@ class Images():
 
 
 	def identify_largest_image(self, album_id):
-		api = Api()
+		api = rhapapi.Api()
 		results = api.get_album_images(album_id)
 		if results:
 			biggest = 0

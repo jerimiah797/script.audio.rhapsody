@@ -3,7 +3,7 @@ import urllib
 import urllib2
 import json
 import base64
-from utils import *
+import utils
 
 
 
@@ -82,7 +82,7 @@ class Api():
 		url = "%salbums/%s/reviews?apikey=%s" % (self.BASEURL, album_id, self.APIKEY)
 		results = self.__get_data_from_rhapsody(url)
 		if results:
-			return remove_html_markup(results[0]["body"])
+			return utils.remove_html_markup(results[0]["body"])
 		else:
 			return False
 
