@@ -87,25 +87,24 @@
                         <onclick>SetProperty(view,Browse)</onclick>
                     </item>
                     <item id="104">
-                        <label>My Music</label>
-                        <onclick>SetProperty(view,My Music)</onclick>
-                        <onclick>Window.SetFocus(202)</onclick>
-                    </item>
-                    <item id="105">
-                        <label>Playlists</label>
-                        <onclick>SetProperty(view,Playlists)</onclick>
-                    </item>
-                    <item id="106">
                         <label>Radio</label>
                         <onclick>SetProperty(view,Radio)</onclick>
                     </item>
+                    <item id="105">
+                        <label>Library</label>
+                        <onclick>SetProperty(view,Library)</onclick>
+                    </item>
+                    <item id="106">
+                        <label>Playlists</label>
+                        <onclick>SetProperty(view,Playlists)</onclick>
+                    </item>
                     <item id="107">
-                        <label>Queue</label>
-                        <onclick>SetProperty(view,Queue)</onclick>
+                        <label>Listening History</label>
+                        <onclick>SetProperty(view,History)</onclick>
                     </item>
                     <item id="108">
-                        <label>Listening History</label>
-                        <onclick>SetProperty(view,Listening History)</onclick>
+                        <label>Queue</label>
+                        <onclick>SetProperty(view,Queue)</onclick>
                     </item>
                     <item id="109">
                         <label>Settings</label>
@@ -172,24 +171,6 @@
                             <!-- darkblue -->
                         </control>
                     </focusedlayout>
-                    <!--content>
-                        <item id="31">
-                            <label>New Releases</label>
-                            <onclick>-</onclick>
-                        </item>
-                        <item id="32">
-                            <label>Popular Albums</label>
-                            <onclick>-</onclick>
-                        </item>
-                        <item id="33">
-                            <label>Popular Artists</label>
-                            <onclick>-</onclick>
-                        </item>
-                        <item id="34">
-                            <label>Popular Tracks</label>
-                            <onclick>-</onclick>
-                        </item>
-                    </content-->
                 </control>
                 <control type="image">
                     <visible>Control.HasFocus(201)</visible>
