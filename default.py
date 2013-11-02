@@ -561,7 +561,7 @@ class AlbumList():
 		win.clearList()
 		for x in range (0, len(self.liz)):
 			win.addItem(self.liz[x])
-			xbmc.sleep(1)
+			xbmc.sleep(2)
 
 
 class TrackList():

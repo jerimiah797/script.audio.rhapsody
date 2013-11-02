@@ -48,13 +48,15 @@ class Member():
 			print "Couldn't read saved user data. Login please"
 			return False
 		diff = time.time()-self.timestamp
-		if diff < self.expires_in:
-			print "Saved creds look good. Automatic login successful!"
-			return True
-		else:
-			print "Saved creds have expired. Generating new ones."
-			self.login_member(self.username, self.password)
-			return True
+		#if diff < self.expires_in:
+		#	print "Saved creds look good. Automatic login successful!"
+		#	return True
+		#else:
+		#	print "Saved creds have expired. Generating new ones."
+		#	self.login_member(self.username, self.password)
+		#	return True
+		self.login_member(self.username, self.password)
+		return True
 
 	def save_user_info(self):
 		#print "Adding data to user_info object"
