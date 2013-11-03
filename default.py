@@ -197,14 +197,14 @@ class MainWin(xbmcgui.WindowXML):
 
 
 	def onInit(self):
-		self.clist = self.getControl(201)
+		#self.clist = self.getControl(201)
 		#self.clist.addItem('New Releases')
 		#self.clist.addItem('Top Albums')
 		#self.clist.addItem('Top Artists')
 		#self.clist.addItem('Top Tracks')
 		self.win = xbmcgui.Window(xbmcgui.getCurrentWindowId())
 		self.win.setProperty("browseview", app.get_var('current_view'))
-		self.win.setProperty("frame", "Browse")
+		self.win.setProperty("frame", "Library")
 		self.alb_dialog = None
 		#print "onInit(): Window initialized"
 		#print "Starting the engines"
@@ -223,7 +223,8 @@ class MainWin(xbmcgui.WindowXML):
 		self.win.setProperty("country", mem.catalog)
 		self.win.setProperty("logged_in", "true")
 		#self.alb_dialog = None
-		self.build_top_navlist("Browse")
+		self.clist = self.getControl(201)
+		#self.build_top_navlist(self.win.getProperty('frame'))
 		self.draw_mainwin()
 
 
@@ -232,24 +233,20 @@ class MainWin(xbmcgui.WindowXML):
 		#print type(action)
 		if action.getId() == 7:
 			if self.getFocusId() == 201:
-				print "onAction(): Clicked a top menu item!"
-				#print "onAction(): Item: " + str(self.getFocus(201).getSelectedPosition())
-				menuitem = self.getFocus(201).getSelectedPosition()
 				if win.getProperty("frame") == "Browse":
 					print "Changing Browse Frame"
-					app.set_var('current_view', self.browse_menu[menuitem])
-					self.win.setProperty("browseview", app.get_var('current_view'))
+					print "Size: "+str(self.clist.size())
+					print "Length: "+str(len(self.browse_menu))
+					app.set_var('current_view', self.win.getProperty('browseview'))
 				if win.getProperty("frame") == "Library":
-					print "Changing Library Frame"
-					app.set_var('current_view', self.library_menu[menuitem])
-					self.win.setProperty("browseview", app.get_var('current_view'))
+					print str(self.clist.size())
+					print str(len(self.library_menu))
+					app.set_var('current_view', self.win.getProperty('browseview'))
 				self.draw_mainwin()
-				#self.main()
 
-			if self.getFocusId() == 101:
+			elif self.getFocusId() == 101:
 				print "Clicked left nav menu: "+self.win.getProperty("frame")
 				frame = self.win.getProperty("frame")
-				self.build_top_navlist(frame)
 				if frame == "Library":
 					app.set_var('current_view', "library_albums")
 					self.win.setProperty("browseview", app.get_var('current_view'))
@@ -258,7 +255,7 @@ class MainWin(xbmcgui.WindowXML):
 					self.win.setProperty("browseview", app.get_var('current_view'))
 				self.draw_mainwin()
 
-			if self.getFocusId() == 1001:
+			elif self.getFocusId() == 1001:
 				app.set_var('logged_in', False)
 				try:
 					os.remove(mem.filename)
@@ -324,26 +321,8 @@ class MainWin(xbmcgui.WindowXML):
 		if self.getListSize() < 2:
 			return True
 
-	def build_top_navlist(self, frame):
-		self.clist.reset()
-		if frame == "Browse":
-			self.clist.addItem('New Releases')
-			self.clist.addItem('Top Albums')
-			self.clist.addItem('Top Artists')
-			self.clist.addItem('Top Tracks')
-		if frame == "Library":
-			self.clist.addItem('Albums')
-			self.clist.addItem('Artists')
-			self.clist.addItem('Tracks')
-			self.clist.addItem('Stations')
-			self.clist.addItem('Favorites')
-
 
 	def draw_mainwin(self):
-		#self.clist.addItem('New Releases')
-		#self.clist.addItem('Top Albums')
-		#self.clist.addItem('Top Artists')
-		#self.clist.addItem('Top Tracks')
 		if app.get_var('current_view') == "browse_newreleases":
 			print "draw mainwin with new releases"
 			self.draw_album_list(newreleases)
@@ -467,11 +446,15 @@ class AlbumDialog(DialogBase):
 			print "Getting review from Rhapsody"
 			review = api.get_album_review(alb_id)
 			if not review:
-				review = api.get_bio(list[pos]['artist_id'])
-				print "No review. Trying artist bio for album review space"
-				print review
+				if list[pos]['artist_id'] == "Art.0":
+					print "No review for Various Artists"
+					return
+				else:
+					review = api.get_bio(list[pos]['artist_id'])
+					print "No review. Trying artist bio for album review space"
+				#print review
 			if review:
-				print review
+				#print review
 				list[pos]["review"] = review
 				app.album[alb_id]["review"] = review
 			else:
@@ -514,7 +497,10 @@ class AlbumDialog(DialogBase):
 		if os.path.isfile(app.album[alb_id]['bigthumb']):
 			list[pos]["bigthumb"] = app.album[alb_id]['bigthumb']
 		else:
-			file = img.base_path+self.big_image(list[pos]["album_id"])
+			if not list[pos]['thumb_url']:
+				file = img.handler(list[pos]['thumb_url'], 'large', 'album')
+			else:
+				file = img.base_path+self.big_image(list[pos]["album_id"])
 			list[pos]["bigthumb"] = file
 			app.album[alb_id]['bigthumb'] = file
 
@@ -788,7 +774,7 @@ tracklist = TrackList()
 app.set_var('running', True)
 app.set_var('logged_in', False)
 app.set_var('bad_creds', False)
-app.set_var('current_view', "browse_newreleases")
+app.set_var('current_view', "library_albums")
 
 loadwin = xbmcgui.WindowXML("loading.xml", __addon_path__, 'Default', '720p')
 loadwin.show()

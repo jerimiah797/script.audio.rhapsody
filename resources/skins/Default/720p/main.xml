@@ -171,6 +171,24 @@
                             <!-- darkblue -->
                         </control>
                     </focusedlayout>
+                    <content>
+                        <item id="31">
+                            <label>New Releases</label>
+                            <onclick>SetProperty(browseview,browse_newreleases)</onclick>
+                        </item>
+                        <item id="32">
+                            <label>Popular Albums</label>
+                            <onclick>SetProperty(browseview,browse_topalbums)</onclick>
+                        </item>
+                        <item id="33">
+                            <label>Popular Artists</label>
+                            <onclick>SetProperty(browseview,browse_artists)</onclick>
+                        </item>
+                        <item id="34">
+                            <label>Popular Tracks</label>
+                            <onclick>SetProperty(browseview,browse_tracks)</onclick>
+                        </item>
+                    </content>
                 </control>
                 <control type="image">
                     <visible>Control.HasFocus(201)</visible>
@@ -623,8 +641,6 @@
                         </control>
                     </focusedlayout>
                 </control>
-
-
             </control>
             <control type="group" id="400">
                 <visible>StringCompare(Window.Property(frame),Search)</visible>
@@ -671,6 +687,7 @@
                     <height>45</height>
                     <onright>-</onright>
                     <ondown>50</ondown>
+                    <onclick>-</onclick>
                     <orientation>horizontal</orientation>
                     <itemlayout width="230">
                         <control type="label">
@@ -698,6 +715,28 @@
                             <!-- darkblue -->
                         </control>
                     </focusedlayout>
+                    <content>
+                        <item id="31">
+                            <label>Albums</label>
+                            <onclick>SetProperty(browseview,library_albums)</onclick>
+                        </item>
+                        <item id="32">
+                            <label>Artists</label>
+                            <onclick>SetProperty(browseview,library_artists)</onclick>
+                        </item>
+                        <item id="33">
+                            <label>Tracks</label>
+                            <onclick>SetProperty(browseview,library_tracks)</onclick>
+                        </item>
+                        <item id="34">
+                            <label>Stations</label>
+                            <onclick>SetProperty(browseview,library_stations)</onclick>
+                        </item>
+                        <item id="35">
+                            <label>Favorites</label>
+                            <onclick>SetProperty(browseview,library_favorites)</onclick>
+                        </item>
+                    </content>
                 </control>
                 <control type="image">
                     <visible>Control.HasFocus(201)</visible>
@@ -815,7 +854,7 @@
                 </control>
                 <!-- Albums Panel View , Top Albums-->
                 <control type="panel" id="50">
-                    <visible>StringCompare(Window.Property(browseview),Browse_topalbums)</visible>
+                    <visible>StringCompare(Window.Property(browseview),library_artists)</visible>
                     <onup>201</onup>
                     <ondown>50</ondown>
                     <onright>-</onright>
@@ -923,7 +962,7 @@
                 </control>
                 <!-- Top Artists View -->
                 <control type="panel" id="50">
-                    <visible>StringCompare(Window.Property(browseview),Browse_topartists)</visible>
+                    <visible>StringCompare(Window.Property(browseview),library_tracks)</visible>
                     <onup>201</onup>
                     <ondown>50</ondown>
                     <onright>-</onright>
@@ -1033,7 +1072,117 @@
                 </control>
                 <!-- Top Tracks View -->
                 <control type="panel" id="50">
-                    <visible>StringCompare(Window.Property(browseview),Browse_toptracks)</visible>
+                    <visible>StringCompare(Window.Property(browseview),library_stations)</visible>
+                    <onup>201</onup>
+                    <ondown>50</ondown>
+                    <onright>-</onright>
+                    <posy>90</posy>
+                    <width>1200</width>
+                    <height>680</height>
+                    <onleft>100</onleft>
+                    <orientation>vertical</orientation>
+                    <itemlayout width="235" height="260">
+                        <control type="label">
+                            <posx>14</posx>
+                            <posy>197</posy>
+                            <width>170</width>
+                            <height>80</height>
+                            <align>left</align>
+                            <font>rhapsody_font10</font>
+                            <info>ListItem.Label</info>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                            <wrapmultiline>true</wrapmultiline>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="label">
+                            <posx>14</posx>
+                            <posy>215</posy>
+                            <width>170</width>
+                            <height>auto</height>
+                            <align>left</align>
+                            <font>rhapsody_font9</font>
+                            <info>ListItem.Label2</info>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                            <wrapmultiline>true</wrapmultiline>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="image">
+                            <posx>14</posx>
+                            <posy>14</posy>
+                            <width>180</width>
+                            <height>180</height>
+                            <align>left</align>
+                            <info blend="false">ListItem.Thumb</info>
+                            <aspectratio scalediffuse="false">scale</aspectratio>
+                            <fadetime>200</fadetime>
+                            <scrolltime>200</scrolltime>
+                        </control>
+                    </itemlayout>
+                    <focusedlayout width="235" height="260">
+                        <control type="button">
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <label>-</label>
+                            <align>left</align>
+                            <font>-</font>
+                            <textcolor>-</textcolor>
+                            <focusedcolor>-</focusedcolor>
+                            <!--onfocus>RunScript(special://skin/scripts/newreleases2.py)</onfocus-->
+                        </control>
+                        <control type="image">
+                            <visible>Control.HasFocus(50)</visible>
+                            <width>209</width>
+                            <height>209</height>
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <texture border="0">outline.png</texture>
+                        </control>
+                        <control type="image">
+                            <visible>Control.HasFocus(50)</visible>
+                            <width>209</width>
+                            <height>30</height>
+                            <posx>0</posx>
+                            <posy>209</posy>
+                            <texture border="0">box.png</texture>
+                        </control>
+                        <control type="label">
+                            <visible>Control.HasFocus(50)</visible>
+                            <posx>14</posx>
+                            <posy>197</posy>
+                            <width>170</width>
+                            <height>auto</height>
+                            <align>left</align>
+                            <font>rhapsody_font10</font>
+                            <info>ListItem.Label</info>
+                            <textcolor>blue</textcolor>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="label">
+                            <visible>Control.HasFocus(50)</visible>
+                            <posx>14</posx>
+                            <posy>215</posy>
+                            <width>170</width>
+                            <align>left</align>
+                            <font>rhapsody_font9</font>
+                            <info>ListItem.Label2</info>
+                            <textcolor>blue</textcolor>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="image">
+                            <posx>14</posx>
+                            <posy>14</posy>
+                            <width>180</width>
+                            <height>180</height>
+                            <info blend="false">ListItem.Thumb</info>
+                            <aspectratio scalediffuse="false">scale</aspectratio>
+                            <fadetime>200</fadetime>
+                        </control>
+                    </focusedlayout>
+                </control>
+                <control type="panel" id="50">
+                    <visible>StringCompare(Window.Property(browseview),library_favorites)</visible>
                     <onup>201</onup>
                     <ondown>50</ondown>
                     <onright>-</onright>
