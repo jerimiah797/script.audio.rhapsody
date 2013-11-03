@@ -191,8 +191,8 @@ class MainWin(xbmcgui.WindowXML):
 		self.pos = None
 		self.playing_pos = None
 		self.current_playlist_albumId = None
-		self.browse_menu = ["browse_newreleases","browse_topalbums","browse_topartists","browse_toptracks"]
-		self.library_menu = ["library_albums", "library_artists", "library_tracks", "library_stations", "library_favorites"]
+		#self.browse_menu = ["browse_newreleases","browse_topalbums","browse_topartists","browse_toptracks"]
+		#self.library_menu = ["library_albums", "library_artists", "library_tracks", "library_stations", "library_favorites"]
 		#print "Script path: " + __addon_path__
 
 
@@ -234,13 +234,8 @@ class MainWin(xbmcgui.WindowXML):
 		if action.getId() == 7:
 			if self.getFocusId() == 201:
 				if win.getProperty("frame") == "Browse":
-					print "Changing Browse Frame"
-					print "Size: "+str(self.clist.size())
-					print "Length: "+str(len(self.browse_menu))
 					app.set_var('current_view', self.win.getProperty('browseview'))
 				if win.getProperty("frame") == "Library":
-					print str(self.clist.size())
-					print str(len(self.library_menu))
 					app.set_var('current_view', self.win.getProperty('browseview'))
 				self.draw_mainwin()
 
@@ -253,6 +248,8 @@ class MainWin(xbmcgui.WindowXML):
 				if frame == "Browse":
 					app.set_var('current_view', "browse_newreleases")
 					self.win.setProperty("browseview", app.get_var('current_view'))
+				if frame == "Settings":
+					pass
 				self.draw_mainwin()
 
 			elif self.getFocusId() == 1001:
@@ -323,7 +320,10 @@ class MainWin(xbmcgui.WindowXML):
 
 
 	def draw_mainwin(self):
-		if app.get_var('current_view') == "browse_newreleases":
+		if win.getProperty('frame') == "Settings":
+			#self.setFocusId(1001)
+			pass
+		elif app.get_var('current_view') == "browse_newreleases":
 			print "draw mainwin with new releases"
 			self.draw_album_list(newreleases)
 		elif app.get_var('current_view') == "browse_topalbums":
@@ -331,6 +331,7 @@ class MainWin(xbmcgui.WindowXML):
 			self.draw_album_list(topalbums)
 		elif app.get_var('current_view') == "library_albums":
 			self.draw_album_list(lib_albums)
+
 
 	def sync_current_list_pos(self):
 		try:
@@ -409,8 +410,10 @@ class AlbumDialog(DialogBase):
 			playlist.build()
 		if id == 51:
 			player.now_playing['pos'] = self.getCurrentListPosition()
+		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song...)")
 		playlist.add_playable_track(0)
 		player.playselected(player.now_playing['pos'])
+		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started)")
 		if id == 21:
 			self.setCurrentListPosition(playlist.getposition())
 			self.setFocusId(51)
@@ -519,11 +522,16 @@ class AlbumList():
 		self.pos = None
 		self.timestamp = time.time()
 		self.name = args[0]
+		self.filename = args[1]
+		self.raw = None
 
 	def fresh(self):
 		return True
 
 	def make_active(self):
+		if (app.get_var('last_rendered_list') == self.name) and win.getListSize()>2:
+			print "Window already has that album list in memory. Skipping list building"
+			return
 		print "AlbumList: make active"
 		print "Built: "+str(self.built)
 		print "Fresh: "+str(self.fresh())
@@ -533,23 +541,42 @@ class AlbumList():
 		else:
 			print "Doing full data fetch and list building for mainwin"
 			self.build()
+		app.set_var('last_rendered_list', self.name)
+		#print app.get_var('last_rendered_list')
 
 
 	def build(self):
 		print "AlbumLlist: build (full)"
 		results = self.download_list()
 		if results:
+			#self.save_raw_data(results)
 			self.ingest_list(results)
 		else:
 			print "Couldn't get info from rhapsody about "+self.name
 
+	def save_raw_data(self, data):
+		jar = open(self.filename, 'wb')
+		pickle.dump(data, jar)
+		jar.close()
+		print self.name+" album info saved in cachefile!"
+
 	def download_list(self):
-		if self.name == 'newreleases':
-			return api.get_new_releases()
-		elif self.name == 'topalbums':
-			return api.get_top_albums()
-		elif self.name == 'library':
-			return api.get_library_albums(mem.access_token)
+		try:
+			pkl_file = open(self.filename, 'rb')
+			self.raw = pickle.load(pkl_file)
+			pkl_file.close()
+			print "Loaded album cache file"
+			return self.raw
+		except:
+			print "No album cache file to load. Let's download it"
+			if self.name == 'newreleases':
+				r = api.get_new_releases()
+			elif self.name == 'topalbums':
+				r = api.get_top_albums()
+			elif self.name == 'library':
+				r = api.get_library_albums(mem.access_token)
+			self.save_raw_data(r)
+			return r
 
 	def ingest_list(self, results):
 		win.clearList()
@@ -700,6 +727,7 @@ class Player(xbmc.Player):
 				self.now_playing['pos'] = pos2
 				playlist.add_playable_track(1)
 				playlist.add_playable_track(-1)
+
 			xbmc.sleep(2)
 			player.onplay_lock = False
 		else:
@@ -724,7 +752,7 @@ class PlayList(xbmc.PlayList):
 			x += 1
 		print "Okay let's play some music! Added "+str(x)+" tracks to the playlist for "+player.now_playing['item']["album_id"]
 		#xbmc.executebuiltin("XBMC.Notification("+ __scriptname__ +",Event Has been triggered,60)")
-		#xbmc.executebuiltin("XBMC.Notification(Added tracks to playlist for ya, Thank me later)")
+		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Preparing to play...)")
 		win.current_playlist_albumId = player.now_playing['item']["album_id"]  #can probably eliminate this variable
 
 
@@ -754,7 +782,7 @@ class PlayList(xbmc.PlayList):
 
 
 
-
+gc.disable()
 
 app = Application()
 mem = member.Member()
@@ -766,15 +794,16 @@ playlist = PlayList(xbmc.PLAYLIST_MUSIC)
 api = rhapapi.Api()
 img = image.Image(__addon_path__)
 
-newreleases = AlbumList('newreleases')
-topalbums = AlbumList('topalbums')
-lib_albums = AlbumList('library')
+newreleases = AlbumList('newreleases', __addon_path__+'/resources/.newreleases.obj')
+topalbums = AlbumList('topalbums', __addon_path__+'/resources/.topalbums.obj')
+lib_albums = AlbumList('library', __addon_path__+'/resources/.lib_albums.obj')
 tracklist = TrackList()
 
 app.set_var('running', True)
 app.set_var('logged_in', False)
 app.set_var('bad_creds', False)
 app.set_var('current_view', "library_albums")
+app.set_var('last_rendered_list', None)
 
 loadwin = xbmcgui.WindowXML("loading.xml", __addon_path__, 'Default', '720p')
 loadwin.show()
