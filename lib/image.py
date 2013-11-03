@@ -18,7 +18,7 @@ class Image():
 		try:
 			urllib.urlretrieve(url, path)
 		except:
-			print "image download failed"
+			print "image download failed. URL: "+url+" Path: "+path
 
 
 	def verify_image_dirs(self):
@@ -33,14 +33,18 @@ class Image():
 
 
 	def handler(self, url, size, kind):
-		prefix_path = self.get_prefix_path(size, kind)
-		img_filename = url.split('/')[(len(url.split('/'))) - 1]
-		#print "Handling "+prefix_path+img_filename
-		full_path = self.base_path+prefix_path+img_filename
-		if not os.path.isfile(full_path):
-			self.download_image(url, full_path)
-			print "downloaded "+prefix_path+img_filename
-		return prefix_path+img_filename
+		if not url:
+			#print "no image to download. Using default image."
+			return self.default_album_img
+		else:
+			prefix_path = self.get_prefix_path(size, kind)
+			img_filename = url.split('/')[(len(url.split('/'))) - 1]
+			#print "Handling "+prefix_path+img_filename
+			full_path = self.base_path+prefix_path+img_filename
+			if not os.path.isfile(full_path):
+				self.download_image(url, full_path)
+				print "downloaded "+prefix_path+img_filename
+			return prefix_path+img_filename
 
 
 	def identify_largest_image(self, album_id):

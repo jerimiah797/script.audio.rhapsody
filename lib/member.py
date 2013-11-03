@@ -55,7 +55,9 @@ class Member():
 		#	print "Saved creds have expired. Generating new ones."
 		#	self.login_member(self.username, self.password)
 		#	return True
-		self.login_member(self.username, self.password)
+		data = self.login_member(self.username, self.password)
+		if data['bad_creds'] == True:
+			print "unable to login at this time. Proceeding in anonymous mode"
 		return True
 
 	def save_user_info(self):

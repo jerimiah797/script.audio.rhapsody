@@ -191,25 +191,27 @@ class MainWin(xbmcgui.WindowXML):
 		self.pos = None
 		self.playing_pos = None
 		self.current_playlist_albumId = None
-		self.browse_list = ["Browse_newreleases","Browse_topalbums","Browse_topartists","Browse_toptracks"]
+		self.browse_menu = ["browse_newreleases","browse_topalbums","browse_topartists","browse_toptracks"]
+		self.library_menu = ["library_albums", "library_artists", "library_tracks", "library_stations", "library_favorites"]
 		#print "Script path: " + __addon_path__
 
 
 	def onInit(self):
 		self.clist = self.getControl(201)
-		self.clist.addItem('New Releases')
-		self.clist.addItem('Top Albums')
-		self.clist.addItem('Top Artists')
-		self.clist.addItem('Top Tracks')
+		#self.clist.addItem('New Releases')
+		#self.clist.addItem('Top Albums')
+		#self.clist.addItem('Top Artists')
+		#self.clist.addItem('Top Tracks')
 		self.win = xbmcgui.Window(xbmcgui.getCurrentWindowId())
-		self.win.setProperty("browseview", app.get_var('view'))
-		self.win.setProperty("view", "Browse")
+		self.win.setProperty("browseview", app.get_var('current_view'))
+		self.win.setProperty("frame", "Browse")
+		self.alb_dialog = None
 		#print "onInit(): Window initialized"
 		#print "Starting the engines"
 		self.main()
 
 	def main(self):
-		#print "self.win view property is "+self.win.getProperty("view")
+		#print "Window main: self.win view property is "+self.win.getProperty("frame")
 		# set window properties
 		self.win.setProperty("username", mem.username)
 		self.win.setProperty("password", mem.password)
@@ -220,8 +222,9 @@ class MainWin(xbmcgui.WindowXML):
 		self.win.setProperty("full_name", mem.first_name+" "+mem.last_name)
 		self.win.setProperty("country", mem.catalog)
 		self.win.setProperty("logged_in", "true")
-		self.alb_dialog = None
-		self.draw_mainwin_browse()
+		#self.alb_dialog = None
+		self.build_top_navlist("Browse")
+		self.draw_mainwin()
 
 
 	def onAction(self, action):
@@ -229,12 +232,32 @@ class MainWin(xbmcgui.WindowXML):
 		#print type(action)
 		if action.getId() == 7:
 			if self.getFocusId() == 201:
-				#print "onAction(): Clicked a menu item!"
+				print "onAction(): Clicked a top menu item!"
 				#print "onAction(): Item: " + str(self.getFocus(201).getSelectedPosition())
 				menuitem = self.getFocus(201).getSelectedPosition()
-				app.set_var('view', self.browse_list[menuitem])
-				self.win.setProperty("browseview", app.get_var('view'))
-				self.main()
+				if win.getProperty("frame") == "Browse":
+					print "Changing Browse Frame"
+					app.set_var('current_view', self.browse_menu[menuitem])
+					self.win.setProperty("browseview", app.get_var('current_view'))
+				if win.getProperty("frame") == "Library":
+					print "Changing Library Frame"
+					app.set_var('current_view', self.library_menu[menuitem])
+					self.win.setProperty("browseview", app.get_var('current_view'))
+				self.draw_mainwin()
+				#self.main()
+
+			if self.getFocusId() == 101:
+				print "Clicked left nav menu: "+self.win.getProperty("frame")
+				frame = self.win.getProperty("frame")
+				self.build_top_navlist(frame)
+				if frame == "Library":
+					app.set_var('current_view', "library_albums")
+					self.win.setProperty("browseview", app.get_var('current_view'))
+				if frame == "Browse":
+					app.set_var('current_view', "browse_newreleases")
+					self.win.setProperty("browseview", app.get_var('current_view'))
+				self.draw_mainwin()
+
 			if self.getFocusId() == 1001:
 				app.set_var('logged_in', False)
 				try:
@@ -270,7 +293,8 @@ class MainWin(xbmcgui.WindowXML):
 			                         pos=self.pos)
 			self.alb_dialog.setProperty("review", "has_review")
 			self.alb_dialog.doModal()
-			self.draw_mainwin_browse()
+			if self.empty_list():
+				self.draw_mainwin()
 			self.setCurrentListPosition(self.alb_dialog.pos)
 			del self.alb_dialog
 			app.save_album_data()
@@ -281,40 +305,53 @@ class MainWin(xbmcgui.WindowXML):
 		#print("onfocus(): control %i" % control)
 		pass
 
-	def draw_newreleases(self):
-		app.set_var(list, newreleases.data)
+	def draw_album_list(self, inst):
+		app.set_var(list, inst.data)
 		#self.getControl(300).setVisible(True)
 		#self.getControl(50).setVisible(True)
 		self.make_visible(300, 50)
-		newreleases.make_active()
-
-	def draw_topalbums(self):
-		app.set_var(list, topalbums.data)
-		#self.getControl(300).setVisible(True)
-		#self.getControl(50).setVisible(True)
-		self.make_visible(300, 50)
-		topalbums.make_active()
+		inst.make_active()
+		self.setFocusId(50)
+		if self.pos:
+			self.setCurrentListPosition(self.pos)
 
 	def make_visible(self, *args):
 		print args
 		for item in args:
 			self.getControl(item).setVisible(True)
 
-	def draw_mainwin_browse(self):
-		if app.get_var('view') == "Browse_newreleases":
+	def empty_list(self):
+		if self.getListSize() < 2:
+			return True
+
+	def build_top_navlist(self, frame):
+		self.clist.reset()
+		if frame == "Browse":
+			self.clist.addItem('New Releases')
+			self.clist.addItem('Top Albums')
+			self.clist.addItem('Top Artists')
+			self.clist.addItem('Top Tracks')
+		if frame == "Library":
+			self.clist.addItem('Albums')
+			self.clist.addItem('Artists')
+			self.clist.addItem('Tracks')
+			self.clist.addItem('Stations')
+			self.clist.addItem('Favorites')
+
+
+	def draw_mainwin(self):
+		#self.clist.addItem('New Releases')
+		#self.clist.addItem('Top Albums')
+		#self.clist.addItem('Top Artists')
+		#self.clist.addItem('Top Tracks')
+		if app.get_var('current_view') == "browse_newreleases":
 			print "draw mainwin with new releases"
-			#app.save_album_data()
-			self.draw_newreleases()
-			self.setFocusId(50)
-			if self.pos:
-				self.setCurrentListPosition(self.pos)
-		if app.get_var('view') == "Browse_topalbums":
+			self.draw_album_list(newreleases)
+		elif app.get_var('current_view') == "browse_topalbums":
 			print "draw mainwin with top albums"
-			#app.save_album_data()
-			self.draw_topalbums()
-			self.setFocusId(50)
-			if self.pos:
-				self.setCurrentListPosition(self.pos)
+			self.draw_album_list(topalbums)
+		elif app.get_var('current_view') == "library_albums":
+			self.draw_album_list(lib_albums)
 
 	def sync_current_list_pos(self):
 		try:
@@ -429,11 +466,16 @@ class AlbumDialog(DialogBase):
 		elif list[pos]["review"] == "":
 			print "Getting review from Rhapsody"
 			review = api.get_album_review(alb_id)
+			if not review:
+				review = api.get_bio(list[pos]['artist_id'])
+				print "No review. Trying artist bio for album review space"
+				print review
 			if review:
+				print review
 				list[pos]["review"] = review
 				app.album[alb_id]["review"] = review
 			else:
-				print "No review available for this album"
+				print "No bio available for this artist either. :-("
 				list[pos]["review"] = ""
 				app.album[alb_id]['review'] = ""
 		else:
@@ -496,6 +538,7 @@ class AlbumList():
 		return True
 
 	def make_active(self):
+		print "AlbumList: make active"
 		print "Built: "+str(self.built)
 		print "Fresh: "+str(self.fresh())
 		if self.built and self.fresh():
@@ -507,6 +550,7 @@ class AlbumList():
 
 
 	def build(self):
+		print "AlbumLlist: build (full)"
 		results = self.download_list()
 		if results:
 			self.ingest_list(results)
@@ -518,6 +562,8 @@ class AlbumList():
 			return api.get_new_releases()
 		elif self.name == 'topalbums':
 			return api.get_top_albums()
+		elif self.name == 'library':
+			return api.get_library_albums(mem.access_token)
 
 	def ingest_list(self, results):
 		win.clearList()
@@ -558,10 +604,11 @@ class AlbumList():
 		win.addItem(li)
 
 	def build_winlist(self):
+		print "AlbumList: build_winlist"
 		win.clearList()
 		for x in range (0, len(self.liz)):
 			win.addItem(self.liz[x])
-			xbmc.sleep(2)
+			#xbmc.sleep(2)
 
 
 class TrackList():
@@ -735,12 +782,13 @@ img = image.Image(__addon_path__)
 
 newreleases = AlbumList('newreleases')
 topalbums = AlbumList('topalbums')
+lib_albums = AlbumList('library')
 tracklist = TrackList()
 
 app.set_var('running', True)
 app.set_var('logged_in', False)
 app.set_var('bad_creds', False)
-app.set_var('view', "Browse_newreleases")
+app.set_var('current_view', "browse_newreleases")
 
 loadwin = xbmcgui.WindowXML("loading.xml", __addon_path__, 'Default', '720p')
 loadwin.show()

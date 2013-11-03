@@ -127,7 +127,7 @@
                             <posx>0</posx>
                             <posy>139</posy>
                             <width>500</width>
-                            <height>258</height>
+                            <height>254</height>
                             <label></label>
                             <textcolor>black</textcolor>
                             <autoscroll delay="3000" time="1000" repeat="10000">!Control.HasFocus(13)</autoscroll>
