@@ -70,6 +70,12 @@ class Application():
 		jar.close()
 		print "Album info saved in cachefile!"
 
+	def save_artist_data(self):
+		jar = open(self.artist_file, 'wb')
+		pickle.dump(self.artist, jar)
+		jar.close()
+		print "Artist info saved in cachefile!"
+
 
 	def load_cached_data(self):
 		print "checking cached data"
@@ -80,6 +86,14 @@ class Application():
 			print "Loaded Album cache"
 		except:
 			print "Couldn't read album cache file. Skipping..."
+
+		try:
+			pkl_file = open(self.artist_file, 'rb')
+			self.artist = pickle.load(pkl_file)
+			pkl_file.close()
+			print "Loaded Artist cache"
+		except:
+			print "Couldn't read artist cache file. Skipping..."
 
 		try:
 			pkl_file = open(self.genre_file, 'rb')
@@ -197,70 +211,25 @@ class MainWin(xbmcgui.WindowXML):
 
 
 	def onInit(self):
-		#self.clist = self.getControl(201)
-		#self.clist.addItem('New Releases')
-		#self.clist.addItem('Top Albums')
-		#self.clist.addItem('Top Artists')
-		#self.clist.addItem('Top Tracks')
+
 		self.win = xbmcgui.Window(xbmcgui.getCurrentWindowId())
 		self.win.setProperty("browseview", app.get_var('current_view'))
 		self.win.setProperty("frame", "Library")
 		self.alb_dialog = None
-		#print "onInit(): Window initialized"
-		#print "Starting the engines"
 		self.main()
 
 	def main(self):
-		#print "Window main: self.win view property is "+self.win.getProperty("frame")
-		# set window properties
-		self.win.setProperty("username", mem.username)
-		self.win.setProperty("password", mem.password)
-		self.win.setProperty("guid", mem.guid)
-		self.win.setProperty("token", mem.access_token)
-		#self.win.setProperty("account_type", mem.account_type)
-		#self.win.setProperty("date_created", mem.date_created)
+
 		self.win.setProperty("full_name", mem.first_name+" "+mem.last_name)
 		self.win.setProperty("country", mem.catalog)
 		self.win.setProperty("logged_in", "true")
-		#self.alb_dialog = None
 		self.clist = self.getControl(201)
-		#self.build_top_navlist(self.win.getProperty('frame'))
 		self.draw_mainwin()
 
 
 	def onAction(self, action):
-		#print str(action.getId())
-		#print type(action)
 		if action.getId() == 7:
-			if self.getFocusId() == 201:
-				if win.getProperty("frame") == "Browse":
-					app.set_var('current_view', self.win.getProperty('browseview'))
-				if win.getProperty("frame") == "Library":
-					app.set_var('current_view', self.win.getProperty('browseview'))
-				self.draw_mainwin()
-
-			elif self.getFocusId() == 101:
-				print "Clicked left nav menu: "+self.win.getProperty("frame")
-				frame = self.win.getProperty("frame")
-				if frame == "Library":
-					app.set_var('current_view', "library_albums")
-					self.win.setProperty("browseview", app.get_var('current_view'))
-				if frame == "Browse":
-					app.set_var('current_view', "browse_newreleases")
-					self.win.setProperty("browseview", app.get_var('current_view'))
-				if frame == "Settings":
-					pass
-				self.draw_mainwin()
-
-			elif self.getFocusId() == 1001:
-				app.set_var('logged_in', False)
-				try:
-					os.remove(mem.filename)
-				except OSError, e:  ## if failed, report it back to the user ##
-					print ("Error: %s - %s." % (e.filename,e.strerror))
-				player.stop()
-				playlist.clear()
-				self.close()
+			self.manage_action()
 		if action.getId() == 10:
 			self.goodbye()
 		elif action.getId() == 92:
@@ -276,13 +245,40 @@ class MainWin(xbmcgui.WindowXML):
 			playlist.clear()
 			self.close()
 
+	def manage_action(self):
+		if self.getFocusId() == 201:
+			if win.getProperty("frame") == "Browse":
+				app.set_var('current_view', self.win.getProperty('browseview'))
+			if win.getProperty("frame") == "Library":
+				app.set_var('current_view', self.win.getProperty('browseview'))
+			self.draw_mainwin()
+
+		elif self.getFocusId() == 101:
+			print "Clicked left nav menu: "+self.win.getProperty("frame")
+			frame = self.win.getProperty("frame")
+			if frame == "Library":
+				app.set_var('current_view', "library_albums")
+				self.win.setProperty("browseview", app.get_var('current_view'))
+			if frame == "Browse":
+				app.set_var('current_view', "browse_newreleases")
+				self.win.setProperty("browseview", app.get_var('current_view'))
+			if frame == "Settings":
+				pass
+			self.draw_mainwin()
+
+		elif self.getFocusId() == 1001:
+			app.set_var('logged_in', False)
+			try:
+				os.remove(mem.filename)
+			except OSError, e:  ## if failed, report it back to the user ##
+				print ("Error: %s - %s." % (e.filename,e.strerror))
+			player.stop()
+			playlist.clear()
+			self.close()
 
 	def onClick(self, control):
-		#print "onclick(): control %i" % control
 		self.pos = self.getCurrentListPosition()
 		if control == 50:
-			#print "Opening album detail dialog"
-			#print str(app.get_var(list))
 			self.alb_dialog = AlbumDialog("album.xml", __addon_path__, 'Default', '720p', current_list=app.get_var(list),
 			                         pos=self.pos)
 			self.alb_dialog.setProperty("review", "has_review")
@@ -290,10 +286,8 @@ class MainWin(xbmcgui.WindowXML):
 			if self.empty_list():
 				self.draw_mainwin()
 			self.setCurrentListPosition(self.alb_dialog.pos)
-			del self.alb_dialog
 			app.save_album_data()
-		#if control == 201:
-		#	print "I see you've clicked the nav menu"
+
 
 	def onFocus(self, control):
 		#print("onfocus(): control %i" % control)
@@ -301,8 +295,6 @@ class MainWin(xbmcgui.WindowXML):
 
 	def draw_album_list(self, inst):
 		app.set_var(list, inst.data)
-		#self.getControl(300).setVisible(True)
-		#self.getControl(50).setVisible(True)
 		self.make_visible(300, 50)
 		inst.make_active()
 		self.setFocusId(50)
@@ -310,7 +302,6 @@ class MainWin(xbmcgui.WindowXML):
 			self.setCurrentListPosition(self.pos)
 
 	def make_visible(self, *args):
-		print args
 		for item in args:
 			self.getControl(item).setVisible(True)
 
@@ -321,16 +312,16 @@ class MainWin(xbmcgui.WindowXML):
 
 	def draw_mainwin(self):
 		if win.getProperty('frame') == "Settings":
-			#self.setFocusId(1001)
-			pass
-		elif app.get_var('current_view') == "browse_newreleases":
-			print "draw mainwin with new releases"
-			self.draw_album_list(newreleases)
-		elif app.get_var('current_view') == "browse_topalbums":
-			print "draw mainwin with top albums"
-			self.draw_album_list(topalbums)
-		elif app.get_var('current_view') == "library_albums":
-			self.draw_album_list(lib_albums)
+			return
+
+		d = {"browse_newreleases": newreleases,
+		     "browse_topalbums":   topalbums,
+		     "browse_topartists":  topartists,
+		     "library_albums":     lib_albums}
+
+		v = app.get_var('current_view')
+
+		self.draw_album_list(d[v])
 
 
 	def sync_current_list_pos(self):
@@ -431,7 +422,7 @@ class AlbumDialog(DialogBase):
 
 	def reset_fields(self):
 		self.getControl(6).setLabel("")
-		self.getControl(7).setImage("none.png")
+		self.getControl(7).setImage("")
 		self.getControl(8).setLabel("")
 		self.getControl(10).setLabel("")
 		self.getControl(11).setText("")
@@ -508,12 +499,12 @@ class AlbumDialog(DialogBase):
 			app.album[alb_id]['bigthumb'] = file
 
 	def big_image(self, album_id):
-		url = img.identify_largest_image(album_id)
+		url = img.identify_largest_image(album_id, "album")
 		bigthumb = img.handler(url, 'large', 'album')
 		return bigthumb
 
 
-class AlbumList():
+class ContentList():
 	#handle new releases, top albums, artist discography, library album list, etc.
 	def __init__(self, *args):
 		self.data = []
@@ -521,8 +512,9 @@ class AlbumList():
 		self.built = False
 		self.pos = None
 		self.timestamp = time.time()
-		self.name = args[0]
-		self.filename = args[1]
+		self.type = args[0]
+		self.name = args[1]
+		self.filename = args[2]
 		self.raw = None
 
 	def fresh(self):
@@ -530,9 +522,9 @@ class AlbumList():
 
 	def make_active(self):
 		if (app.get_var('last_rendered_list') == self.name) and win.getListSize()>2:
-			print "Window already has that album list in memory. Skipping list building"
+			print "Window already has that list in memory. Skipping list building"
 			return
-		print "AlbumList: make active"
+		print "ContentList: make active"
 		print "Built: "+str(self.built)
 		print "Fresh: "+str(self.fresh())
 		if self.built and self.fresh():
@@ -546,7 +538,7 @@ class AlbumList():
 
 
 	def build(self):
-		print "AlbumLlist: build (full)"
+		print "ContentList: build (full)"
 		results = self.download_list()
 		if results:
 			#self.save_raw_data(results)
@@ -566,32 +558,45 @@ class AlbumList():
 			self.raw = pickle.load(pkl_file)
 			pkl_file.close()
 			print "Loaded album cache file"
-			return self.raw
+			r = self.raw
 		except:
-			print "No album cache file to load. Let's download it"
-			if self.name == 'newreleases':
-				r = api.get_new_releases()
-			elif self.name == 'topalbums':
-				r = api.get_top_albums()
-			elif self.name == 'library':
-				r = api.get_library_albums(mem.access_token)
+			print "No list cache file to load. Let's download it"
+			d = {'newreleases': api.get_new_releases,
+			     'topalbums':   api.get_top_albums,
+			     'topartists':  api.get_top_artists,
+			     'library':     api.get_library_albums
+			     }
+			r = d[self.name]()
 			self.save_raw_data(r)
-			return r
+		return r
 
 	def ingest_list(self, results):
 		win.clearList()
-		count = 0
-		if results:
-			for item in results:
-				infos = self.process_album(count, item)
+
+		if self.type == 'album':
+			album_cache = app.album
+			for i, item in enumerate(results):
+				id = item['id']
+				infos = self.process_album(i, item)
 				self.data.append(infos['album'])
 				self.liz.append(infos['listitem'])
 				self.add_lizitem_to_winlist(infos['listitem'])
-				if not app.album.has_key(item["id"]):
-					app.album[item["id"]] = infos['album']
-				count += 1
-			self.built = True
-			#app.save_album_data()
+				if not id in album_cache:
+					album_cache[id] = infos['album']
+
+		elif self.type == 'artist':
+			artist_cache = app.artist
+			for i, item in enumerate(results):
+				id = item['id']
+				infos = self.process_artist(i, item)
+				self.data.append(infos['artist'])
+				self.liz.append(infos['listitem'])
+				self.add_lizitem_to_winlist(infos['listitem'])
+				if not id in artist_cache:
+					artist_cache[id] = infos['artist']
+
+		self.built = True
+		#app.save_album_data()
 
 	def process_album(self, count, item):
 		data = {}
@@ -613,14 +618,33 @@ class AlbumList():
 		data['listitem'] = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', thumb)
 		return data
 
+	def process_artist(self, count, item):
+		data = {}
+		url = img.identify_largest_image(item["id"], "artist")
+		bigthumb = img.handler(url, 'large', 'artist')
+		g_id = api.get_artist_genre(item["id"])
+		print g_id
+		genre = app.genre_dict__[g_id]
+		data['artist'] = {'artist_id': item["id"],
+		         'name': item["name"],
+		         'thumb': '',
+		         'thumb_url': url,
+		         'bio': "",
+		         'bigthumb': bigthumb,
+		         'toptracks': "",
+		         'style': genre,
+		         'list_id': count}
+		data['listitem'] = xbmcgui.ListItem(item["name"], data["artist"]["style"], '', bigthumb)
+		return data
+
 	def add_lizitem_to_winlist(self, li):
 		win.addItem(li)
 
 	def build_winlist(self):
-		print "AlbumList: build_winlist"
+		print "ContentList: build_winlist"
 		win.clearList()
-		for x in range (0, len(self.liz)):
-			win.addItem(self.liz[x])
+		for i, item in enumerate(self.liz):
+			win.addItem(self.liz[i])
 			#xbmc.sleep(2)
 
 
@@ -746,12 +770,10 @@ class PlayList(xbmc.PlayList):
 
 	def build(self):
 		playlist.clear()
-		x = 0
-		for track in player.now_playing['item']['tracks']:
+		list = player.now_playing['item']['tracks']
+		for i, track in enumerate(list):
 			playlist.add(track['previewURL'], listitem=xbmcgui.ListItem(''))
-			x += 1
-		print "Okay let's play some music! Added "+str(x)+" tracks to the playlist for "+player.now_playing['item']["album_id"]
-		#xbmc.executebuiltin("XBMC.Notification("+ __scriptname__ +",Event Has been triggered,60)")
+		print "Okay let's play some music! Added "+str(i)+" tracks to the playlist for "+player.now_playing['item']["album_id"]
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Preparing to play...)")
 		win.current_playlist_albumId = player.now_playing['item']["album_id"]  #can probably eliminate this variable
 
@@ -761,7 +783,7 @@ class PlayList(xbmc.PlayList):
 		print "Fetching track "+str(circ_pos+1)
 		tid = player.now_playing['item']['tracks'][circ_pos]['trackId']
 		tname = self.__getitem__(circ_pos).getfilename()
-		playurl = api.get_playable_url(tid, mem.access_token)
+		playurl = api.get_playable_url(tid)
 		self.remove(tname)
 		li = xbmcgui.ListItem(
 	            player.now_playing['item']["tracks"][circ_pos]["name"],
@@ -794,9 +816,10 @@ playlist = PlayList(xbmc.PLAYLIST_MUSIC)
 api = rhapapi.Api()
 img = image.Image(__addon_path__)
 
-newreleases = AlbumList('newreleases', __addon_path__+'/resources/.newreleases.obj')
-topalbums = AlbumList('topalbums', __addon_path__+'/resources/.topalbums.obj')
-lib_albums = AlbumList('library', __addon_path__+'/resources/.lib_albums.obj')
+newreleases = ContentList('album', 'newreleases', __addon_path__+'/resources/.newreleases.obj')
+topalbums = ContentList('album', 'topalbums', __addon_path__+'/resources/.topalbums.obj')
+lib_albums = ContentList('album', 'library', __addon_path__+'/resources/.lib_albums.obj')
+topartists = ContentList('artist', 'topartists', __addon_path__+'/resources/.lib_artists.obj')
 tracklist = TrackList()
 
 app.set_var('running', True)
@@ -824,6 +847,7 @@ while app.get_var('running'):
 			loadwin.getControl(10).setLabel('Logging you in...')
 			app.set_var('logged_in', True)
 			time.sleep(1)
+		api.token = mem.access_token
 	win = MainWin("main.xml", __addon_path__, 'Default', '720p')
 	win.doModal()
 	if app.get_var('logged_in') == False:

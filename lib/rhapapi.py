@@ -15,6 +15,7 @@ class Api():
 		self.AUTHURL = "https://api.rhapsody.com/oauth/token"
 		self.APIKEY = "22Q1bFiwGxYA2eaG4vVAGsJqi3SQWzmd"
 		self.SECRET = "Z1AAYBC1JEtnMJGm"
+		self.token = None
 
 
 	def __get_data_from_rhapsody(self, req, timeout):
@@ -41,8 +42,8 @@ class Api():
 
 #----------- Secure API calls requiring auth headers ---------
 
-	def __build_member_req(self, url, access_token):
-		header = b'Bearer ' + access_token
+	def __build_member_req(self, url):
+		header = b'Bearer ' + self.token
 		req = urllib2.Request(url)
 		req.add_header('Authorization', header)
 		return req
@@ -65,10 +66,10 @@ class Api():
 			return False
 
 
-	def get_playable_url(self, track_id, access_token):
+	def get_playable_url(self, track_id):
 		print "Rhapapi: getting playable url"
 		url = "%splay/%s" %(self.S_BASEURL, track_id)
-		req = self.__build_member_req(url, access_token)
+		req = self.__build_member_req(url)
 		results = self.__get_data_from_rhapsody(req, 5)
 		if results:
 			return results['url']
@@ -132,6 +133,25 @@ class Api():
 		else:
 			return False
 
+	def get_artist_images(self, artist_id):
+		print "Rhapapi: getting artist image"
+		url = "%sartists/%s/images?apikey=%s" %(self.BASEURL, artist_id, self.APIKEY)
+		req = self.__build_req(url)
+		results = self.__get_data_from_rhapsody(req, 3)
+		if results:
+			return results
+		else:
+			return False
+
+	def get_artist_genre(self, artist_id):
+		print "Rhapapi: getting artist genre"
+		url = "%sartists/%s?apikey=%s" %(self.BASEURL, artist_id, self.APIKEY)
+		req = self.__build_req(url)
+		results = self.__get_data_from_rhapsody(req, 3)
+		if results:
+			return results["genre"]["id"]
+		else:
+			return False
 
 	def get_new_releases(self):
 		print "Rhapapi: getting new releases"
@@ -194,3 +214,4 @@ class Api():
 			return utils.remove_html_markup(results['bio'])
 		else:
 			return False
+

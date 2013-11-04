@@ -5,7 +5,7 @@
 
 <window>
     <defaultcontrol>202</defaultcontrol>
-    <allowoverlay>no</allowoverlay>
+    <allowoverlay>yes</allowoverlay>
 
     <controls>
         <control type="image">
@@ -182,11 +182,11 @@
                         </item>
                         <item id="33">
                             <label>Popular Artists</label>
-                            <onclick>SetProperty(browseview,browse_artists)</onclick>
+                            <onclick>SetProperty(browseview,browse_topartists)</onclick>
                         </item>
                         <item id="34">
                             <label>Popular Tracks</label>
-                            <onclick>SetProperty(browseview,browse_tracks)</onclick>
+                            <onclick>SetProperty(browseview,browse_toptracks)</onclick>
                         </item>
                     </content>
                 </control>

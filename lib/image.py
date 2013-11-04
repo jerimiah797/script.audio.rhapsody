@@ -47,9 +47,13 @@ class Image():
 			return prefix_path+img_filename
 
 
-	def identify_largest_image(self, album_id):
+	def identify_largest_image(self, id, kind):
+		results = None
 		api = rhapapi.Api()
-		results = api.get_album_images(album_id)
+		if kind == "album":
+			results = api.get_album_images(id)
+		elif kind == "artist":
+			results = api.get_artist_images(id)
 		if results:
 			biggest = 0
 			biggest_index = 0
@@ -64,13 +68,22 @@ class Image():
 
 
 	def get_prefix_path(self, size, kind):
-		if kind == "album":
-			if size == "small":
-				return self.album_small_path
-			if size == "large":
-				return self.album_large_path
-		if kind == "artist":
-			if size == "small":
-				return self.artist_small_path
-			if size == "large":
-				return self.artist_large_path
+
+		d = {"album": {"small": self.album_small_path,
+		               "large": self.album_large_path},
+			"artist": {"small": self.artist_small_path,
+			           "large": self.artist_large_path}
+			}
+
+		return d[kind][size]
+
+		#if kind == "album":
+		#	if size == "small":
+		#		return self.album_small_path
+		#	if size == "large":
+		#		return self.album_large_path
+		#if kind == "artist":
+		#	if size == "small":
+		#		return self.artist_small_path
+		#	if size == "large":
+		#		return self.artist_large_path

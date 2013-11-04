@@ -1,4 +1,5 @@
 resources/skins/Default/media/album/
+resources/skins/Default/media/artist/
 *.DS_Store
 .*.obj
 .idea/*
