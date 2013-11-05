@@ -22,6 +22,7 @@ class Api():
 		succeed = 0
 		while succeed < 2:
 			print "Rhapapi: trying to get data..."
+			#print "timeout = "+str(timeout)
 			try:
 				response = urllib2.urlopen(req, timeout=timeout)
 				results = json.load(response)
@@ -43,6 +44,7 @@ class Api():
 #----------- Secure API calls requiring auth headers ---------
 
 	def __build_member_req(self, url):
+		#print "access token: "+self.token
 		header = b'Bearer ' + self.token
 		req = urllib2.Request(url)
 		req.add_header('Authorization', header)
@@ -71,10 +73,13 @@ class Api():
 		url = "%splay/%s" %(self.S_BASEURL, track_id)
 		req = self.__build_member_req(url)
 		results = self.__get_data_from_rhapsody(req, 5)
-		if results:
-			return results['url']
-		else:
+		if not results:
 			return False
+		if results['url'][:5] == u'undef':
+			return False
+		else:
+			return results['url']
+
 
 	def validate_session(self):
 		pass
@@ -89,12 +94,23 @@ class Api():
 		pass
 
 	#------Library -----------
-	def get_library_albums(self, access_token):
+	def get_library_albums(self):
 		print "Rhapapi: getting library albums"
 		url = "https://api.rhapsody.com/v1/me/library/albums"
-		req = self.__build_member_req(url, access_token)
+		req = self.__build_member_req(url)
 		results = self.__get_data_from_rhapsody(req, 20)
 		if results:
+			return results
+		else:
+			return False
+
+	def get_library_artists(self):
+		print "Rhapapi: getting library artists"
+		url = "https://api.rhapsody.com/v1/me/library/artists"
+		req = self.__build_member_req(url)
+		results = self.__get_data_from_rhapsody(req, 20)
+		if results:
+			utils.prettyprint(results)
 			return results
 		else:
 			return False

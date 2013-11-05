@@ -9,16 +9,18 @@ class Image():
 		self.album_small_path = "album/"
 		self.album_large_path = "album/large/"
 		self.artist_small_path = "artist/"
-		self.artist_large_path = "artist/large"
+		self.artist_large_path = "artist/large/"
 		self.default_album_img = self.base_path+"AlbumPlaceholder.png"
 		self.verify_image_dirs()
 		pass
 
 	def download_image(self, url, path):
 		try:
+			#print "Download Image: downloading "+url+" to "+path
 			urllib.urlretrieve(url, path)
 		except:
-			print "image download failed. URL: "+url+" Path: "+path
+			#print "image download failed. URL: "+url+" Path: "+path
+			pass
 
 
 	def verify_image_dirs(self):
@@ -38,6 +40,7 @@ class Image():
 			return self.default_album_img
 		else:
 			prefix_path = self.get_prefix_path(size, kind)
+			#print "Prefix path: "+prefix_path
 			img_filename = url.split('/')[(len(url.split('/'))) - 1]
 			#print "Handling "+prefix_path+img_filename
 			full_path = self.base_path+prefix_path+img_filename
@@ -77,13 +80,3 @@ class Image():
 
 		return d[kind][size]
 
-		#if kind == "album":
-		#	if size == "small":
-		#		return self.album_small_path
-		#	if size == "large":
-		#		return self.album_large_path
-		#if kind == "artist":
-		#	if size == "small":
-		#		return self.artist_small_path
-		#	if size == "large":
-		#		return self.artist_large_path

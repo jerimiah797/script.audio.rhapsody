@@ -441,7 +441,6 @@
                             <font>rhapsody_font10</font>
                             <info>ListItem.Label</info>
                             <textcolor>DD171717</textcolor>
-                    <!-- darkgrey -->
                             <wrapmultiline>true</wrapmultiline>
                             <scroll>false</scroll>
                         </control>
@@ -454,7 +453,6 @@
                             <font>rhapsody_font9</font>
                             <info>ListItem.Label2</info>
                             <textcolor>DD171717</textcolor>
-                    <!-- darkgrey -->
                             <wrapmultiline>true</wrapmultiline>
                             <scroll>false</scroll>
                         </control>
@@ -465,13 +463,12 @@
                             <height>180</height>
                             <align>left</align>
                             <info blend="false">ListItem.Thumb</info>
-                            <aspectratio scalediffuse="false">scale</aspectratio>
-                            <fadetime>200</fadetime>
+                            <aspectratio scalediffuse="true">scale</aspectratio>
                             <scrolltime>200</scrolltime>
                         </control>
                     </itemlayout>
                     <focusedlayout width="235" height="260">
-                        <control type="button">
+                        <!--control type="button">
                             <posx>0</posx>
                             <posy>0</posy>
                             <label>-</label>
@@ -479,7 +476,7 @@
                             <font>-</font>
                             <textcolor>-</textcolor>
                             <focusedcolor>-</focusedcolor>
-                        </control>
+                        </control-->
                         <control type="image">
                             <visible>Control.HasFocus(50)</visible>
                             <width>209</width>
@@ -505,7 +502,7 @@
                             <align>left</align>
                             <font>rhapsody_font10</font>
                             <info>ListItem.Label</info>
-                            <textcolor>blue</textcolor>
+                            <textcolor>F39CD4F5</textcolor>
                             <scroll>false</scroll>
                         </control>
                         <control type="label">
@@ -516,7 +513,7 @@
                             <align>left</align>
                             <font>rhapsody_font9</font>
                             <info>ListItem.Label2</info>
-                            <textcolor>blue</textcolor>
+                            <textcolor>F39CD4F5</textcolor>
                             <scroll>false</scroll>
                         </control>
                         <control type="image">
@@ -525,8 +522,7 @@
                             <width>180</width>
                             <height>180</height>
                             <info blend="false">ListItem.Thumb</info>
-                            <aspectratio scalediffuse="false">scale</aspectratio>
-                            <fadetime>200</fadetime>
+                            <aspectratio scalediffuse="true">scale</aspectratio>
                         </control>
                     </focusedlayout>
                 </control>

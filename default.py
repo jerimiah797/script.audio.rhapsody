@@ -214,7 +214,7 @@ class MainWin(xbmcgui.WindowXML):
 
 		self.win = xbmcgui.Window(xbmcgui.getCurrentWindowId())
 		self.win.setProperty("browseview", app.get_var('current_view'))
-		self.win.setProperty("frame", "Library")
+		self.win.setProperty("frame", app.get_var('current_frame'))
 		self.alb_dialog = None
 		self.main()
 
@@ -317,7 +317,12 @@ class MainWin(xbmcgui.WindowXML):
 		d = {"browse_newreleases": newreleases,
 		     "browse_topalbums":   topalbums,
 		     "browse_topartists":  topartists,
-		     "library_albums":     lib_albums}
+		     "browse_toptracks":   toptracks,
+		     "library_albums":     lib_albums,
+		     "library_artists":    lib_artists,
+		     "library_tracks":     lib_tracks,
+		     "library_stations":   lib_stations,
+		     "library_favorites":  lib_favorites}
 
 		v = app.get_var('current_view')
 
@@ -402,7 +407,12 @@ class AlbumDialog(DialogBase):
 		if id == 51:
 			player.now_playing['pos'] = self.getCurrentListPosition()
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song...)")
-		playlist.add_playable_track(0)
+		track = playlist.add_playable_track(0)
+		if not track:
+			xbmc.executebuiltin("XBMC.Notification(Rhapsody, Problem with this song. Aborting...)")
+			print "Unplayable track. Can't play this track"
+			#player.stop()
+			return False
 		player.playselected(player.now_playing['pos'])
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started)")
 		if id == 21:
@@ -524,7 +534,9 @@ class ContentList():
 		if (app.get_var('last_rendered_list') == self.name) and win.getListSize()>2:
 			print "Window already has that list in memory. Skipping list building"
 			return
-		print "ContentList: make active"
+		print "ContentList: make active " +self.name
+		print "current frame: "+app.get_var('current_frame')
+		print "current view: "+app.get_var('current_view')
 		print "Built: "+str(self.built)
 		print "Fresh: "+str(self.fresh())
 		if self.built and self.fresh():
@@ -541,7 +553,6 @@ class ContentList():
 		print "ContentList: build (full)"
 		results = self.download_list()
 		if results:
-			#self.save_raw_data(results)
 			self.ingest_list(results)
 		else:
 			print "Couldn't get info from rhapsody about "+self.name
@@ -550,50 +561,56 @@ class ContentList():
 		jar = open(self.filename, 'wb')
 		pickle.dump(data, jar)
 		jar.close()
-		print self.name+" album info saved in cachefile!"
+		print self.name+" info saved in cachefile!"
 
 	def download_list(self):
+		print "Download_list. self.filename: "+self.filename
 		try:
 			pkl_file = open(self.filename, 'rb')
 			self.raw = pickle.load(pkl_file)
 			pkl_file.close()
-			print "Loaded album cache file"
+			print "Loaded cache file"
 			r = self.raw
 		except:
 			print "No list cache file to load. Let's download it"
-			d = {'newreleases': api.get_new_releases,
-			     'topalbums':   api.get_top_albums,
-			     'topartists':  api.get_top_artists,
-			     'library':     api.get_library_albums
+			d = {'newreleases':   api.get_new_releases,
+			     'topalbums':     api.get_top_albums,
+			     'topartists':    api.get_top_artists,
+			     'toptracks':     api.get_top_tracks,
+			     'lib_albums':    api.get_library_albums,
+			     'lib_artists':   api.get_library_artists,
+			     'lib_tracks':    api.get_library_tracks,
+			     'lib_stations':  api.get_library_stations,
+			     'lib_favorites': api.get_library_favorites
 			     }
 			r = d[self.name]()
 			self.save_raw_data(r)
 		return r
 
 	def ingest_list(self, results):
+
+		print "Ingest list. Type: "+self.type
 		win.clearList()
+		__ = {}
 
-		if self.type == 'album':
-			album_cache = app.album
-			for i, item in enumerate(results):
-				id = item['id']
+		d = {'album': app.album,
+			 'artist': app.artist,
+		     'track':  __,
+		     'station': __}
+
+		cache = d[self.type]
+
+		for i, item in enumerate(results):
+			id = item['id']
+			if self.type == 'album':
 				infos = self.process_album(i, item)
-				self.data.append(infos['album'])
-				self.liz.append(infos['listitem'])
-				self.add_lizitem_to_winlist(infos['listitem'])
-				if not id in album_cache:
-					album_cache[id] = infos['album']
-
-		elif self.type == 'artist':
-			artist_cache = app.artist
-			for i, item in enumerate(results):
-				id = item['id']
+			elif self.type == 'artist':
 				infos = self.process_artist(i, item)
-				self.data.append(infos['artist'])
-				self.liz.append(infos['listitem'])
-				self.add_lizitem_to_winlist(infos['listitem'])
-				if not id in artist_cache:
-					artist_cache[id] = infos['artist']
+			self.data.append(infos[self.type])
+			self.liz.append(infos['listitem'])
+			self.add_lizitem_to_winlist(infos['listitem'])
+			if not id in cache:
+				cache[id] = infos[self.type]
 
 		self.built = True
 		#app.save_album_data()
@@ -619,15 +636,30 @@ class ContentList():
 		return data
 
 	def process_artist(self, count, item):
+		id = item['id']
+		print "processing "+id
 		data = {}
-		url = img.identify_largest_image(item["id"], "artist")
+
+		if not id in app.artist:
+			if id == 'Art.0':
+				print "detected artist 0 case!"
+				url = None
+				genre = ""
+			else:
+				url = img.identify_largest_image(item["id"], "artist")
+				g_id = api.get_artist_genre(item["id"])
+				genre = app.genre_dict__[g_id]
+		else:
+			#print 'using cached thumb url for artist image'
+			url = app.artist[id]['thumb_url']
+			#print 'using cached genre for artist'
+			genre = app.artist[id]['style']
+
 		bigthumb = img.handler(url, 'large', 'artist')
-		g_id = api.get_artist_genre(item["id"])
-		print g_id
-		genre = app.genre_dict__[g_id]
+
 		data['artist'] = {'artist_id': item["id"],
 		         'name': item["name"],
-		         'thumb': '',
+		         'thumb': bigthumb,
 		         'thumb_url': url,
 		         'bio': "",
 		         'bigthumb': bigthumb,
@@ -784,6 +816,8 @@ class PlayList(xbmc.PlayList):
 		tid = player.now_playing['item']['tracks'][circ_pos]['trackId']
 		tname = self.__getitem__(circ_pos).getfilename()
 		playurl = api.get_playable_url(tid)
+		if not playurl:
+			return False
 		self.remove(tname)
 		li = xbmcgui.ListItem(
 	            player.now_playing['item']["tracks"][circ_pos]["name"],
@@ -800,11 +834,11 @@ class PlayList(xbmc.PlayList):
 				}
 		li.setInfo("music", info)
 		self.add(playurl, listitem=li, index=circ_pos)
+		return True
 
 
 
-
-gc.disable()
+#gc.disable()
 
 app = Application()
 mem = member.Member()
@@ -816,16 +850,22 @@ playlist = PlayList(xbmc.PLAYLIST_MUSIC)
 api = rhapapi.Api()
 img = image.Image(__addon_path__)
 
-newreleases = ContentList('album', 'newreleases', __addon_path__+'/resources/.newreleases.obj')
-topalbums = ContentList('album', 'topalbums', __addon_path__+'/resources/.topalbums.obj')
-lib_albums = ContentList('album', 'library', __addon_path__+'/resources/.lib_albums.obj')
-topartists = ContentList('artist', 'topartists', __addon_path__+'/resources/.lib_artists.obj')
+newreleases =   ContentList('album',   'newreleases',   __addon_path__+'/resources/.newreleases.obj')
+topalbums =     ContentList('album',   'topalbums',     __addon_path__+'/resources/.topalbums.obj')
+topartists =    ContentList('artist',  'topartists',    __addon_path__+'/resources/.topartists.obj')
+toptracks =     ContentList('track',   'toptracks',     __addon_path__+'/resources/.toptracks.obj')
+lib_albums =    ContentList('album',   'lib_albums',    __addon_path__+'/resources/.lib_albums.obj')
+lib_artists =   ContentList('artist',  'lib_artists',   __addon_path__+'/resources/.lib_artists.obj')
+lib_tracks =    ContentList('track',   'lib_tracks',    __addon_path__+'/resources/.lib_tracks.obj')
+lib_stations =  ContentList('station', 'lib_stations',  __addon_path__+'/resources/.lib_stations.obj')
+lib_favorites = ContentList('tracks',  'lib_favorites', __addon_path__+'/resources/.lib_favorites.obj')
 tracklist = TrackList()
 
 app.set_var('running', True)
 app.set_var('logged_in', False)
 app.set_var('bad_creds', False)
-app.set_var('current_view', "library_albums")
+app.set_var('current_view', "browse_newreleases")
+app.set_var('current_frame', "Browse")
 app.set_var('last_rendered_list', None)
 
 loadwin = xbmcgui.WindowXML("loading.xml", __addon_path__, 'Default', '720p')
@@ -857,6 +897,7 @@ while app.get_var('running'):
 	del win
 	t1 = time.time()
 	app.save_album_data()
+	app.save_artist_data()
 	t2 = time.time()
 	print "Album data save operation took "+str(t2-t1)
 	time.sleep(1)
