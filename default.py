@@ -306,7 +306,7 @@ class MainWin(xbmcgui.WindowXML):
 		#print("onfocus(): control %i" % control)
 		pass
 
-	def draw_album_list(self, inst):
+	def draw_list(self, inst):
 		app.set_var(list, inst.data)
 		self.make_visible(300, 50)
 		inst.make_active()
@@ -324,8 +324,6 @@ class MainWin(xbmcgui.WindowXML):
 
 
 	def draw_mainwin(self):
-		if win.getProperty('frame') == "Settings":
-			return
 
 		d = {"browse_newreleases": newreleases,
 		     "browse_topalbums":   topalbums,
@@ -340,7 +338,7 @@ class MainWin(xbmcgui.WindowXML):
 
 		v = app.get_var('current_view')
 
-		self.draw_album_list(d[v])
+		self.draw_list(d[v])
 
 
 	def sync_current_list_pos(self):
@@ -620,6 +618,8 @@ class ContentList():
 				infos = self.process_album(i, item)
 			elif self.type == 'artist':
 				infos = self.process_artist(i, item)
+			elif self.type == 'track':
+				infos = self.process_track(i, item)
 			self.data.append(infos[self.type])
 			self.liz.append(infos['listitem'])
 			self.add_lizitem_to_winlist(infos['listitem'])
@@ -683,6 +683,32 @@ class ContentList():
 		data['listitem'] = xbmcgui.ListItem(item["name"], data["artist"]["style"], '', bigthumb)
 		return data
 
+	def process_track(self, count, item):
+		data = {}
+		#thumb = img.handler(item["images"][0]["url"], 'small', 'album')
+		data['track'] = {'track_id': item["id"],
+		         'track_name': item["name"],
+		         #'thumb': thumb,
+		         #'thumb_url': item["images"][0]["url"],
+		         'album': item['album']['name'],
+		         'album_id': item['album']['id'],
+		         'genre_id': item['genre']['id'],
+		         'duration': item['duration'],
+		         'style': '',
+		         'artist': item["artist"]["name"],
+		         'artist_id': item["artist"]["id"],
+		         'list_id': count}
+		data['listitem'] = xbmcgui.ListItem(item["name"], item["artist"]["name"])
+		info = {
+	            "title": item["name"],
+	            "album": item['album']['name'],
+	            "artist": item["artist"]["name"],
+	            "duration": item['duration'],
+	            "tracknumber": count+1,
+				}
+		data['listitem'].setInfo("music", info)
+		return data
+
 	def add_lizitem_to_winlist(self, li):
 		win.addItem(li)
 
@@ -701,6 +727,7 @@ class TrackList():
 
 	def get_litems(self, cache, id):
 		src = cache[id]
+		#utils.prettyprint(src)
 		x = 0
 		list = []
 		for item in src["tracks"]:
