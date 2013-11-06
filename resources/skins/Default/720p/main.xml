@@ -16,6 +16,7 @@
             <texture>background/background.png</texture>
         </control>
 
+
         <control type="group" id="100">
             <animation effect="slide" start="0,0" end="-200,0" time="400" condition="ControlGroup(200).HasFocus | Control(200).HasFocus(201) | !ControlGroup(100).HasFocus" tween="cubic" easing="inout">Conditional</animation>
             <!--visible>!IsEmpty(Window.Property(view))</visible-->
@@ -100,7 +101,7 @@
                     </item>
                     <item id="107">
                         <label>Listening History</label>
-                        <onclick>SetProperty(frame,History)</onclick>
+                        <onclick>SetProperty(frame,Listening History)</onclick>
                     </item>
                     <item id="108">
                         <label>Queue</label>
@@ -661,25 +662,23 @@
             </control>
             <control type="group" id="500">
                 <description>Library, albums - default view</description>
-                <!--visible>SubString(Window.Property(view),Browse)</visible-->
                 <visible>StringCompare(Window.Property(frame),Library)</visible>
-                <control type="button" id="202">
+                <!--control type="button" id="202">
                     <description>dummy button to set initial view</description>
                     <posx>0</posx>
                     <posy>0</posy>
                     <texturenofocus>-</texturenofocus>
                     <texturefocus>-</texturefocus>
-                    <!--onfocus>SetFocus(50)</onfocus-->
                     <ondown>50</ondown>
                     <onup>201</onup>
                     <onleft>50</onleft>
                     <onright>50</onright>
-                </control>
+                </control-->
                 <!--Top Nav Menu -->
                 <control type="wraplist" id="201">
                     <posx>14</posx>
                     <posy>10</posy>
-                    <width>920</width>
+                    <width>340</width>
                     <height>45</height>
                     <onright>-</onright>
                     <ondown>50</ondown>
@@ -720,7 +719,7 @@
                             <label>Artists</label>
                             <onclick>SetProperty(browseview,library_artists)</onclick>
                         </item>
-                        <item id="33">
+                        <!--item id="33">
                             <label>Tracks</label>
                             <onclick>SetProperty(browseview,library_tracks)</onclick>
                         </item>
@@ -731,7 +730,7 @@
                         <item id="35">
                             <label>Favorites</label>
                             <onclick>SetProperty(browseview,library_favorites)</onclick>
-                        </item>
+                        </item-->
                     </content>
                 </control>
                 <control type="image">
@@ -1542,5 +1541,23 @@
                 </control>
             </control>
         </control>
+
+        <control type="image" id="120">
+            <posx>1040</posx>
+            <posy>0</posy>
+            <width>280</width>
+            <height>50</height>
+            <texture>bkrnd_box.png</texture>
+        </control>
+        <control type="label" id="121">
+            <posx>100r</posx>
+            <posy>5</posy>
+            <width>280</width>
+            <label>$INFO[Window.Property(frame)]</label>
+            <font>rhapsody_font35_title</font>
+            <textcolor>black</textcolor>
+            <align>right</align>
+        </control>
+
     </controls>
 </window>

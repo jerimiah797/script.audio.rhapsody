@@ -224,6 +224,7 @@ class MainWin(xbmcgui.WindowXML):
 		self.win.setProperty("country", mem.catalog)
 		self.win.setProperty("logged_in", "true")
 		self.clist = self.getControl(201)
+		self.frame_label = self.getControl(121)
 		self.draw_mainwin()
 
 
@@ -256,13 +257,25 @@ class MainWin(xbmcgui.WindowXML):
 		elif self.getFocusId() == 101:
 			print "Clicked left nav menu: "+self.win.getProperty("frame")
 			frame = self.win.getProperty("frame")
-			if frame == "Library":
-				app.set_var('current_view', "library_albums")
-				self.win.setProperty("browseview", app.get_var('current_view'))
-			if frame == "Browse":
+			if frame == "Search":
+				pass
+			elif frame == "Browse":
 				app.set_var('current_view', "browse_newreleases")
 				self.win.setProperty("browseview", app.get_var('current_view'))
-			if frame == "Settings":
+
+			elif frame == "Radio":
+				pass
+			elif frame == "Library":
+				app.set_var('current_view', "library_albums")
+				self.win.setProperty("browseview", app.get_var('current_view'))
+
+			elif frame == "Playlists":
+				pass
+			elif frame == "Listening History":
+				pass
+			elif frame == "Queue":
+				pass
+			elif frame == "Settings":
 				pass
 			self.draw_mainwin()
 
@@ -320,9 +333,10 @@ class MainWin(xbmcgui.WindowXML):
 		     "browse_toptracks":   toptracks,
 		     "library_albums":     lib_albums,
 		     "library_artists":    lib_artists,
-		     "library_tracks":     lib_tracks,
-		     "library_stations":   lib_stations,
-		     "library_favorites":  lib_favorites}
+		     #"library_tracks":     lib_tracks,
+		     #"library_stations":   lib_stations,
+		     #"library_favorites":  lib_favorites
+		     }
 
 		v = app.get_var('current_view')
 
@@ -579,9 +593,9 @@ class ContentList():
 			     'toptracks':     api.get_top_tracks,
 			     'lib_albums':    api.get_library_albums,
 			     'lib_artists':   api.get_library_artists,
-			     'lib_tracks':    api.get_library_tracks,
-			     'lib_stations':  api.get_library_stations,
-			     'lib_favorites': api.get_library_favorites
+			     #'lib_tracks':    api.get_library_artist_tracks,
+			     #'lib_stations':  api.get_library_stations,
+			     #'lib_favorites': api.get_library_favorites
 			     }
 			r = d[self.name]()
 			self.save_raw_data(r)
@@ -856,9 +870,9 @@ topartists =    ContentList('artist',  'topartists',    __addon_path__+'/resourc
 toptracks =     ContentList('track',   'toptracks',     __addon_path__+'/resources/.toptracks.obj')
 lib_albums =    ContentList('album',   'lib_albums',    __addon_path__+'/resources/.lib_albums.obj')
 lib_artists =   ContentList('artist',  'lib_artists',   __addon_path__+'/resources/.lib_artists.obj')
-lib_tracks =    ContentList('track',   'lib_tracks',    __addon_path__+'/resources/.lib_tracks.obj')
-lib_stations =  ContentList('station', 'lib_stations',  __addon_path__+'/resources/.lib_stations.obj')
-lib_favorites = ContentList('tracks',  'lib_favorites', __addon_path__+'/resources/.lib_favorites.obj')
+#lib_tracks =    ContentList('track',   'lib_tracks',    __addon_path__+'/resources/.lib_tracks.obj')
+#lib_stations =  ContentList('station', 'lib_stations',  __addon_path__+'/resources/.lib_stations.obj')
+#lib_favorites = ContentList('tracks',  'lib_favorites', __addon_path__+'/resources/.lib_favorites.obj')
 tracklist = TrackList()
 
 app.set_var('running', True)

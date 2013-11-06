@@ -96,7 +96,7 @@ class Api():
 	#------Library -----------
 	def get_library_albums(self):
 		print "Rhapapi: getting library albums"
-		url = "https://api.rhapsody.com/v1/me/library/albums"
+		url = "%sme/library/albums" %(self.S_BASEURL)
 		req = self.__build_member_req(url)
 		results = self.__get_data_from_rhapsody(req, 20)
 		if results:
@@ -106,7 +106,18 @@ class Api():
 
 	def get_library_artists(self):
 		print "Rhapapi: getting library artists"
-		url = "https://api.rhapsody.com/v1/me/library/artists"
+		url = "%sme/library/artists" % (self.S_BASEURL)
+		req = self.__build_member_req(url)
+		results = self.__get_data_from_rhapsody(req, 20)
+		if results:
+			utils.prettyprint(results)
+			return results
+		else:
+			return False
+
+	def get_library_artist_tracks(self, art_id):
+		print "Rhapapi: getting library tracks"
+		url = "%sme/library/artists/%s/tracks" % (self.S_BASEURL, art_id)
 		req = self.__build_member_req(url)
 		results = self.__get_data_from_rhapsody(req, 20)
 		if results:

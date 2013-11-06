@@ -514,8 +514,8 @@
             <posy>80</posy>
             <texture>feather_line_inverted.png</texture>
         </control-->
-        <control type="group">
-            <description>container for bottom pre/next nav buttons</description>
+        <!--control type="group">
+            <description>container for bottom player status area</description>
             <posx>0</posx>
             <posy>120</posy>
             <description>Slide-out bottom nav for album view</description>
@@ -811,7 +811,7 @@
 				<textureslidernibfocus>osd_slider_nib.png</textureslidernibfocus>
 				<visible>Player.Seeking</visible>
 			</control>
-		</control>
+		</control-->
 
     </controls>
 </window>
