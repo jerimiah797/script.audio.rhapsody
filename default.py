@@ -404,10 +404,11 @@ class AlbumDialog(DialogBase):
 		self.manage_details(self.current_list, self.pos)
 		self.getControl(10).setLabel(self.current_list[self.pos]["label"])
 		self.getControl(6).setLabel(self.current_list[self.pos]["style"])
-		self.manage_tracklist(self.current_list, self.pos)
+		self.manage_windowtracklist(self.current_list, self.pos)
 
-	def manage_tracklist(self, list, pos):
-		liz = tracklist.get_litems(app.album, list[pos]["album_id"])
+	def manage_windowtracklist(self, list, pos):
+		print "AlbumDialog: Manage tracklist for gui list"
+		liz = windowtracklist.get_litems(app.album, list[pos]["album_id"])
 		for item in liz:
 			self.addItem(item)
 		win.sync_current_list_pos()
@@ -436,7 +437,11 @@ class AlbumDialog(DialogBase):
 
 
 	def start_playback(self, id):
+		print "Album dialog: start playback"
 		if not self.now_playing_matches_album_dialog():
+			player.now_playing = {'pos': 0, 'type':'album', 'item':self.current_list[self.pos]}
+			playlist.build()
+		if player.now_playing['type'] != 'album':
 			player.now_playing = {'pos': 0, 'type':'album', 'item':self.current_list[self.pos]}
 			playlist.build()
 		if id == 51:
@@ -620,7 +625,7 @@ class ContentList():
 			     }
 			r = d[self.name]()
 			#self.save_raw_data(r)
-		utils.prettyprint(r)
+		#utils.prettyprint(r)
 		return r
 
 	def ingest_list(self, results):
@@ -751,12 +756,13 @@ class ContentList():
 			#xbmc.sleep(2)
 
 
-class TrackList():
+class WindowTrackList():
 	def __init__(self):
 		pass
 	#handle albums, playlists, radio, queue, listening history
 
 	def get_litems(self, cache, id):
+		print "Tracklist: adding dummy tracks for gui list"
 		src = cache[id]
 		#utils.prettyprint(src)
 		x = 0
@@ -875,12 +881,14 @@ class PlayList(xbmc.PlayList):
 	def build(self):
 		print "Playlist: build dummy playlist"
 		playlist.clear()
-		utils.prettyprint(player.now_playing['item'])
+		#utils.prettyprint(player.now_playing['item'])
 		if player.now_playing['type'] == "album":
-			list = player.now_playing['item']['tracks']
+			liz = player.now_playing['item']['tracks']
+			win.current_playlist_albumId = player.now_playing['item']["album_id"]  #can probably eliminate this variable
 		elif player.now_playing['type'] == 'playlist':
-			list = player.now_playing['item']
-		for i, track in enumerate(list):
+			liz = player.now_playing['item']
+			win.current_playlist_albumId = None
+		for i, track in enumerate(liz):
 			playlist.add(track['previewURL'], listitem=xbmcgui.ListItem(''))
 		#print "Okay let's play some music! Added "+str(i)+" tracks to the playlist for "+player.now_playing['item']["album_id"]
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Preparing to play...)")
@@ -895,8 +903,10 @@ class PlayList(xbmc.PlayList):
 		print "Fetching track "+str(circ_pos+1)
 		if player.now_playing['type'] == 'album':
 			item = player.now_playing['item']['tracks'][circ_pos]
+			thumb = img.base_path+player.now_playing['item']["thumb"]
 		elif player.now_playing['type'] == 'playlist':
 			item = player.now_playing['item'][circ_pos]
+			thumb = "none.png"
 		tid = item['trackId']
 		tname = self.__getitem__(circ_pos).getfilename()
 		playurl = api.get_playable_url(tid)
@@ -906,8 +916,8 @@ class PlayList(xbmc.PlayList):
 		li = xbmcgui.ListItem(
 	            item["name"],
 	            path=item["previewURL"],
-	            iconImage=img.base_path+item["thumb"],
-	            thumbnailImage=img.base_path+item["thumb"]
+	            iconImage=thumb,
+	            thumbnailImage=thumb
 				)
 		info = {
 	            "title": item["name"],
@@ -943,7 +953,7 @@ lib_artists =   ContentList('artist',  'lib_artists',   __addon_path__+'/resourc
 #lib_tracks =    ContentList('track',   'lib_tracks',    __addon_path__+'/resources/.lib_tracks.obj')
 #lib_stations =  ContentList('station', 'lib_stations',  __addon_path__+'/resources/.lib_stations.obj')
 #lib_favorites = ContentList('tracks',  'lib_favorites', __addon_path__+'/resources/.lib_favorites.obj')
-tracklist = TrackList()
+windowtracklist = WindowTrackList()
 
 app.set_var('running', True)
 app.set_var('logged_in', False)
