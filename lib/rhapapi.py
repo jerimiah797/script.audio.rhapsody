@@ -182,7 +182,7 @@ class Api():
 
 	def get_new_releases(self):
 		print "Rhapapi: getting new releases"
-		url = '%salbums/new?apikey=%s&limit=100' % (self.BASEURL, self.APIKEY)
+		url = '%salbums/new?apikey=%s&limit=5' % (self.BASEURL, self.APIKEY)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 3)
 		if results:
@@ -193,7 +193,7 @@ class Api():
 
 	def get_top_albums(self):
 		print "Rhapapi: getting top albums"
-		url = '%salbums/top?apikey=%s&limit=100' % (self.BASEURL, self.APIKEY)
+		url = '%salbums/top?apikey=%s&limit=5' % (self.BASEURL, self.APIKEY)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 3)
 		if results:
@@ -213,10 +213,14 @@ class Api():
 
 	def get_top_tracks(self):
 		print "Rhapapi: getting top tracks"
-		url = '%stracks/top?apikey=%s&limit=100' % (self.BASEURL, self.APIKEY)
+		url = '%stracks/top?apikey=%s&limit=5' % (self.BASEURL, self.APIKEY)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 3)
+		#container = []
 		if results:
+			#d = {'id': 'playlist', 'tracks': results2}
+			#container.append(d)
+			#return container
 			return results
 		else:
 			return False

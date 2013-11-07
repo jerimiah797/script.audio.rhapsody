@@ -528,7 +528,7 @@
                     </focusedlayout>
                 </control>
                 <!-- Top Tracks View -->
-                <control type="list" id="50">
+                <control type="list" id="51">
                     <visible>StringCompare(Window.Property(browseview),Browse_toptracks)</visible>
                     <onup>201</onup>
                     <ondown>50</ondown>

@@ -301,6 +301,29 @@ class MainWin(xbmcgui.WindowXML):
 			self.setCurrentListPosition(self.alb_dialog.pos)
 			app.save_album_data()
 
+		elif control == 51:
+			self.start_playback(control)
+
+
+	def start_playback(self, id):
+
+		player.now_playing = {'pos': 0, 'type':'playlist', 'item':toptracks.data}  #['data']}
+		playlist.build()
+		if id == 51:
+			player.now_playing['pos'] = self.getCurrentListPosition()
+		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song...)")
+		track = playlist.add_playable_track(0)
+		if not track:
+			xbmc.executebuiltin("XBMC.Notification(Rhapsody, Problem with this song. Aborting...)")
+			print "Unplayable track. Can't play this track"
+			#player.stop()
+			return False
+		player.playselected(player.now_playing['pos'])
+		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started)")
+		if id == 21:
+			self.setCurrentListPosition(playlist.getposition())
+			self.setFocusId(51)
+
 
 	def onFocus(self, control):
 		#print("onfocus(): control %i" % control)
@@ -596,7 +619,8 @@ class ContentList():
 			     #'lib_favorites': api.get_library_favorites
 			     }
 			r = d[self.name]()
-			self.save_raw_data(r)
+			#self.save_raw_data(r)
+		utils.prettyprint(r)
 		return r
 
 	def ingest_list(self, results):
@@ -627,6 +651,7 @@ class ContentList():
 				cache[id] = infos[self.type]
 
 		self.built = True
+		#utils.prettyprint(self.data)
 		#app.save_album_data()
 
 	def process_album(self, count, item):
@@ -686,18 +711,24 @@ class ContentList():
 	def process_track(self, count, item):
 		data = {}
 		#thumb = img.handler(item["images"][0]["url"], 'small', 'album')
-		data['track'] = {'track_id': item["id"],
-		         'track_name': item["name"],
-		         #'thumb': thumb,
+		thumb = 'none.png'
+		data['track'] = {'trackId': item["id"],
+		         'name': item["name"],
+		         'thumb': thumb,
 		         #'thumb_url': item["images"][0]["url"],
 		         'album': item['album']['name'],
+		         'displayAlbumName': item['album']['name'],
 		         'album_id': item['album']['id'],
 		         'genre_id': item['genre']['id'],
 		         'duration': item['duration'],
+		         'playbackSeconds': item['duration'],
 		         'style': '',
 		         'artist': item["artist"]["name"],
-		         'artist_id': item["artist"]["id"],
-		         'list_id': count}
+		         'displayArtistName': item["artist"]["name"],
+		         'artistId': item["artist"]["id"],
+		         'previewURL': item['sample'],
+		         'list_id': count,
+		         'trackIndex': count+1}
 		data['listitem'] = xbmcgui.ListItem(item["name"], item["artist"]["name"])
 		info = {
 	            "title": item["name"],
@@ -842,36 +873,48 @@ class Player(xbmc.Player):
 class PlayList(xbmc.PlayList):
 
 	def build(self):
+		print "Playlist: build dummy playlist"
 		playlist.clear()
-		list = player.now_playing['item']['tracks']
+		utils.prettyprint(player.now_playing['item'])
+		if player.now_playing['type'] == "album":
+			list = player.now_playing['item']['tracks']
+		elif player.now_playing['type'] == 'playlist':
+			list = player.now_playing['item']
 		for i, track in enumerate(list):
 			playlist.add(track['previewURL'], listitem=xbmcgui.ListItem(''))
-		print "Okay let's play some music! Added "+str(i)+" tracks to the playlist for "+player.now_playing['item']["album_id"]
+		#print "Okay let's play some music! Added "+str(i)+" tracks to the playlist for "+player.now_playing['item']["album_id"]
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Preparing to play...)")
-		win.current_playlist_albumId = player.now_playing['item']["album_id"]  #can probably eliminate this variable
+		#win.current_playlist_albumId = player.now_playing['item']["album_id"]  #can probably eliminate this variable
 
 
 	def add_playable_track(self, offset):
+		print "Playlist: add playable track"
+		print "pos: "+str(player.now_playing['pos'])
+		print "self.size: "+str(self.size())
 		circ_pos = (player.now_playing['pos']+offset)%self.size()
 		print "Fetching track "+str(circ_pos+1)
-		tid = player.now_playing['item']['tracks'][circ_pos]['trackId']
+		if player.now_playing['type'] == 'album':
+			item = player.now_playing['item']['tracks'][circ_pos]
+		elif player.now_playing['type'] == 'playlist':
+			item = player.now_playing['item'][circ_pos]
+		tid = item['trackId']
 		tname = self.__getitem__(circ_pos).getfilename()
 		playurl = api.get_playable_url(tid)
 		if not playurl:
 			return False
 		self.remove(tname)
 		li = xbmcgui.ListItem(
-	            player.now_playing['item']["tracks"][circ_pos]["name"],
-	            path=player.now_playing['item']["tracks"][circ_pos]["previewURL"],
-	            iconImage=img.base_path+player.now_playing['item']["thumb"],
-	            thumbnailImage=img.base_path+player.now_playing['item']["thumb"]
+	            item["name"],
+	            path=item["previewURL"],
+	            iconImage=img.base_path+item["thumb"],
+	            thumbnailImage=img.base_path+item["thumb"]
 				)
 		info = {
-	            "title": player.now_playing['item']["tracks"][circ_pos]["name"],
-	            "album": player.now_playing['item']["album"],
-	            "artist": player.now_playing['item']["artist"],
-	            "duration": player.now_playing['item']["tracks"][circ_pos]["playbackSeconds"],
-	            "tracknumber": int(player.now_playing['item']["tracks"][circ_pos]["trackIndex"]),
+	            "title": item["name"],
+	            "album": item["displayAlbumName"],
+	            "artist": item["displayArtistName"],
+	            "duration": item["playbackSeconds"],
+	            "tracknumber": int(item["trackIndex"]),
 				}
 		li.setInfo("music", info)
 		self.add(playurl, listitem=li, index=circ_pos)
