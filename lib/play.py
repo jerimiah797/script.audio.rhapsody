@@ -7,7 +7,7 @@ class Player(xbmc.Player):
 
 	def __init__(self, **kwargs):
 		self.win = kwargs.get('win')
-		self.app = kwargs.get('app')
+		self.cache = kwargs.get('cache')
 		self.img = kwargs.get('img')
 		self.api = kwargs.get('api')
 		self.playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC) #player=self, app=self.app, api=self.api, img=self.img)
@@ -101,7 +101,7 @@ class Player(xbmc.Player):
 		item = self.now_playing['item'][circ_pos]
 		alb_id = item['albumId']
 		try:
-			thumb = self.img.base_path+self.img.handler(self.app.album[alb_id]['thumb_url'], 'small', 'album')
+			thumb = self.img.base_path+self.img.handler(self.cache.album[alb_id]['thumb_url'], 'small', 'album')
 		except:
 			thumb = "none.png"
 		#thumb = "none.png"

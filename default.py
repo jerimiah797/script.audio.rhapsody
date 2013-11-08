@@ -12,6 +12,7 @@ from lib import play
 from lib import view
 from lib import lists
 from lib import utils
+from lib import caching
 
 
 #Set global addon information first
@@ -26,19 +27,6 @@ class Application():
 
 	def __init__(self):
 		self.__vars = {}  #dict for app vars
-		self.user_data = {} #object to store cached data
-
-		self.genre_tree__ = []  #json data from rhapsody
-		self.genre_dict__ = {}  #object to store cached data
-
-		self.artist = {}  #object to store cached data                                convert to self-managing data class instance
-		self.artist_file = __addon_path__+'/resources/.artistdb.obj'  #picklefile
-
-		self.album = {}  #object to store cached data
-		self.album_file = __addon_path__+'/resources/.albumdb.obj'  #picklefile
-
-		self.genre = {}  #object to store cached data
-		self.genre_file = __addon_path__+'/resources/.genres.obj'  #picklefile
 
 
 	def set_var(self, name, value):
@@ -56,59 +44,6 @@ class Application():
 	def remove_var(self, name):
 		del self.__vars[name]
 
-	def save_genre_data(self):
-		self.genre['genretree'] = self.genre_tree__
-		self.genre['genredict'] = self.genre_dict__
-		self.genre['timestamp'] = time.time()
-		jar = open(self.genre_file, 'wb')
-		pickle.dump(self.genre, jar)
-		jar.close()
-		print "Genre data saved!"
-
-
-	def save_album_data(self):
-		jar = open(self.album_file, 'wb')
-		pickle.dump(self.album, jar)
-		jar.close()
-		print "Album info saved in cachefile!"
-
-	def save_artist_data(self):
-		jar = open(self.artist_file, 'wb')
-		pickle.dump(self.artist, jar)
-		jar.close()
-		print "Artist info saved in cachefile!"
-
-
-	def load_cached_data(self):
-		print "checking cached data"
-		try:
-			pkl_file = open(self.album_file, 'rb')
-			self.album = pickle.load(pkl_file)
-			pkl_file.close()
-			print "Loaded Album cache"
-		except:
-			print "Couldn't read album cache file. Skipping..."
-
-		try:
-			pkl_file = open(self.artist_file, 'rb')
-			self.artist = pickle.load(pkl_file)
-			pkl_file.close()
-			print "Loaded Artist cache"
-		except:
-			print "Couldn't read artist cache file. Skipping..."
-
-		try:
-			pkl_file = open(self.genre_file, 'rb')
-			self.genre = pickle.load(pkl_file)
-			pkl_file.close()
-			self.genre_tree__ = self.genre['genretree']
-			self.genre_dict__ = self.genre['genredict']
-			print "Loaded Genre cache"
-		except:
-			print("Couldn't read genre cache file. Regenerating...")
-			genres.get_genre_tree()
-			genres.flatten_genre_keys(app.genre_tree__)
-			self.save_genre_data()
 
 
 class LoginWin(xbmcgui.WindowXML):
@@ -205,8 +140,8 @@ class MainWin(xbmcgui.WindowXML):
 	def __init__(self, xmlName, thescriptPath, defaultname, forceFallback):
 		self.setup = False
 		self.pos = None
-		self.playing_pos = None
-		self.current_playlist_albumId = None
+		#self.playing_pos = None
+		#self.current_playlist_albumId = None
 		#self.browse_menu = ["browse_newreleases","browse_topalbums","browse_topartists","browse_toptracks"]
 		#self.library_menu = ["library_albums", "library_artists", "library_tracks", "library_stations", "library_favorites"]
 		#print "Script path: " + __addon_path__
@@ -286,17 +221,19 @@ class MainWin(xbmcgui.WindowXML):
 			self.close()
 
 	def onClick(self, control):
-		self.pos = self.getCurrentListPosition()
-		id = app.get_var(list)[self.pos]#["album_id"]
+		pos = self.getCurrentListPosition()
+		id = app.get_var(list)[pos]#["album_id"]
+		print "mainwin onClick: id: "+str(id)
 		if control == 50:
 			self.alb_dialog = AlbumDialog("album.xml", __addon_path__, 'Default', '720p', current_list=app.get_var(list),
-			                         pos=self.pos, cache=app.album, alb_id=id)
+			                         pos=pos, cache=cache.album, alb_id=id)
 			self.alb_dialog.setProperty("review", "has_review")
 			self.alb_dialog.doModal()
+			self.alb_dialog.id = None
 			if self.empty_list():
 				view.draw_mainwin(self, app)
 			self.setCurrentListPosition(self.alb_dialog.pos)
-			app.save_album_data()
+			cache.save_album_data()
 
 		elif control == 51:
 			self.start_playback(control)
@@ -339,8 +276,11 @@ class MainWin(xbmcgui.WindowXML):
 	def sync_playlist_pos(self):
 		try:
 			if player.now_playing['id'] == 'toptracks':
+				print "syncing playlist pos because player.now_playing id is 'toptracks'"
 				self.setCurrentListPosition(playlist.getposition())
+				toptracks.pos = playlist.getposition()
 			elif player.now_playing['id'] == self.alb_dialog.id:
+				print "syncing playlist pos because player.now_player id is current album id"
 				self.alb_dialog.setCurrentListPosition(playlist.getposition())
 		except:
 			pass
@@ -529,15 +469,17 @@ class AlbumDialog(DialogBase):
 class ContentList():
 	#handle new releases, top albums, artist discography, library album list, etc.
 	def __init__(self, *args):
+
 		self.data = []
 		self.liz = []
 		self.built = False
-		self.pos = None
+		self.pos = 0
 		self.timestamp = time.time()
 		self.type = args[0]
 		self.name = args[1]
 		self.filename = args[2]
 		self.raw = None
+		print 'running init code for '+self.name
 
 	def fresh(self):
 		return True
@@ -558,6 +500,8 @@ class ContentList():
 			print "Doing full data fetch and list building for mainwin"
 			self.build()
 		app.set_var('last_rendered_list', self.name)
+		#if self.name == 'toptracks':
+		#	win.sync_playlist_pos()
 		#print app.get_var('last_rendered_list')
 
 
@@ -606,12 +550,12 @@ class ContentList():
 		win.clearList()
 		__ = {}
 
-		d = {'album': app.album,
-			 'artist': app.artist,
+		d = {'album': cache.album,
+			 'artist': cache.artist,
 		     'track':  __,
 		     'station': __}
 
-		cache = d[self.type]
+		store = d[self.type]
 
 		for i, item in enumerate(results):
 			id = item['id']
@@ -626,13 +570,13 @@ class ContentList():
 				self.data.append(infos[self.type])
 			self.liz.append(infos['listitem'])
 			self.add_lizitem_to_winlist(infos['listitem'])
-			if not id in cache:
-				cache[id] = infos[self.type]
+			if not id in store:
+				store[id] = infos[self.type]
 
 		self.built = True
 		#utils.prettyprint(self.data)
-		app.save_album_data()
-		app.save_artist_data()
+		cache.save_album_data()
+		cache.save_artist_data()
 
 
 	def process_album(self, count, item):
@@ -660,7 +604,7 @@ class ContentList():
 		print "processing "+id
 		data = {}
 
-		if not id in app.artist:
+		if not id in cache.artist:
 			if id == 'Art.0':
 				print "detected artist 0 case!"
 				url = None
@@ -668,12 +612,12 @@ class ContentList():
 			else:
 				url = img.identify_largest_image(item["id"], "artist")
 				g_id = api.get_artist_genre(item["id"])
-				genre = app.genre_dict__[g_id]
+				genre = cache.genre_dict__[g_id]
 		else:
 			#print 'using cached thumb url for artist image'
-			url = app.artist[id]['thumb_url']
+			url = cache.artist[id]['thumb_url']
 			#print 'using cached genre for artist'
-			genre = app.artist[id]['style']
+			genre = cache.artist[id]['style']
 
 		bigthumb = img.handler(url, 'large', 'artist')
 
@@ -730,7 +674,7 @@ class ContentList():
 		for i, item in enumerate(self.liz):
 			win.addItem(self.liz[i])
 			#xbmc.sleep(2)
-
+		print "list position: "+ str(self.pos)
 
 class WindowTrackList():
 	def __init__(self):
@@ -753,34 +697,9 @@ class WindowTrackList():
 
 
 
-class ArtistList():
-	def __init__(self):
-		pass
-	#handle top artists, artist library list, editorial artist lists, etc.
 
 
-class Genres():
-	def __init__(self):
-		#self.get_genre_tree()
-		#self.flatten_genre_keys(app.genre_tree__)
-		#app.save_genre_data()
-		pass
 
-
-	def get_genre_tree(self):
-		results = api.get_genres()
-		if results:
-			app.genre_tree__ = results
-		else:
-			print "Couldn't retrieve genres!"
-
-	def flatten_genre_keys(self, j):
-		for item in j:
-			app.genre_dict__[item['id']] = item['name']
-			#print "added a key for "+item['name']
-			if 'subgenres' in item:
-				#print "found subgenres. Calling self recursively"
-				self.flatten_genre_keys(item['subgenres'])
 
 
 
@@ -790,11 +709,11 @@ app = Application()
 mem = member.Member()
 mem.set_addon_path(__addon_path__)
 win = MainWin("main.xml", __addon_path__, 'Default', '720p')
-
+cache = caching.Cache(__addon_path__)
 api = rhapapi.Api()
 img = image.Image(__addon_path__)
-genres = Genres()
-player = play.Player(win=win, app=app, img=img, api=api)
+
+player = play.Player(win=win, cache=cache, img=img, api=api)
 playlist = player.playlist
 
 
@@ -830,7 +749,7 @@ app.set_var('last_rendered_list', None)
 loadwin = xbmcgui.WindowXML("loading.xml", __addon_path__, 'Default', '720p')
 loadwin.show()
 loadwin.getControl(10).setLabel('Getting things ready...')
-app.load_cached_data()
+cache.load_cached_data()
 time.sleep(1)
 
 
@@ -855,8 +774,8 @@ while app.get_var('running'):
 		loadwin.getControl(10).setLabel('Finishing up...')
 	del win
 	t1 = time.time()
-	app.save_album_data()
-	app.save_artist_data()
+	cache.save_album_data()
+	cache.save_artist_data()
 	t2 = time.time()
 	print "Album data save operation took "+str(t2-t1)
 	time.sleep(1)

@@ -7,5 +7,5 @@ def draw_mainwin(win, app):
 		win.make_visible(300, 50)
 		inst.make_active()
 		win.setFocusId(50)
-		if win.pos:
-			win.setCurrentListPosition(win.pos)
+		if inst.pos:
+			win.setCurrentListPosition(inst.pos)
