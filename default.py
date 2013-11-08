@@ -27,6 +27,7 @@ class Application():
 
 	def __init__(self):
 		self.__vars = {}  #dict for app vars
+		self.view_keeper = {'browseview': 'browse_newreleases', 'frame': 'Browse'}
 
 
 	def set_var(self, name, value):
@@ -140,6 +141,10 @@ class MainWin(xbmcgui.WindowXML):
 	def __init__(self, xmlName, thescriptPath, defaultname, forceFallback):
 		self.setup = False
 		print "running _init_ for mainwin"
+		#self.win = xbmcgui.Window(xbmcgui.getCurrentWindowId())
+		#self.win.setProperty("browseview", 'browse_newreleases')
+		#self.win.setProperty("frame", 'Browse')
+
 		#self.pos = None
 		#self.playing_pos = None
 		#self.current_playlist_albumId = None
@@ -150,17 +155,16 @@ class MainWin(xbmcgui.WindowXML):
 
 	def onInit(self):
 		print "running onInit for mainwin"
-		self.win = xbmcgui.Window(xbmcgui.getCurrentWindowId())
-		self.win.setProperty("browseview", 'browse_newreleases')
-		self.win.setProperty("frame", 'Browse')
-		self.alb_dialog = None
+		self.handle = xbmcgui.Window(xbmcgui.getCurrentWindowId())
+		self.handle.setProperty("browseview", app.view_keeper['browseview'])
+		self.handle.setProperty("frame", app.view_keeper['frame'])
+		#self.alb_dialog = None
 		self.main()
 
 	def main(self):
-
-		self.win.setProperty("full_name", mem.first_name+" "+mem.last_name)
-		self.win.setProperty("country", mem.catalog)
-		self.win.setProperty("logged_in", "true")
+		self.handle.setProperty("full_name", mem.first_name+" "+mem.last_name)
+		self.handle.setProperty("country", mem.catalog)
+		self.handle.setProperty("logged_in", "true")
 		self.clist = self.getControl(201)
 		self.frame_label = self.getControl(121)
 		view.draw_mainwin(self, app)
@@ -180,9 +184,11 @@ class MainWin(xbmcgui.WindowXML):
 	def manage_action(self):
 		if self.getFocusId() == 201:
 			view.draw_mainwin(self, app)
+			app.view_keeper = {'browseview': self.getProperty('browseview'), 'frame': self.getProperty('frame')}
 
 		elif self.getFocusId() == 101:
 			view.draw_mainwin(self, app)
+			app.view_keeper = {'browseview': self.getProperty('browseview'), 'frame': self.getProperty('frame')}
 
 		elif self.getFocusId() == 1001:
 			app.set_var('logged_in', False)

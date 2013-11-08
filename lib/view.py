@@ -1,7 +1,7 @@
 
 
 def draw_mainwin(win, app):
-		v = win.getProperty('browseview')
+		v = win.handle.getProperty('browseview')
 		inst = app.get_var('view_matrix')[v]
 		app.set_var(list, inst.data)
 		win.make_visible(300, 50)
