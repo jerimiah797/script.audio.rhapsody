@@ -139,7 +139,8 @@ class MainWin(xbmcgui.WindowXML):
 
 	def __init__(self, xmlName, thescriptPath, defaultname, forceFallback):
 		self.setup = False
-		self.pos = None
+		print "running _init_ for mainwin"
+		#self.pos = None
 		#self.playing_pos = None
 		#self.current_playlist_albumId = None
 		#self.browse_menu = ["browse_newreleases","browse_topalbums","browse_topartists","browse_toptracks"]
@@ -148,10 +149,10 @@ class MainWin(xbmcgui.WindowXML):
 
 
 	def onInit(self):
-
+		print "running onInit for mainwin"
 		self.win = xbmcgui.Window(xbmcgui.getCurrentWindowId())
-		self.win.setProperty("browseview", app.get_var('current_view'))
-		self.win.setProperty("frame", app.get_var('current_frame'))
+		self.win.setProperty("browseview", 'browse_newreleases')
+		self.win.setProperty("frame", 'Browse')
 		self.alb_dialog = None
 		self.main()
 
@@ -178,36 +179,9 @@ class MainWin(xbmcgui.WindowXML):
 
 	def manage_action(self):
 		if self.getFocusId() == 201:
-			if win.getProperty("frame") == "Browse":
-				app.set_var('current_view', self.win.getProperty('browseview'))
-			if win.getProperty("frame") == "Library":
-				app.set_var('current_view', self.win.getProperty('browseview'))
 			view.draw_mainwin(self, app)
 
 		elif self.getFocusId() == 101:
-			print "Clicked left nav menu: "+self.win.getProperty("frame")
-			frame = self.win.getProperty("frame")
-			if frame == "Search":
-				app.set_var('current_frame', frame)
-			elif frame == "Browse":
-				app.set_var('current_view', "browse_newreleases")
-				self.win.setProperty("browseview", app.get_var('current_view'))
-				app.set_var('current_frame', frame)
-			elif frame == "Radio":
-				app.set_var('current_frame', frame)
-			elif frame == "Library":
-				app.set_var('current_view', "library_albums")
-				self.win.setProperty("browseview", app.get_var('current_view'))
-				app.set_var('current_frame', frame)
-
-			elif frame == "Playlists":
-				app.set_var('current_frame', frame)
-			elif frame == "Listening History":
-				app.set_var('current_frame', frame)
-			elif frame == "Queue":
-				app.set_var('current_frame', frame)
-			elif frame == "Settings":
-				app.set_var('current_frame', frame)
 			view.draw_mainwin(self, app)
 
 		elif self.getFocusId() == 1001:
@@ -489,8 +463,10 @@ class ContentList():
 			print "Window already has that list in memory. Skipping list building"
 			return
 		print "ContentList: make active " +self.name
-		print "current frame: "+app.get_var('current_frame')
-		print "current view: "+app.get_var('current_view')
+		#print "current frame: "+app.get_var('current_frame')
+		#print "current view: "+app.get_var('current_view')
+		print "current frame: "+win.getProperty('frame')
+		print "current view: "+win.getProperty('browseview')
 		print "Built: "+str(self.built)
 		print "Fresh: "+str(self.fresh())
 		if self.built and self.fresh():
@@ -742,8 +718,6 @@ app.set_var('view_matrix' , {"browse_newreleases": newreleases,
 app.set_var('running', True)
 app.set_var('logged_in', False)
 app.set_var('bad_creds', False)
-app.set_var('current_view', "browse_newreleases")
-app.set_var('current_frame', "Browse")
 app.set_var('last_rendered_list', None)
 
 loadwin = xbmcgui.WindowXML("loading.xml", __addon_path__, 'Default', '720p')

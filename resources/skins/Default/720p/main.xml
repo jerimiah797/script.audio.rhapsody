@@ -86,6 +86,7 @@
                     <item id="103">
                         <label>Browse</label>
                         <onclick>SetProperty(frame,Browse)</onclick>
+                        <onclick>SetProperty(browseview,browse_newreleases)</onclick>
                     </item>
                     <item id="104">
                         <label>Radio</label>
@@ -94,6 +95,7 @@
                     <item id="105">
                         <label>Library</label>
                         <onclick>SetProperty(frame,Library)</onclick>
+                        <onclick>SetProperty(browseview,library_albums)</onclick>
                     </item>
                     <item id="106">
                         <label>Playlists</label>
