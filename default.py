@@ -8,6 +8,9 @@ import time
 from lib import rhapapi
 from lib import image
 from lib import member
+from lib import play
+
+from lib import lists
 from lib import utils
 
 
@@ -310,11 +313,11 @@ class MainWin(xbmcgui.WindowXML):
 	def start_playback(self, id):
 
 		player.now_playing = {'pos': 0, 'type':'playlist', 'item':toptracks.data, 'id':'toptracks'}  #['data']}
-		playlist.build()
+		player.build()
 		if id == 51:
 			player.now_playing['pos'] = self.getCurrentListPosition()
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song...)")
-		track = playlist.add_playable_track(0)
+		track = player.add_playable_track(0)
 		if not track:
 			xbmc.executebuiltin("XBMC.Notification(Rhapsody, Problem with this song. Aborting...)")
 			print "Unplayable track. Can't play this track"
@@ -455,17 +458,17 @@ class AlbumDialog(DialogBase):
 		if not self.now_playing_matches_album_dialog():
 			print "hit the first if. building playlist"
 			player.now_playing = {'pos': 0, 'type':'album', 'item':album['tracks'], 'id':album['album_id']}
-			playlist.build()
+			player.build()
 		if player.now_playing['type'] != 'album':
 			print "hit the second if. building playlist"
 			player.now_playing = {'pos': 0, 'type':'album', 'item':album['tracks'], 'id':album['album_id']}
-			playlist.build()
+			player.build()
 		#print "Now playing item list follows!"
 		#utils.prettyprint(player.now_playing['item'])
 		if id == 51:
 			player.now_playing['pos'] = self.getCurrentListPosition()
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song...)")
-		track = playlist.add_playable_track(0)
+		track = player.add_playable_track(0)
 		if not track:
 			xbmc.executebuiltin("XBMC.Notification(Rhapsody, Problem with this song. Aborting...)")
 			print "Unplayable track. Can't play this track"
@@ -813,136 +816,20 @@ class Genres():
 				self.flatten_genre_keys(item['subgenres'])
 
 
-class Player(xbmc.Player):
-
-	def __init__(self):
-		self.now_playing = {'pos': 0, 'type': None,'item':[]}
-		#self.now_playing['item']['album_id'] = 'blank'
-		self.onplay_lock = False
-
-	def onPlayBackStarted(self):
-		if not player.onplay_lock:
-			player.onplay_lock = True
-			win.sync_playlist_pos()
-			pos = playlist.getposition()
-			self.now_playing['pos'] = pos
-			print "Playing track "+str(pos+1)
-			playlist.add_playable_track(1)
-			playlist.add_playable_track(-1)
-			win.sync_playlist_pos()
-			pos2 = playlist.getposition()
-			#print "pos: "+str(pos)+" pos2: "+str(pos2)
-			if pos != pos2:
-				print "Oh wait! We're not playing track "+str(pos+1)+"!"
-				print "Playing track "+str(pos2+1)
-				print "There, fixed it for ya. "
-				self.now_playing['pos'] = pos2
-				playlist.add_playable_track(1)
-				playlist.add_playable_track(-1)
-			xbmc.sleep(2)
-			player.onplay_lock = False
-		else:
-			print "--------- blocked an extra play action from XBMC --------"
-
-
-	def onPlayBackResumed(self):
-		if not player.onplay_lock:
-			player.onplay_lock = True
-			win.sync_playlist_pos()
-			pos = playlist.getposition()
-			self.now_playing['pos'] = pos
-			print "Playing track "+str(pos+1)
-			playlist.add_playable_track(1)
-			playlist.add_playable_track(-1)
-			win.sync_playlist_pos()
-			pos2 = playlist.getposition()
-			#print "pos: "+str(pos)+" pos2: "+str(pos2)
-			if pos != pos2:
-				print "Oh wait! We're not playing track "+str(pos+1)+"!"
-				print "Playing track "+str(pos2+1)
-				print "There, fixed it for ya. "
-				self.now_playing['pos'] = pos2
-				playlist.add_playable_track(1)
-				playlist.add_playable_track(-1)
-
-			xbmc.sleep(2)
-			player.onplay_lock = False
-		else:
-			print "--------- blocked an extra play action from XBMC --------"
-
-	def onPlayBackEnded(self):
-		print "onPlaybackEnded was detected!"
-
-	def onPlayBackStopped(self):
-		print "onPlaybackStopped was detected!"
-
-	def onQueueNextItem(self):
-		print "onQueueNextItem was detected!"
-
-class PlayList(xbmc.PlayList):
-
-	def build(self):
-		print "Playlist: build dummy playlist"
-		playlist.clear()
-		#utils.prettyprint(player.now_playing['item'])
-		if player.now_playing['type'] == "album":
-			liz = player.now_playing['item']
-			#win.current_playlist_albumId = player.now_playing['item']["album_id"]  #can probably eliminate this variable
-		elif player.now_playing['type'] == 'playlist':
-			liz = player.now_playing['item']
-			#win.current_playlist_albumId = None
-		#utils.prettyprint(liz)
-		for i, track in enumerate(liz):
-			playlist.add(track['previewURL'], listitem=xbmcgui.ListItem(''))
-		#print "Okay let's play some music! Added "+str(i)+" tracks to the playlist for "+player.now_playing['item']["album_id"]
-		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Preparing to play...)")
-		#win.current_playlist_albumId = player.now_playing['item']["album_id"]  #can probably eliminate this variable
-
-
-	def add_playable_track(self, offset):
-		print "Playlist: add playable track"
-		circ_pos = (player.now_playing['pos']+offset)%self.size()
-		print "Fetching track "+str(circ_pos+1)
-		item = player.now_playing['item'][circ_pos]
-		alb_id = item['albumId']
-		thumb = img.base_path+img.handler(app.album[alb_id]['thumb_url'], 'small', 'album')
-		#thumb = "none.png"
-		tid = item['trackId']
-		tname = self.__getitem__(circ_pos).getfilename()
-		playurl = api.get_playable_url(tid)
-		if not playurl:
-			return False
-		self.remove(tname)
-		li = xbmcgui.ListItem(
-	            item["name"],
-	            path=item["previewURL"],
-	            iconImage=thumb,
-	            thumbnailImage=thumb
-				)
-		info = {
-	            "title": item["name"],
-	            "album": item["displayAlbumName"],
-	            "artist": item["displayArtistName"],
-	            "duration": item["playbackSeconds"],
-	            "tracknumber": int(item["trackIndex"]),
-				}
-		li.setInfo("music", info)
-		self.add(playurl, listitem=li, index=circ_pos)
-		return True
-
-
 
 #gc.disable()
 
 app = Application()
 mem = member.Member()
 mem.set_addon_path(__addon_path__)
+win = MainWin("main.xml", __addon_path__, 'Default', '720p')
 
-genres = Genres()
-player = Player()
-playlist = PlayList(xbmc.PLAYLIST_MUSIC)
 api = rhapapi.Api()
 img = image.Image(__addon_path__)
+genres = Genres()
+player = play.Player(win=win, app=app, img=img, api=api)
+playlist = player.playlist
+
 
 newreleases =   ContentList('album',   'newreleases',   __addon_path__+'/resources/.newreleases.obj')
 topalbums =     ContentList('album',   'topalbums',     __addon_path__+'/resources/.topalbums.obj')
@@ -982,7 +869,7 @@ while app.get_var('running'):
 			app.set_var('logged_in', True)
 			time.sleep(1)
 		api.token = mem.access_token
-	win = MainWin("main.xml", __addon_path__, 'Default', '720p')
+	#win = MainWin("main.xml", __addon_path__, 'Default', '720p')
 	win.doModal()
 	if app.get_var('logged_in') == False:
 		loadwin.getControl(10).setLabel('Logging you out...')
