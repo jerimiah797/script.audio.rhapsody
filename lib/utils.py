@@ -1,3 +1,4 @@
+import xbmcgui
 import json
 
 def remove_html_markup(s):
@@ -18,3 +19,11 @@ def remove_html_markup(s):
 
 def prettyprint(string):
 	print(json.dumps(string, sort_keys=True, indent=4, separators=(',', ': ')))
+
+def goodbye(win, app, player):
+		dialog = xbmcgui.Dialog()
+		if dialog.yesno("Quit Rhapsody?", "Nobody like a quitter. Nobody. "):
+			app.set_var('running',False)
+			player.stop()
+			player.playlist.clear()
+			win.close()

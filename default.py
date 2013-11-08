@@ -9,7 +9,7 @@ from lib import rhapapi
 from lib import image
 from lib import member
 from lib import play
-
+from lib import view
 from lib import lists
 from lib import utils
 
@@ -39,7 +39,6 @@ class Application():
 
 		self.genre = {}  #object to store cached data
 		self.genre_file = __addon_path__+'/resources/.genres.obj'  #picklefile
-
 
 
 	def set_var(self, name, value):
@@ -228,26 +227,19 @@ class MainWin(xbmcgui.WindowXML):
 		self.win.setProperty("logged_in", "true")
 		self.clist = self.getControl(201)
 		self.frame_label = self.getControl(121)
-		self.draw_mainwin()
+		view.draw_mainwin(self, app)
 
 
 	def onAction(self, action):
 		if action.getId() == 7:
 			self.manage_action()
 		if action.getId() == 10:
-			self.goodbye()
+			utils.goodbye(self, app, player)
 		elif action.getId() == 92:
-			self.goodbye()
+			utils.goodbye(self, app, player)
 		else:
 			pass
 
-	def goodbye(self):
-		dialog = xbmcgui.Dialog()
-		if dialog.yesno("Quit Rhapsody?", "Nobody like a quitter. Nobody. "):
-			app.set_var('running',False)
-			player.stop()
-			playlist.clear()
-			self.close()
 
 	def manage_action(self):
 		if self.getFocusId() == 201:
@@ -255,7 +247,7 @@ class MainWin(xbmcgui.WindowXML):
 				app.set_var('current_view', self.win.getProperty('browseview'))
 			if win.getProperty("frame") == "Library":
 				app.set_var('current_view', self.win.getProperty('browseview'))
-			self.draw_mainwin()
+			view.draw_mainwin(self, app)
 
 		elif self.getFocusId() == 101:
 			print "Clicked left nav menu: "+self.win.getProperty("frame")
@@ -281,7 +273,7 @@ class MainWin(xbmcgui.WindowXML):
 				app.set_var('current_frame', frame)
 			elif frame == "Settings":
 				app.set_var('current_frame', frame)
-			self.draw_mainwin()
+			view.draw_mainwin(self, app)
 
 		elif self.getFocusId() == 1001:
 			app.set_var('logged_in', False)
@@ -302,7 +294,7 @@ class MainWin(xbmcgui.WindowXML):
 			self.alb_dialog.setProperty("review", "has_review")
 			self.alb_dialog.doModal()
 			if self.empty_list():
-				self.draw_mainwin()
+				view.draw_mainwin(self, app)
 			self.setCurrentListPosition(self.alb_dialog.pos)
 			app.save_album_data()
 
@@ -334,13 +326,6 @@ class MainWin(xbmcgui.WindowXML):
 		#print("onfocus(): control %i" % control)
 		pass
 
-	def draw_list(self, inst):
-		app.set_var(list, inst.data)
-		self.make_visible(300, 50)
-		inst.make_active()
-		self.setFocusId(50)
-		if self.pos:
-			self.setCurrentListPosition(self.pos)
 
 	def make_visible(self, *args):
 		for item in args:
@@ -349,24 +334,6 @@ class MainWin(xbmcgui.WindowXML):
 	def empty_list(self):
 		if self.getListSize() < 2:
 			return True
-
-
-	def draw_mainwin(self):
-
-		d = {"browse_newreleases": newreleases,
-		     "browse_topalbums":   topalbums,
-		     "browse_topartists":  topartists,
-		     "browse_toptracks":   toptracks,
-		     "library_albums":     lib_albums,
-		     "library_artists":    lib_artists,
-		     #"library_tracks":     lib_tracks,
-		     #"library_stations":   lib_stations,
-		     #"library_favorites":  lib_favorites
-		     }
-
-		v = app.get_var('current_view')
-
-		self.draw_list(d[v])
 
 
 	def sync_playlist_pos(self):
@@ -841,6 +808,17 @@ lib_artists =   ContentList('artist',  'lib_artists',   __addon_path__+'/resourc
 #lib_stations =  ContentList('station', 'lib_stations',  __addon_path__+'/resources/.lib_stations.obj')
 #lib_favorites = ContentList('tracks',  'lib_favorites', __addon_path__+'/resources/.lib_favorites.obj')
 windowtracklist = WindowTrackList()
+
+app.set_var('view_matrix' , {"browse_newreleases": newreleases,
+			                "browse_topalbums":   topalbums,
+			                "browse_topartists":  topartists,
+			                "browse_toptracks":   toptracks,
+			                "library_albums":     lib_albums,
+			                "library_artists":    lib_artists,
+			                #"library_tracks":     lib_tracks,
+			                #"library_stations":   lib_stations,
+			                #"library_favorites":  lib_favorites
+			                })
 
 app.set_var('running', True)
 app.set_var('logged_in', False)
