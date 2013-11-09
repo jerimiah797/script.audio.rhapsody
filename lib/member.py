@@ -24,8 +24,6 @@ class Member():
 		self.catalog = ""
 		self.timestamp = ""
 
-	#def set_addon_path(self, path):
-	#	self.filename = path+'/resources/.rhapuser.obj'
 
 	def has_saved_creds(self):
 		print "checking saved creds"
@@ -47,7 +45,7 @@ class Member():
 		except:
 			print "Couldn't read saved user data. Login please"
 			return False
-		diff = time.time()-self.timestamp
+		#diff = time.time()-self.timestamp
 		#if diff < self.expires_in:
 		#	print "Saved creds look good. Automatic login successful!"
 		#	return True

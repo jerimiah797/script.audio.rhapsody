@@ -1,5 +1,4 @@
 import xbmcgui
-import gc
 import time
 from lib import view
 from lib import main
@@ -33,14 +32,10 @@ while app.get_var('running'):
 	else:
 		loadwin.getControl(10).setLabel('Finishing up...')
 	del app.win
-	t1 = time.time()
-	app.cache.save_album_data()
-	app.cache.save_artist_data()
-	t2 = time.time()
-	print "Album and artist data save operation took "+str(t2-t1)
 	time.sleep(1)
+loadwin.close()
 del loadwin
-gc.collect()
+del app
 print "Rhapsody addon has exited"
 
 

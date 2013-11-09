@@ -24,26 +24,33 @@ class Cache():
 		self.api = self.app.api
 
 	def save_genre_data(self):
+		t1 = time.time()
 		self.genre['genretree'] = self.genre_tree__
 		self.genre['genredict'] = self.genre_dict__
 		self.genre['timestamp'] = time.time()
 		jar = open(self.genre_file, 'wb')
 		pickle.dump(self.genre, jar)
 		jar.close()
-		print "Genre data saved!"
+		t2 = time.time()
+		print "Genre data saved!  Operation took "+str(t2-t1)
 
 
 	def save_album_data(self):
+		t1 = time.time()
 		jar = open(self.album_file, 'wb')
 		pickle.dump(self.album, jar)
 		jar.close()
-		print "Album info saved in cachefile!"
+		t2 = time.time()
+		print "Album info saved in cachefile! Operation took "+str(t2-t1)
+
 
 	def save_artist_data(self):
+		t1 = time.time()
 		jar = open(self.artist_file, 'wb')
 		pickle.dump(self.artist, jar)
 		jar.close()
-		print "Artist info saved in cachefile!"
+		t2 = time.time()
+		print "Artist info saved in cachefile! Operation took "+str(t2-t1)
 
 
 	def load_cached_data(self):

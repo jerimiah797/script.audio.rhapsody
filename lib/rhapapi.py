@@ -21,12 +21,12 @@ class Api():
 	def __get_data_from_rhapsody(self, req, timeout):
 		succeed = 0
 		while succeed < 2:
-			print "Rhapapi: trying to get data..."
+			#print "Rhapapi: trying to get data..."
 			#print "timeout = "+str(timeout)
 			try:
 				response = urllib2.urlopen(req, timeout=timeout)
 				results = json.load(response)
-				print "Rhapapi: received data from servers!"
+				#print "Rhapapi: received data from servers!"
 				return results
 			except urllib2.HTTPError, e:
 				print "------------------  Bad server response ----------------"

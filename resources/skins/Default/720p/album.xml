@@ -78,7 +78,7 @@
                 <height>560</height>
                 <texture>white.png</texture>
             </control>
-            <!--control type="group" id="35">
+            <control type="group" id="35">
                 <description>container for bottom pre/next nav buttons</description>
                 <posx>0</posx>
                 <posy>120</posy>
@@ -95,11 +95,11 @@
                     <texture>white.png</texture>
                 </control>
                 <control type="button" id="31">
-                    <width>120</width>
+                    <width>240</width>
                     <height>50</height>
                     <posx>430</posx>
                     <posy>560</posy>
-                    <label>PREV</label>
+                    <label>PREV / NEXT</label>
                     <textcolor>black</textcolor>
                     <textoffsetx>0</textoffsetx>
                     <textoffsety>0</textoffsety>
@@ -110,9 +110,9 @@
                     <align>center</align>
                     <onup>29</onup>
                     <onleft>-</onleft>
-                    <onright>32</onright>
+                    <onright>-</onright>
                 </control>
-                <control type="button" id="32">
+                <!--control type="button" id="32">
                     <width>120</width>
                     <height>50</height>
                     <posx>550</posx>
@@ -129,8 +129,8 @@
                     <onup>29</onup>
                     <onleft>31</onleft>
                     <onright>-</onright>
-                </control>
-            </control-->
+                </control-->
+            </control>
 
             <control type="group" id="1200">
                 <!-- Artist info pane -->
@@ -200,7 +200,7 @@
 
                             <onright>24</onright>
                             <onleft>51</onleft>
-                            <ondown>-</ondown>
+                            <ondown>35</ondown>
                         </control>
                         <control type="label" id="22">
                             <posx>90</posx>
@@ -212,7 +212,7 @@
                             <font>rhapsody_font45caps_title</font>
                             <onright>24</onright>
                             <onleft>21</onleft>
-                            <ondown>-</ondown>
+                            <ondown>35</ondown>
                         </control>
                         <control type="group">
                             <description>subcontainer for Add to... buttons</description>
@@ -266,7 +266,7 @@
                                 <onup>24</onup>
                                 <onleft>21</onleft>
                                 <onright>26</onright>
-                                <ondown>-</ondown>
+                                <ondown>35</ondown>
                             </control>
                         </control>
                         <control type="button" id="26">

@@ -91,7 +91,7 @@ class Player(xbmc.Player):
 		for i, track in enumerate(liz):
 			self.playlist.add(track['previewURL'], listitem=xbmcgui.ListItem(''))
 		#print "Okay let's play some music! Added "+str(i)+" tracks to the playlist for "+player.now_playing['item']["album_id"]
-		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Preparing to play...)")
+		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Preparing to play..., 2000, %s)" %(self.app.__addon_icon__))
 		#win.current_playlist_albumId = player.now_playing['item']["album_id"]  #can probably eliminate this variable
 
 

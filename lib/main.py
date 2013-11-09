@@ -21,6 +21,7 @@ class Application():
 		self.__addon_cfg__ = xbmcaddon.Addon(self.__addon_id__)
 		self.__addon_path__ = self.__addon_cfg__.getAddonInfo('path')
 		self.__addon_version__ = self.__addon_cfg__.getAddonInfo('version')
+		self.__addon_icon__ = self.__addon_cfg__.getAddonInfo('icon')
 
 		self.newreleases =   None
 		self.topalbums =     None

@@ -1,7 +1,8 @@
 import time
 import pickle
 import xbmcgui
-from lib import rhapapi
+import gc
+
 
 class ContentList():
 	#handle new releases, top albums, artist discography, library album list, etc.
@@ -98,22 +99,25 @@ class ContentList():
 		     'station': __}
 
 		store = d[self.type]
+		recycle = {}
 
 		for i, item in enumerate(results):
 			id = item['id']
 			if self.type == 'album':
-				infos = self.process_album(i, item)
+				infos = self.process_album(i, item, recycle)
 				self.data.append(infos[self.type]['album_id'])
 			elif self.type == 'artist':
-				infos = self.process_artist(i, item)
+				infos = self.process_artist(i, item, recycle)
 				self.data.append(infos[self.type]['artist_id'])
 			elif self.type == 'track':
-				infos = self.process_track(i, item)
+				infos = self.process_track(i, item, recycle)
 				self.data.append(infos[self.type])
 			self.liz.append(infos['listitem'])
 			self.add_lizitem_to_winlist(infos['listitem'])
 			if not id in store:
 				store[id] = infos[self.type]
+			del infos
+			gc.collect
 
 		self.built = True
 		#utils.prettyprint(self.data)
@@ -121,8 +125,8 @@ class ContentList():
 		self.cache.save_artist_data()
 
 
-	def process_album(self, count, item):
-		data = {}
+	def process_album(self, count, item, data):
+		#data = {}
 		thumb = self.img.handler(item["images"][0]["url"], 'small', 'album')
 		data['album'] = {'album_id': item["id"],
 		         'album': item["name"],
@@ -141,10 +145,10 @@ class ContentList():
 		data['listitem'] = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', thumb)
 		return data
 
-	def process_artist(self, count, item):
+	def process_artist(self, count, item, data):
 		id = item['id']
 		print "processing "+id
-		data = {}
+		#data = {}
 
 		if not id in self.cache.artist:
 			if id == 'Art.0':
@@ -175,8 +179,8 @@ class ContentList():
 		data['listitem'] = xbmcgui.ListItem(item["name"], data["artist"]["style"], '', bigthumb)
 		return data
 
-	def process_track(self, count, item):
-		data = {}
+	def process_track(self, count, item, data):
+		#data = {}
 		#thumb = img.handler(item["images"][0]["url"], 'small', 'album')
 		thumb = 'none.png'
 		data['track'] = {'trackId': item["id"],

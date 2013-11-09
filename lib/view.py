@@ -1,22 +1,18 @@
 import xbmcgui
 import xbmc
+
 import os
 from lib import utils
-from lib import play
-
-
-
-
 
 def draw_mainwin(win, app):
-		v = win.handle.getProperty('browseview')
-		inst = app.get_var('view_matrix')[v]
-		app.set_var(list, inst.data)
+		view = win.handle.getProperty('browseview')
+		list_instance = app.get_var('view_matrix')[view]
+		app.set_var(list, list_instance.data)
 		win.make_visible(300, 50)
-		inst.make_active()
+		list_instance.make_active()
 		win.setFocusId(50)
-		if inst.pos:
-			win.setCurrentListPosition(inst.pos)
+		if list_instance.pos:
+			win.setCurrentListPosition(list_instance.pos)
 
 
 class WinBase(xbmcgui.WindowXML):
@@ -48,6 +44,12 @@ class LoginWin(WinBase):
 
 		print "Exited the while loop! Calling the del function"
 		self.close()
+
+
+class DialogBase(xbmcgui.WindowXMLDialog):
+	def __init__(self, xmlName, thescriptPath, defaultname, forceFallback):
+		#print "I'm the Dialog base dialog class"
+		pass
 
 
 class InputDialog(xbmcgui.WindowXMLDialog):
@@ -115,7 +117,6 @@ class InputDialog(xbmcgui.WindowXMLDialog):
 		else: pass
 
 
-
 class MainWin(WinBase):
 
 	def __init__(self, *args, **kwargs):
@@ -137,14 +138,13 @@ class MainWin(WinBase):
 		self.handle = xbmcgui.Window(xbmcgui.getCurrentWindowId())
 		self.handle.setProperty("browseview", self.app.view_keeper['browseview'])
 		self.handle.setProperty("frame", self.app.view_keeper['frame'])
-		#self.alb_dialog = None
 		self.main()
 
 	def main(self):
 		self.handle.setProperty("full_name", self.mem.first_name+" "+self.mem.last_name)
 		self.handle.setProperty("country", self.mem.catalog)
 		self.handle.setProperty("logged_in", "true")
-		self.clist = self.getControl(201)
+		#self.clist = self.getControl(201)
 		self.frame_label = self.getControl(121)
 		draw_mainwin(self, self.app)
 
@@ -204,15 +204,15 @@ class MainWin(WinBase):
 		self.player.build()
 		if id == 51:
 			self.player.now_playing['pos'] = self.getCurrentListPosition()
-		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song...)")
+		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
 		track = self.player.add_playable_track(0)
 		if not track:
-			xbmc.executebuiltin("XBMC.Notification(Rhapsody, Problem with this song. Aborting...)")
+			xbmc.executebuiltin("XBMC.Notification(Rhapsody, Problem with this song. Aborting..., 2000, %s)" %(self.app.__addon_icon__))
 			print "Unplayable track. Can't play this track"
 			#player.stop()
 			return False
 		self.player.playselected(self.player.now_playing['pos'])
-		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started)")
+		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
 		if id == 21:
 			self.setCurrentListPosition(self.playlist.getposition())
 			self.setFocusId(51)
@@ -243,12 +243,6 @@ class MainWin(WinBase):
 				self.alb_dialog.setCurrentListPosition(self.playlist.getposition())
 		except:
 			pass
-
-
-class DialogBase(xbmcgui.WindowXMLDialog):
-	def __init__(self, xmlName, thescriptPath, defaultname, forceFallback):
-		#print "I'm the Dialog base dialog class"
-		pass
 
 
 class AlbumDialog(DialogBase):
@@ -302,7 +296,15 @@ class AlbumDialog(DialogBase):
 		self.win.sync_playlist_pos()
 
 	def onAction(self, action):
-		if action.getId() == 7:                     # --- Enter / Select ---
+		print action
+		print str(action.getId())
+		if action.getId() == 1:                     # --- left arrow ---
+			if self.getFocusId() == 31:
+				self.show_next_album(-1)
+		elif action.getId() == 2:                   # --- right arrow ---
+			if self.getFocusId() == 31:
+				self.show_next_album(1)
+		elif action.getId() == 7:                   # --- Enter / Select ---
 			if self.getFocusId() == 21:             # --- Play Button ---
 				self.start_playback(self.getFocusId(), self.cache[self.id])
 			elif self.getFocusId() == 27:           # --- Next Button ---
@@ -337,15 +339,15 @@ class AlbumDialog(DialogBase):
 		#utils.prettyprint(player.now_playing['item'])
 		if id == 51:
 			self.app.player.now_playing['pos'] = self.getCurrentListPosition()
-		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song...)")
+		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
 		track = self.app.player.add_playable_track(0)
 		if not track:
-			xbmc.executebuiltin("XBMC.Notification(Rhapsody, Problem with this song. Aborting...)")
+			xbmc.executebuiltin("XBMC.Notification(Rhapsody, Problem with this song. Aborting..., 2000, %s)" %(self.app.__addon_icon__))
 			print "Unplayable track. Can't play this track"
 			#player.stop()
 			return False
 		self.app.player.playselected(self.app.player.now_playing['pos'])
-		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started)")
+		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
 		if id == 21:
 			self.setCurrentListPosition(self.app.playlist.getposition())
 			self.setFocusId(51)
@@ -417,13 +419,10 @@ class AlbumDialog(DialogBase):
 			return
 		else:
 			if not album['thumb_url']:
-				file = self.img.handler(album['thumb_url'], 'large', 'album')
+				full_filename = self.img.handler(album['thumb_url'], 'large', 'album')
 			else:
-				file = self.img.base_path+self.big_image(album["album_id"])
-			album["bigthumb"] = file
-			#cache[alb_id]['bigthumb'] = file
+				url = self.img.identify_largest_image(alb_id, "album")
+				bigthumb = self.img.handler(url, 'large', 'album')
+				full_filename = self.img.base_path+bigthumb
+			album["bigthumb"] = full_filename
 
-	def big_image(self, album_id):
-		url = self.img.identify_largest_image(album_id, "album")
-		bigthumb = self.img.handler(url, 'large', 'album')
-		return bigthumb
