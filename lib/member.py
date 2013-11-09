@@ -4,9 +4,9 @@ import time
 import rhapapi
 
 class Member():
-	def __init__(self):
+	def __init__(self, app):
 		self.info = []
-		self.filename = None
+		self.filename = app.__addon_path__+'/resources/.rhapuser.obj'
 		self.picklefile = ''
 		self.cobrandId = "40134"
 		self.user_info = {}
@@ -24,8 +24,8 @@ class Member():
 		self.catalog = ""
 		self.timestamp = ""
 
-	def set_addon_path(self, path):
-		self.filename = path+'/resources/.rhapuser.obj'
+	#def set_addon_path(self, path):
+	#	self.filename = path+'/resources/.rhapuser.obj'
 
 	def has_saved_creds(self):
 		print "checking saved creds"

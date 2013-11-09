@@ -5,22 +5,23 @@ from rhapapi import Api
 class Cache():
 
 	def __init__(self, *args):
-		__addon_path__ = args[0]
+		self.app = args[0]
+		self.__addon_path__ = self.app.__addon_path__
 		self.user_data = {} #object to store cached data
 
 		self.genre_tree__ = []  #json data from rhapsody
 		self.genre_dict__ = {}  #object to store cached data
 
 		self.artist = {}  #object to store cached data                                convert to self-managing data class instance
-		self.artist_file = __addon_path__+'/resources/.artistdb.obj'  #picklefile
+		self.artist_file = self.__addon_path__+'/resources/.artistdb.obj'  #picklefile
 
 		self.album = {}  #object to store cached data
-		self.album_file = __addon_path__+'/resources/.albumdb.obj'  #picklefile
+		self.album_file = self.__addon_path__+'/resources/.albumdb.obj'  #picklefile
 
 		self.genre = {}  #object to store cached data
-		self.genre_file = __addon_path__+'/resources/.genres.obj'  #picklefile
+		self.genre_file = self.__addon_path__+'/resources/.genres.obj'  #picklefile
 
-		self.api = Api()
+		self.api = self.app.api
 
 	def save_genre_data(self):
 		self.genre['genretree'] = self.genre_tree__

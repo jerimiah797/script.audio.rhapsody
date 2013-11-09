@@ -6,10 +6,11 @@ import xbmcgui
 class Player(xbmc.Player):
 
 	def __init__(self, **kwargs):
-		self.win = kwargs.get('win')
-		self.cache = kwargs.get('cache')
-		self.img = kwargs.get('img')
-		self.api = kwargs.get('api')
+		self.app = kwargs.get('app')
+		self.win = self.app.win
+		self.cache = self.app.cache
+		self.img = self.app.img
+		self.api = self.app.api
 		self.playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC) #player=self, app=self.app, api=self.api, img=self.img)
 		self.now_playing = {'pos': 0, 'type': None,'item':[], 'id': None}
 		#self.now_playing['item']['album_id'] = 'blank'

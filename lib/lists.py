@@ -16,10 +16,10 @@ class ContentList():
 		self.name = args[1]
 		self.filename = args[2]
 		self.app = args[3]
-		self.win = args[4]
-		self.cache = args[5]
-		self.img = args[6]
-		self.api = args[7]
+		self.win = self.app.win
+		self.cache = self.app.cache
+		self.img = self.app.img
+		self.api = self.app.api
 		self.raw = None
 		print 'running init code for '+self.name
 
