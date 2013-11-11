@@ -258,6 +258,7 @@ class AlbumDialog(DialogBase):
 		self.api = self.app.api
 		self.img = self.app.img
 		self.img_dir = self.app.__addon_path__+'/resources/skins/Default/media/'
+		self.listcontrol_id = 52
 
 
 	def onInit(self):
@@ -311,7 +312,7 @@ class AlbumDialog(DialogBase):
 				self.show_next_album(1)
 			elif self.getFocusId() == 26:           # --- Prev Button ---
 				self.show_next_album(-1)
-			elif self.getFocusId() == 51:           # --- Tracklist ---
+			elif self.getFocusId() == self.listcontrol_id:           # --- Tracklist ---
 				self.start_playback(self.getFocusId(), self.cache[self.id])
 			else: pass
 		elif action.getId() == 10:                  # --- Back ---
@@ -337,7 +338,7 @@ class AlbumDialog(DialogBase):
 			self.app.player.build()
 		#print "Now playing item list follows!"
 		#utils.prettyprint(player.now_playing['item'])
-		if id == 51:
+		if id == self.listcontrol_id:
 			self.app.player.now_playing['pos'] = self.getCurrentListPosition()
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
 		track = self.app.player.add_playable_track(0)
@@ -350,7 +351,7 @@ class AlbumDialog(DialogBase):
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
 		if id == 21:
 			self.setCurrentListPosition(self.app.playlist.getposition())
-			self.setFocusId(51)
+			self.setFocusId(self.listcontrol_id)
 
 
 	def now_playing_matches_album_dialog(self):
