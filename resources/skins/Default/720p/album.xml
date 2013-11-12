@@ -109,8 +109,7 @@
                     <pulseonselect>false</pulseonselect>
                     <align>center</align>
                     <onup>29</onup>
-                    <onleft>-</onleft>
-                    <onright>-</onright>
+                    <ondown>29</ondown>
                 </control>
                 <!--control type="button" id="32">
                     <width>120</width>
@@ -199,7 +198,7 @@
                             <texturefocus>button210x80.png</texturefocus>
 
                             <onright>24</onright>
-                            <onleft>52</onleft>
+                            <onleft>3150</onleft>
                             <ondown>35</ondown>
                         </control>
                         <control type="label" id="22">
@@ -310,7 +309,7 @@
                     </control>
                 </control>
                 <!--Tracklist pane -->
-                <control type="list" id="52">
+                <control type="list" id="3150">
                     <!--animation effect="slide" start="0,0" end="-575,0" time="400" tween="cubic" easing="inout">Focus</animation>
                     <animation effect="slide" start="-575,0" end="0,0" time="400" tween="cubic" easing="inout">Unfocus</animation-->
                     <description>Album tracklist</description>
@@ -360,7 +359,7 @@
                             <texture>button180x25.png</texture>
                         </control>
                         <control type="label">
-                            <visible>Control.HasFocus(52)</visible>
+                            <visible>Control.HasFocus(3150)</visible>
                             <posx>40</posx>
                             <posy>0</posy>
                             <width>440</width>
@@ -371,7 +370,7 @@
                             <aligny>center></aligny>
                         </control>
                         <control type="label">
-                            <visible>Control.HasFocus(52)</visible>
+                            <visible>Control.HasFocus(3150)</visible>
                             <posx>10</posx>
                             <posy>0</posy>
                             <width>30</width>
@@ -383,7 +382,7 @@
                             <aligny>center></aligny>
                         </control>
                         <control type="label">
-                            <visible>Control.HasFocus(52)</visible>
+                            <visible>Control.HasFocus(3150)</visible>
                             <posx>510</posx>
                             <posy>0</posy>
                             <width>54</width>
@@ -395,7 +394,7 @@
                             <align>right</align>
                         </control>
                         <control type="label">
-                            <visible>!Control.HasFocus(52)</visible>
+                            <visible>!Control.HasFocus(3150)</visible>
                             <posx>40</posx>
                             <posy>0</posy>
                             <width>450</width>
@@ -406,7 +405,7 @@
                             <aligny>center></aligny>
                         </control>
                         <control type="label">
-                            <visible>!Control.HasFocus(52)</visible>
+                            <visible>!Control.HasFocus(3150)</visible>
                             <posx>10</posx>
                             <posy>0</posy>
                             <width>30</width>
@@ -418,7 +417,7 @@
                             <aligny>center></aligny>
                         </control>
                         <control type="label">
-                            <visible>!Control.HasFocus(52)</visible>
+                            <visible>!Control.HasFocus(3150)</visible>
                             <posx>510</posx>
                             <posy>0</posy>
                             <width>50</width>
@@ -436,14 +435,14 @@
 
             <!--Large Art pane -->
             <control type="group">
-                <animation effect="slide" start="0,0" end="283,0" time="600" condition="Control.HasFocus(52)" tween="cubic" easing="inout">Conditional</animation>
-                <animation effect="slide" start="283,0" end="0,0" time="600" condition="!Control.HasFocus(52)" tween="cubic" easing="inout">Conditional</animation>
+                <animation effect="slide" start="0,0" end="283,0" time="600" condition="Control.HasFocus(3150)" tween="cubic" easing="inout">Conditional</animation>
+                <animation effect="slide" start="283,0" end="0,0" time="600" condition="!Control.HasFocus(3150)" tween="cubic" easing="inout">Conditional</animation>
                 <posx>0</posx>
                 <visible></visible>
                 <description>Container for large art, release dates, lable, and genre</description>
                 <control type="image" id="">
-                    <animation effect="slide" start="0,0" end="-11,0" time="600" condition="Control.HasFocus(52)" tween="cubic" easing="inout">Conditional</animation>
-                    <animation effect="slide" start="-11,0" end="0,0" time="600" condition="!Control.HasFocus(52)" tween="cubic" easing="inout">Conditional</animation>
+                    <animation effect="slide" start="0,0" end="-11,0" time="600" condition="Control.HasFocus(3150)" tween="cubic" easing="inout">Conditional</animation>
+                    <animation effect="slide" start="-11,0" end="0,0" time="600" condition="!Control.HasFocus(3150)" tween="cubic" easing="inout">Conditional</animation>
                     <posx>0</posx>
                     <posy>0</posy>
                     <width>540</width>

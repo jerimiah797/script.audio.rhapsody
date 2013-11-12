@@ -4,7 +4,7 @@ import sys
 from lib import view
 from lib import main
 
-REMOTE_DBG = True 
+REMOTE_DBG = False
 
 # append pydev remote debugger
 if REMOTE_DBG:

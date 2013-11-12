@@ -7,12 +7,19 @@ from lib import utils
 def draw_mainwin(win, app):
 		view = win.handle.getProperty('browseview')
 		list_instance = app.get_var('view_matrix')[view]
+		win.list_id = app.get_var('list_matrix')[win.getProperty('browseview')]
+		print "list id: "+str(win.list_id)
+		win.clist = win.getControl(win.list_id)
 		app.set_var(list, list_instance.data)
-		win.make_visible(300, 50)
+		win.make_visible(300, win.list_id)
 		list_instance.make_active()
-		win.setFocusId(50)
+		win.getControl(201).controlDown(win.clist)
+		win.setFocusId(win.list_id)
 		if list_instance.pos:
-			win.setCurrentListPosition(list_instance.pos)
+			win.clist.selectItem(list_instance.pos)
+			print "auto-selected list item "+str(list_instance.pos)
+
+		#list_instance.save_data()
 
 
 class WinBase(xbmcgui.WindowXML):
@@ -121,6 +128,7 @@ class MainWin(WinBase):
 
 	def __init__(self, *args, **kwargs):
 		WinBase.__init__(self, *args)
+		print "running _init_ for mainwin"
 		self.app = kwargs.get('app')
 		self.mem = self.app.mem
 		self.cache = self.app.cache
@@ -130,7 +138,9 @@ class MainWin(WinBase):
 		self.player = self.app.player
 		self.playlist = self.app.playlist
 		self.setup = False
-		print "running _init_ for mainwin"
+		self.list_id = None
+
+
 
 
 	def onInit(self):
@@ -138,9 +148,15 @@ class MainWin(WinBase):
 		self.handle = xbmcgui.Window(xbmcgui.getCurrentWindowId())
 		self.handle.setProperty("browseview", self.app.view_keeper['browseview'])
 		self.handle.setProperty("frame", self.app.view_keeper['frame'])
+		#self.list_id = self.app.get_var('list_matrix')[self.getProperty('browseview')]
+		#print "list id: "+str(self.list_id)
+		#self.clist = self.getControl(self.list_id)
 		self.main()
 
 	def main(self):
+		#self.list_id = self.app.get_var('list_matrix')[self.getProperty('browseview')]
+		#print "list id: "+str(self.list_id)
+		#self.clist = self.getControl(self.list_id)
 		self.handle.setProperty("full_name", self.mem.first_name+" "+self.mem.last_name)
 		self.handle.setProperty("country", self.mem.catalog)
 		self.handle.setProperty("logged_in", "true")
@@ -180,10 +196,10 @@ class MainWin(WinBase):
 			self.close()
 
 	def onClick(self, control):
-		pos = self.getCurrentListPosition()
+		pos = self.clist.getSelectedPosition()
 		id = self.app.get_var(list)[pos]#["album_id"]
 		print "mainwin onClick: id: "+str(id)
-		if control == 50:
+		if (control == 3350) or (control == 3351) or (control == 3352) or (control == 3550) or (control == 3551):
 			self.alb_dialog = AlbumDialog("album.xml", self.app.__addon_path__, 'Default', '720p', current_list=self.app.get_var(list),
 			                         pos=pos, cache=self.cache.album, alb_id=id, app=self.app)
 			self.alb_dialog.setProperty("review", "has_review")
@@ -191,10 +207,10 @@ class MainWin(WinBase):
 			self.alb_dialog.id = None
 			if self.empty_list():
 				draw_mainwin(self, self.app)
-			self.setCurrentListPosition(self.alb_dialog.pos)
-			self.cache.save_album_data()
+			self.clist.selectItem(self.alb_dialog.pos)
+			#self.cache.save_album_data()
 
-		elif control == 51:
+		elif control == 3353:
 			self.start_playback(control)
 
 
@@ -202,8 +218,8 @@ class MainWin(WinBase):
 
 		self.player.now_playing = {'pos': 0, 'type':'playlist', 'item':self.toptracks.data, 'id':'toptracks'}  #['data']}
 		self.player.build()
-		if id == 51:
-			self.player.now_playing['pos'] = self.getCurrentListPosition()
+		if id == 3353:
+			self.player.now_playing['pos'] = self.getSelectedPosition()
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
 		track = self.player.add_playable_track(0)
 		if not track:
@@ -214,8 +230,8 @@ class MainWin(WinBase):
 		self.player.playselected(self.player.now_playing['pos'])
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
 		if id == 21:
-			self.setCurrentListPosition(self.playlist.getposition())
-			self.setFocusId(51)
+			self.clist.selectItem(self.playlist.getposition())
+			self.setFocusId(3353)
 
 
 	def onFocus(self, control):
@@ -227,6 +243,7 @@ class MainWin(WinBase):
 		for item in args:
 			self.getControl(item).setVisible(True)
 
+
 	def empty_list(self):
 		if self.getListSize() < 2:
 			return True
@@ -236,11 +253,11 @@ class MainWin(WinBase):
 		try:
 			if self.player.now_playing['id'] == 'toptracks':
 				print "syncing playlist pos because player.now_playing id is 'toptracks'"
-				self.setCurrentListPosition(self.playlist.getposition())
+				self.clist.selectItem(self.playlist.getposition())
 				self.toptracks.pos = self.playlist.getposition()
 			elif self.player.now_playing['id'] == self.alb_dialog.id:
 				print "syncing playlist pos because player.now_player id is current album id"
-				self.alb_dialog.setCurrentListPosition(self.playlist.getposition())
+				self.alb_dialog.clist.selectItem(self.playlist.getposition())
 		except:
 			pass
 
@@ -258,10 +275,14 @@ class AlbumDialog(DialogBase):
 		self.api = self.app.api
 		self.img = self.app.img
 		self.img_dir = self.app.__addon_path__+'/resources/skins/Default/media/'
-		self.listcontrol_id = 52
+		self.listcontrol_id = 3150
+
 
 
 	def onInit(self):
+		self.view = self.win.handle.getProperty('browseview')
+		self.list_instance = self.app.get_var('view_matrix')[self.view]
+		self.clist = self.getControl(self.listcontrol_id)
 		self.show_info(self.id, self.cache)
 
 
@@ -269,7 +290,8 @@ class AlbumDialog(DialogBase):
 		print "AlbumDialog: album id = "+self.id
 		album = cache[alb_id]
 		self.reset_fields()
-		self.clearList()
+		#self.clearList()
+		self.clist.reset()
 		self.getControl(11).setText(album["album"])
 		self.getControl(13).setLabel(album["artist"])
 		self.getControl(8).setLabel(album["album_date"])
@@ -293,12 +315,12 @@ class AlbumDialog(DialogBase):
 		print "AlbumDialog: Manage tracklist for gui list"
 		liz = self.app.windowtracklist.get_litems(cache, album["album_id"])
 		for item in liz:
-			self.addItem(item)
+			self.clist.addItem(item)
 		self.win.sync_playlist_pos()
 
 	def onAction(self, action):
-		print action
-		print str(action.getId())
+		#print action
+		#print str(action.getId())
 		if action.getId() == 1:                     # --- left arrow ---
 			if self.getFocusId() == 31:
 				self.show_next_album(-1)
@@ -315,11 +337,14 @@ class AlbumDialog(DialogBase):
 			elif self.getFocusId() == self.listcontrol_id:           # --- Tracklist ---
 				self.start_playback(self.getFocusId(), self.cache[self.id])
 			else: pass
-		elif action.getId() == 10:                  # --- Back ---
+		elif action.getId() == 10:
+			self.list_instance.pos = self.pos        # --- Esc ---
 			self.close()
-		elif action.getId() == 92:                  # --- Esc ---
+		elif action.getId() == 92:                  # --- Back ---
+			self.list_instance.pos = self.pos
 			self.close()
 		elif action.getId() == 18:                  # --- Tab ---
+			self.list_instance.pos = self.pos
 			self.close()
 		else:
 			pass
@@ -339,7 +364,7 @@ class AlbumDialog(DialogBase):
 		#print "Now playing item list follows!"
 		#utils.prettyprint(player.now_playing['item'])
 		if id == self.listcontrol_id:
-			self.app.player.now_playing['pos'] = self.getCurrentListPosition()
+			self.app.player.now_playing['pos'] = self.clist.getSelectedPosition()
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
 		track = self.app.player.add_playable_track(0)
 		if not track:
@@ -350,7 +375,7 @@ class AlbumDialog(DialogBase):
 		self.app.player.playselected(self.app.player.now_playing['pos'])
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
 		if id == 21:
-			self.setCurrentListPosition(self.app.playlist.getposition())
+			self.clist.selectItem(self.app.playlist.getposition())
 			self.setFocusId(self.listcontrol_id)
 
 

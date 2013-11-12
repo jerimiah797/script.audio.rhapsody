@@ -210,7 +210,7 @@
                     <!-- darkgrey -->
                 </control>
                 <!-- Albums Panel View, New Releases -->
-                <control type="panel" id="50">
+                <control type="panel" id="3350">
                     <visible>StringCompare(Window.Property(browseview),Browse_newreleases)</visible>
                     <onup>201</onup>
                     <ondown>50</ondown>
@@ -267,7 +267,7 @@
                             <focusedcolor>-</focusedcolor>
                         </control-->
                         <control type="image">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3350)</visible>
                             <width>209</width>
                             <height>209</height>
                             <posx>0</posx>
@@ -275,7 +275,7 @@
                             <texture border="0">outline.png</texture>
                         </control>
                         <control type="image">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3350)</visible>
                             <width>209</width>
                             <height>30</height>
                             <posx>0</posx>
@@ -283,7 +283,7 @@
                             <texture border="0">box.png</texture>
                         </control>
                         <control type="label">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3350)</visible>
                             <posx>14</posx>
                             <posy>197</posy>
                             <width>170</width>
@@ -295,7 +295,7 @@
                             <scroll>false</scroll>
                         </control>
                         <control type="label">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3350)</visible>
                             <posx>14</posx>
                             <posy>215</posy>
                             <width>170</width>
@@ -316,7 +316,7 @@
                     </focusedlayout>
                 </control>
                 <!-- Albums Panel View , Top Albums-->
-                <control type="panel" id="50">
+                <control type="panel" id="3351">
                     <visible>StringCompare(Window.Property(browseview),Browse_topalbums)</visible>
                     <onup>201</onup>
                     <ondown>50</ondown>
@@ -374,7 +374,7 @@
                             <focusedcolor>-</focusedcolor>
                         </control-->
                         <control type="image">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3351)</visible>
                             <width>209</width>
                             <height>209</height>
                             <posx>0</posx>
@@ -382,7 +382,7 @@
                             <texture border="0">outline.png</texture>
                         </control>
                         <control type="image">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3351)</visible>
                             <width>209</width>
                             <height>30</height>
                             <posx>0</posx>
@@ -390,7 +390,7 @@
                             <texture border="0">box.png</texture>
                         </control>
                         <control type="label">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3351)</visible>
                             <posx>14</posx>
                             <posy>197</posy>
                             <width>170</width>
@@ -402,7 +402,7 @@
                             <scroll>false</scroll>
                         </control>
                         <control type="label">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3351)</visible>
                             <posx>14</posx>
                             <posy>215</posy>
                             <width>170</width>
@@ -424,7 +424,7 @@
                     </focusedlayout>
                 </control>
                 <!-- Top Artists View -->
-                <control type="panel" id="50">
+                <control type="panel" id="3352">
                     <visible>StringCompare(Window.Property(browseview),Browse_topartists)</visible>
                     <onup>201</onup>
                     <ondown>50</ondown>
@@ -481,7 +481,7 @@
                             <focusedcolor>-</focusedcolor>
                         </control-->
                         <control type="image">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3352)</visible>
                             <width>209</width>
                             <height>209</height>
                             <posx>0</posx>
@@ -489,7 +489,7 @@
                             <texture border="0">outline.png</texture>
                         </control>
                         <control type="image">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3352)</visible>
                             <width>209</width>
                             <height>30</height>
                             <posx>0</posx>
@@ -497,7 +497,7 @@
                             <texture border="0">box.png</texture>
                         </control>
                         <control type="label">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3352)</visible>
                             <posx>14</posx>
                             <posy>197</posy>
                             <width>170</width>
@@ -509,7 +509,7 @@
                             <scroll>false</scroll>
                         </control>
                         <control type="label">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3352)</visible>
                             <posx>14</posx>
                             <posy>215</posy>
                             <width>170</width>
@@ -530,7 +530,7 @@
                     </focusedlayout>
                 </control>
                 <!-- Top Tracks View -->
-                <control type="list" id="51">
+                <control type="list" id="3353">
                     <visible>StringCompare(Window.Property(browseview),Browse_toptracks)</visible>
                     <onup>201</onup>
                     <ondown>50</ondown>
@@ -579,7 +579,7 @@
                             <texture>button180x25.png</texture>
                         </control>
                         <control type="label">
-                            <visible>Control.HasFocus(51)</visible>
+                            <visible>Control.HasFocus(3353)</visible>
                             <posx>40</posx>
                             <posy>0</posy>
                             <width>440</width>
@@ -590,7 +590,7 @@
                             <aligny>center></aligny>
                         </control>
                         <control type="label">
-                            <visible>Control.HasFocus(51)</visible>
+                            <visible>Control.HasFocus(3353)</visible>
                             <posx>10</posx>
                             <posy>0</posy>
                             <width>30</width>
@@ -602,7 +602,7 @@
                             <aligny>center></aligny>
                         </control>
                         <control type="label">
-                            <visible>Control.HasFocus(51)</visible>
+                            <visible>Control.HasFocus(3353)</visible>
                             <posx>510</posx>
                             <posy>0</posy>
                             <width>54</width>
@@ -614,7 +614,7 @@
                             <align>right</align>
                         </control>
                         <control type="label">
-                            <visible>!Control.HasFocus(51)</visible>
+                            <visible>!Control.HasFocus(3353)</visible>
                             <posx>40</posx>
                             <posy>0</posy>
                             <width>450</width>
@@ -625,7 +625,7 @@
                             <aligny>center></aligny>
                         </control>
                         <control type="label">
-                            <visible>!Control.HasFocus(51)</visible>
+                            <visible>!Control.HasFocus(3353)</visible>
                             <posx>10</posx>
                             <posy>0</posy>
                             <width>30</width>
@@ -637,7 +637,7 @@
                             <aligny>center></aligny>
                         </control>
                         <control type="label">
-                            <visible>!Control.HasFocus(51)</visible>
+                            <visible>!Control.HasFocus(3353)</visible>
                             <posx>510</posx>
                             <posy>0</posy>
                             <width>50</width>
@@ -881,8 +881,8 @@
                     <posy>55</posy>
                     <texture border="0">box.png</texture>
                 </control>
-                <!-- Albums Panel View, New Releases -->
-                <control type="panel" id="50">
+                <!-- Albums Panel View, Library -->
+                <control type="panel" id="3550">
                     <visible>StringCompare(Window.Property(browseview),library_albums)</visible>
                     <onup>201</onup>
                     <ondown>50</ondown>
@@ -939,7 +939,7 @@
                             <focusedcolor>-</focusedcolor>
                         </control-->
                         <control type="image">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3550)</visible>
                             <width>209</width>
                             <height>209</height>
                             <posx>0</posx>
@@ -947,7 +947,7 @@
                             <texture border="0">outline.png</texture>
                         </control>
                         <control type="image">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3550)</visible>
                             <width>209</width>
                             <height>30</height>
                             <posx>0</posx>
@@ -955,7 +955,7 @@
                             <texture border="0">box.png</texture>
                         </control>
                         <control type="label">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3550)</visible>
                             <posx>14</posx>
                             <posy>197</posy>
                             <width>170</width>
@@ -967,7 +967,7 @@
                             <scroll>false</scroll>
                         </control>
                         <control type="label">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3550)</visible>
                             <posx>14</posx>
                             <posy>215</posy>
                             <width>170</width>
@@ -987,8 +987,8 @@
                         </control>
                     </focusedlayout>
                 </control>
-                <!-- Albums Panel View , Top Albums-->
-                <control type="panel" id="50">
+                <!-- Artist Panel View , LIbrary-->
+                <control type="panel" id="3551">
                     <visible>StringCompare(Window.Property(browseview),library_artists)</visible>
                     <onup>201</onup>
                     <ondown>50</ondown>
@@ -1046,7 +1046,7 @@
                             <focusedcolor>-</focusedcolor>
                         </control-->
                         <control type="image">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3551)</visible>
                             <width>209</width>
                             <height>209</height>
                             <posx>0</posx>
@@ -1054,7 +1054,7 @@
                             <texture border="0">outline.png</texture>
                         </control>
                         <control type="image">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3551)</visible>
                             <width>209</width>
                             <height>30</height>
                             <posx>0</posx>
@@ -1062,7 +1062,7 @@
                             <texture border="0">box.png</texture>
                         </control>
                         <control type="label">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3551)</visible>
                             <posx>14</posx>
                             <posy>197</posy>
                             <width>170</width>
@@ -1074,7 +1074,7 @@
                             <scroll>false</scroll>
                         </control>
                         <control type="label">
-                            <visible>Control.HasFocus(50)</visible>
+                            <visible>Control.HasFocus(3551)</visible>
                             <posx>14</posx>
                             <posy>215</posy>
                             <width>170</width>

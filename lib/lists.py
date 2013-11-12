@@ -11,7 +11,7 @@ class ContentList():
 		self.data = []
 		self.liz = []
 		self.built = False
-		self.pos = 0
+		self.pos = None
 		self.timestamp = time.time()
 		self.type = args[0]
 		self.name = args[1]
@@ -90,7 +90,7 @@ class ContentList():
 	def ingest_list(self, results):
 
 		print "Ingest list. Type: "+self.type
-		self.win.clearList()
+		self.win.clist.reset()
 		__ = {}
 
 		d = {'album': self.cache.album,
@@ -117,12 +117,11 @@ class ContentList():
 			if not id in store:
 				store[id] = infos[self.type]
 			del infos
-			gc.collect
+
 
 		self.built = True
 		#utils.prettyprint(self.data)
-		self.cache.save_album_data()
-		self.cache.save_artist_data()
+
 
 
 	def process_album(self, count, item, data):
@@ -147,7 +146,7 @@ class ContentList():
 
 	def process_artist(self, count, item, data):
 		id = item['id']
-		print "processing "+id
+		#print "processing "+id
 		#data = {}
 
 		if not id in self.cache.artist:
@@ -212,15 +211,32 @@ class ContentList():
 		return data
 
 	def add_lizitem_to_winlist(self, li):
-		self.win.addItem(li)
+		#if self.name == "newreleases":
+		self.win.clist.addItem(li)
+		#else:
+		#	self.win.addItem(li)
 
 	def build_winlist(self):
-		print "ContentList: build_winlist"
-		self.win.clearList()
+		#if self.name == 'newreleases':
+		#print "ContentList: build_winlist"
+		self.win.clist.reset()
 		for i, item in enumerate(self.liz):
-			self.win.addItem(self.liz[i])
+			self.win.clist.addItem(self.liz[i])
 			#xbmc.sleep(2)
-		print "list position: "+ str(self.pos)
+		#print "list position: "+ str(self.pos)
+		#else:
+		#	print "ContentList: build_winlist"
+		#	self.win.clearList()
+		#	for i, item in enumerate(self.liz):
+		#		self.win.addItem(self.liz[i])
+		#		#xbmc.sleep(2)
+		#	print "list position: "+ str(self.pos)
+
+
+	def save_data(self):
+		self.cache.save_album_data()
+		self.cache.save_artist_data()
+
 
 class WindowTrackList():
 	def __init__(self):

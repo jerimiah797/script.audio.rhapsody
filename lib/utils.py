@@ -26,4 +26,6 @@ def goodbye(app):
 			app.set_var('running',False)
 			app.player.stop()
 			app.player.playlist.clear()
+			app.cache.save_artist_data()
+			app.cache.save_album_data()
 			app.win.close()

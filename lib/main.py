@@ -15,7 +15,7 @@ class Application():
 
 	def __init__(self):
 		self.__vars = {}  #dict for app vars
-		self.view_keeper = {'browseview': 'browse_newreleases', 'frame': 'Browse'}
+		self.view_keeper = {'browseview': 'browse_newreleases', 'frame': 'Browse', 'view_id':3350}
 
 		self.__addon_id__ = 'script.audio.rhapsody'
 		self.__addon_cfg__ = xbmcaddon.Addon(self.__addon_id__)
@@ -63,15 +63,23 @@ class Application():
 
 	def init_vars(self):
 		self.set_var('view_matrix' , {"browse_newreleases": self.newreleases,
-			                "browse_topalbums":   self.topalbums,
-			                "browse_topartists":  self.topartists,
-			                "browse_toptracks":   self.toptracks,
-			                "library_albums":     self.lib_albums,
-			                "library_artists":    self.lib_artists,
-			                #"library_tracks":     lib_tracks,
-			                #"library_stations":   lib_stations,
-			                #"library_favorites":  lib_favorites
-			                })
+						                "browse_topalbums":   self.topalbums,
+						                "browse_topartists":  self.topartists,
+						                "browse_toptracks":   self.toptracks,
+						                "library_albums":     self.lib_albums,
+						                "library_artists":    self.lib_artists,
+						                #"library_tracks":     lib_tracks,
+						                #"library_stations":   lib_stations,
+						                #"library_favorites":  lib_favorites,
+						                })
+
+		self.set_var('list_matrix' , {"browse_newreleases":    3350,
+						              "browse_topalbums":      3351,
+						              "browse_topartists":     3352,
+						              "browse_toptracks":      3353,
+						              "library_albums":        3550,
+						              "library_artists":       3551,
+						                })
 
 		self.set_var('running', True)
 		self.set_var('logged_in', False)
