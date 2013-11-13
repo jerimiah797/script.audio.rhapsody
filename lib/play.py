@@ -20,6 +20,7 @@ class Player(xbmc.Player):
 	def onPlayBackStarted(self):
 		if not self.onplay_lock:
 			self.onplay_lock = True
+			self.validate_session(self.session)
 			self.win.sync_playlist_pos()
 			pos = self.playlist.getposition()
 			self.now_playing['pos'] = pos
@@ -45,6 +46,7 @@ class Player(xbmc.Player):
 	def onPlayBackResumed(self):
 		if not self.onplay_lock:
 			self.onplay_lock = True
+			self.validate_session(self.session)
 			self.win.sync_playlist_pos()
 			pos = self.playlist.getposition()
 			self.now_playing['pos'] = pos
@@ -98,7 +100,6 @@ class Player(xbmc.Player):
 
 	def add_playable_track(self, offset):
 		print "Playlist: add playable track"
-		self.validate_session()
 		circ_pos = (self.now_playing['pos']+offset)%self.playlist.size()
 		print "Fetching track "+str(circ_pos+1)
 		item = self.now_playing['item'][circ_pos]

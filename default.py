@@ -44,8 +44,8 @@ while app.get_var('running'):
 			app.set_var('logged_in', True)
 			time.sleep(1)
 		app.api.token = app.mem.access_token
-		app.player.get_session()
-		app.player.validate_session(app.player.session)
+		#app.player.get_session()
+		#app.player.validate_session(app.player.session)
 	app.win.doModal()
 	if app.get_var('logged_in') == False:
 		loadwin.getControl(10).setLabel('Logging you out...')
