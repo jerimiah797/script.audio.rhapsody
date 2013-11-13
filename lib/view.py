@@ -11,10 +11,11 @@ def draw_mainwin(win, app):
 		print "list id: "+str(win.list_id)
 		win.clist = win.getControl(win.list_id)
 		app.set_var(list, list_instance.data)
-		win.make_visible(300, win.list_id)
+		#win.make_visible(300, win.list_id)
+		win.setFocusId(win.list_id)
 		list_instance.make_active()
 		win.getControl(201).controlDown(win.clist)
-		win.setFocusId(win.list_id)
+		#win.setFocusId(win.list_id)
 		if list_instance.pos:
 			win.clist.selectItem(list_instance.pos)
 			print "auto-selected list item "+str(list_instance.pos)
@@ -160,6 +161,7 @@ class MainWin(WinBase):
 		self.handle.setProperty("full_name", self.mem.first_name+" "+self.mem.last_name)
 		self.handle.setProperty("country", self.mem.catalog)
 		self.handle.setProperty("logged_in", "true")
+		self.handle.setProperty("username", self.mem.username)
 		#self.clist = self.getControl(201)
 		self.frame_label = self.getControl(121)
 		draw_mainwin(self, self.app)
@@ -168,9 +170,12 @@ class MainWin(WinBase):
 	def onAction(self, action):
 		if action.getId() == 7:
 			self.manage_action()
-		if action.getId() == 10:
-			utils.goodbye(self.app)
-		elif action.getId() == 92:
+		if action.getId() == 92:
+			self.menu_dialog = MenuDialog("menu.xml", self.app.__addon_path__, 'Default', '720p', current_list=self.app.get_var(list),
+			                          cache=self.cache.album, app=self.app)
+			self.menu_dialog.doModal()
+			#utils.goodbye(self.app)
+		elif action.getId() == 10:
 			utils.goodbye(self.app)
 		else:
 			pass
@@ -219,7 +224,7 @@ class MainWin(WinBase):
 		self.player.now_playing = {'pos': 0, 'type':'playlist', 'item':self.toptracks.data, 'id':'toptracks'}  #['data']}
 		self.player.build()
 		if id == 3353:
-			self.player.now_playing['pos'] = self.getSelectedPosition()
+			self.player.now_playing['pos'] = self.clist.getSelectedPosition()
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
 		track = self.player.add_playable_track(0)
 		if not track:
@@ -245,7 +250,8 @@ class MainWin(WinBase):
 
 
 	def empty_list(self):
-		if self.getListSize() < 2:
+		if self.clist.size() < 2:
+			print "window list is empty.. redrawing"
 			return True
 
 
@@ -452,3 +458,18 @@ class AlbumDialog(DialogBase):
 				full_filename = self.img.base_path+bigthumb
 			album["bigthumb"] = full_filename
 
+
+class MenuDialog(DialogBase):
+
+	def __init__(self, *args, **kwargs):
+		DialogBase.__init__(self, *args)
+		self.current_list = kwargs.get('current_list')
+		self.cache = kwargs.get('cache')
+		self.id = kwargs.get('alb_id')
+		self.pos = kwargs.get('pos')
+		self.app = kwargs.get('app')
+		self.win = self.app.win
+		self.api = self.app.api
+		self.img = self.app.img
+		self.img_dir = self.app.__addon_path__+'/resources/skins/Default/media/'
+		#self.listcontrol_id = 3150

@@ -13,6 +13,7 @@ class Player(xbmc.Player):
 		self.api = self.app.api
 		self.playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC) #player=self, app=self.app, api=self.api, img=self.img)
 		self.now_playing = {'pos': 0, 'type': None,'item':[], 'id': None}
+		self.session = {'valid': None, 'id': None}
 		#self.now_playing['item']['album_id'] = 'blank'
 		self.onplay_lock = False
 
@@ -97,6 +98,7 @@ class Player(xbmc.Player):
 
 	def add_playable_track(self, offset):
 		print "Playlist: add playable track"
+		self.validate_session()
 		circ_pos = (self.now_playing['pos']+offset)%self.playlist.size()
 		print "Fetching track "+str(circ_pos+1)
 		item = self.now_playing['item'][circ_pos]
@@ -129,3 +131,15 @@ class Player(xbmc.Player):
 		self.playlist.add(playurl, listitem=li, index=circ_pos)
 		return True
 
+	def validate_session(self, session):
+		valid = self.api.validate_session(session)
+		if valid:
+			return True
+		else:
+			self.get_session()
+			return True
+
+	def get_session(self):
+		print "player.get_session:"
+		self.session = self.api.get_session()
+		print "Session:"+str(self.session)

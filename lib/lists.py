@@ -116,7 +116,8 @@ class ContentList():
 			self.add_lizitem_to_winlist(infos['listitem'])
 			if not id in store:
 				store[id] = infos[self.type]
-			del infos
+			self.win.setFocusId(self.win.list_id)
+			#del infos
 
 
 		self.built = True
@@ -211,26 +212,15 @@ class ContentList():
 		return data
 
 	def add_lizitem_to_winlist(self, li):
-		#if self.name == "newreleases":
 		self.win.clist.addItem(li)
-		#else:
-		#	self.win.addItem(li)
+
 
 	def build_winlist(self):
-		#if self.name == 'newreleases':
 		#print "ContentList: build_winlist"
 		self.win.clist.reset()
 		for i, item in enumerate(self.liz):
 			self.win.clist.addItem(self.liz[i])
-			#xbmc.sleep(2)
-		#print "list position: "+ str(self.pos)
-		#else:
-		#	print "ContentList: build_winlist"
-		#	self.win.clearList()
-		#	for i, item in enumerate(self.liz):
-		#		self.win.addItem(self.liz[i])
-		#		#xbmc.sleep(2)
-		#	print "list position: "+ str(self.pos)
+
 
 
 	def save_data(self):

@@ -1679,6 +1679,13 @@
                         </control>
                     </control>
                 </control>
+                <control type="image">
+                     <posx>580</posx>
+                     <posy>180</posy>
+                     <height>400</height>
+                     <width>400</width>
+                     <texture>rhapsody_icon.png</texture>
+                </control>
             </control>
         </control>
 

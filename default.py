@@ -44,13 +44,17 @@ while app.get_var('running'):
 			app.set_var('logged_in', True)
 			time.sleep(1)
 		app.api.token = app.mem.access_token
+		app.player.get_session()
+		app.player.validate_session(app.player.session)
 	app.win.doModal()
 	if app.get_var('logged_in') == False:
 		loadwin.getControl(10).setLabel('Logging you out...')
 	else:
 		loadwin.getControl(10).setLabel('Finishing up...')
-	del app.win
-	time.sleep(1)
+	app.cache.save_album_data()
+	app.cache.save_artist_data()
+del app.win
+time.sleep(1)
 loadwin.close()
 del loadwin
 del app
