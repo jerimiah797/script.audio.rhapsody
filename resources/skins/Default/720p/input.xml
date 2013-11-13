@@ -13,6 +13,8 @@
             <control type="label">
                 <posx>-30</posx>
                 <posy>0</posy>
+                <align>left</align>
+                <aligny>top</aligny>
                 <label>Sign in to start listening</label>
                 <font>rhapsody_font45caps_title</font>
                 <textcolor>DD171717</textcolor>
@@ -23,6 +25,7 @@
                 <posy>80</posy>
                 <label>Username (usually your email address)</label>
                 <align>left</align>
+                <aligny>top</aligny>
                 <font>rhapsody_font16</font>
                 <textcolor>DD171717</textcolor>
                         <!-- darkgrey -->
@@ -39,6 +42,7 @@
                 <posy>170</posy>
                 <label>Password</label>
                 <align>left</align>
+                <aligny>top</aligny>
                 <font>rhapsody_font16</font>
                 <textcolor>DD171717</textcolor>
                         <!-- darkgrey -->

@@ -152,6 +152,7 @@
                             <width>480</width>
                             <height>98</height>
                             <align>left</align>
+                            <aligny>top</aligny>
                             <label></label>
                             <textcolor>black</textcolor>
                             <autoscroll delay="3000" time="1000" repeat="10000">!Control.HasFocus(83)</autoscroll>
@@ -164,6 +165,7 @@
                             <width>500</width>
                             <height>20</height>
                             <align>left</align>
+                            <aligny>top</aligny>
                             <label></label>
                             <textcolor>black</textcolor>
                             <font>rhapsody_font14</font>
@@ -206,6 +208,8 @@
                             <posy>0</posy>
                             <width>210</width>
                             <label>PLAY</label>
+                            <align>left</align>
+                            <aligny>top</aligny>
                             <textcolor>black</textcolor>
                             <textoffsety>5</textoffsety>
                             <font>rhapsody_font45caps_title</font>
@@ -328,7 +332,8 @@
                             <info>ListItem.Title</info>
                             <font>rhapsody_font12</font>
                             <textcolor>black</textcolor>
-                            <aligny>center></aligny>
+                            <align>left</align>
+                            <aligny>top></aligny>
                         </control>
                         <control type="label">
                             <posx>10</posx>
@@ -338,7 +343,7 @@
                             <font>rhapsody_font12</font>
                             <textcolor>black</textcolor>
                             <align>left</align>
-                            <aligny>center></aligny>
+                            <aligny>top></aligny>
                         </control>
                         <control type="label">
                             <posx>510</posx>
@@ -347,7 +352,7 @@
                             <info>ListItem.Duration</info>
                             <font>rhapsody_font12</font>
                             <textcolor>black</textcolor>
-                            <aligny>center></aligny>
+                            <aligny>top></aligny>
                             <align>right</align>
                         </control>
                     </itemlayout>
@@ -367,7 +372,8 @@
                             <font>rhapsody_font12</font>
                             <textcolor>F3FFFFFF</textcolor>
                             <!-- white -->
-                            <aligny>center></aligny>
+                            <align>left</align>
+                            <aligny>top></aligny>
                         </control>
                         <control type="label">
                             <visible>Control.HasFocus(3150)</visible>
@@ -379,7 +385,7 @@
                             <textcolor>F3FFFFFF</textcolor>
                             <!-- white -->
                             <align>left</align>
-                            <aligny>center></aligny>
+                            <aligny>top></aligny>
                         </control>
                         <control type="label">
                             <visible>Control.HasFocus(3150)</visible>
@@ -390,7 +396,7 @@
                             <font>rhapsody_font12</font>
                             <textcolor>F3FFFFFF</textcolor>
                             <!-- white -->
-                            <aligny>center></aligny>
+                            <aligny>top></aligny>
                             <align>right</align>
                         </control>
                         <control type="label">
@@ -414,7 +420,7 @@
                             <textcolor>F3FFFFFF</textcolor>
                             <!-- white -->
                             <align>left</align>
-                            <aligny>center></aligny>
+                            <aligny>top></aligny>
                         </control>
                         <control type="label">
                             <visible>!Control.HasFocus(3150)</visible>
@@ -425,7 +431,7 @@
                             <font>rhapsody_font12</font>
                             <textcolor>F3FFFFFF</textcolor>
                             <!-- white -->
-                            <aligny>center></aligny>
+                            <aligny>top></aligny>
                             <align>right</align>
                         </control>
 
@@ -465,6 +471,7 @@
                     <width>470</width>
                     <height>20</height>
                     <align>left</align>
+                    <aligny>top</aligny>
                     <label></label>
                     <textcolor>black</textcolor>
                     <font>rhapsody_font10</font>
@@ -477,6 +484,7 @@
                     <width>470</width>
                     <height>20</height>
                     <align>left</align>
+                    <aligny>top</aligny>
                     <label></label>
                     <textcolor>black</textcolor>
                     <font>rhapsody_font10</font>
@@ -488,6 +496,7 @@
                     <width>470</width>
                     <height>20</height>
                     <align>right</align>
+                    <aligny>top</aligny>
                     <label></label>
                     <textcolor>black</textcolor>
                     <font>rhapsody_font10</font>
@@ -499,6 +508,7 @@
                     <width>470</width>
                     <height>20</height>
                     <align>right</align>
+                    <aligny>top</aligny>
                     <label>Primary Genre</label>
                     <textcolor>black</textcolor>
                     <font>rhapsody_font10</font>

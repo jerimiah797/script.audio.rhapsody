@@ -36,6 +36,7 @@
                     <visible>true</visible>
                     <label>-</label>
                     <align>left</align>
+                    <aligny>top</aligny>
                     <font>rhapsody_font30</font>
                     <textcolor>DD171717</textcolor>
                             <!-- darkgrey -->
