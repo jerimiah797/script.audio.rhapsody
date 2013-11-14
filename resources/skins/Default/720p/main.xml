@@ -1676,6 +1676,7 @@
                             <texturefocus border="8">selectoutline_solid.png</texturefocus>
                             <font>rhapsody_font24_title</font>
                             <textcolor>DD171717</textcolor>
+                            <focusedcolor>DD171717</focusedcolor>
                     <!-- darkgrey -->
                             <onclick>ClearProperty(username)</onclick>
                             <onclick>ClearProperty(password)</onclick>

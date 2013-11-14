@@ -101,6 +101,7 @@
                     <posy>560</posy>
                     <label>PREV / NEXT</label>
                     <textcolor>black</textcolor>
+                    <focusedcolor>black</focusedcolor>
                     <textoffsetx>0</textoffsetx>
                     <textoffsety>0</textoffsety>
                     <texturefocus>button180x25.png</texturefocus>
@@ -194,6 +195,7 @@
                             <height>80</height>
                             <label></label>
                             <textcolor>black</textcolor>
+                            <focusedcolor>black</focusedcolor>
                             <textoffsetx>0</textoffsetx>
                             <textoffsety>-8</textoffsety>
                             <font>rhapsody_symbol96</font>
@@ -228,6 +230,7 @@
                                 <height>25</height>
                                 <label>ADD TO QUEUE</label>
                                 <textcolor>black</textcolor>
+                                <focusedcolor>black</focusedcolor>
                                 <textoffsetx>12</textoffsetx>
                                 <textoffsety>-3</textoffsety>
                                 <texturefocus>button180x25.png</texturefocus>
@@ -244,6 +247,7 @@
                                 <height>25</height>
                                 <label>ADD TO PLAYLIST</label>
                                 <textcolor>black</textcolor>
+                                <focusedcolor>black</focusedcolor>
                                 <textoffsetx>12</textoffsetx>
                                 <textoffsety>-3</textoffsety>
                                 <texturefocus>button180x25.png</texturefocus>
@@ -261,6 +265,7 @@
                                 <height>25</height>
                                 <label>ADD TO LIBRARY</label>
                                 <textcolor>black</textcolor>
+                                <focusedcolor>black</focusedcolor>
                                 <textoffsetx>12</textoffsetx>
                                 <textoffsety>-3</textoffsety>
                                 <texturefocus>button180x25.png</texturefocus>
