@@ -10,6 +10,7 @@ def draw_mainwin(win, app):
 		print "Drawmain: No lists to draw. Passing..."
 		win.handle.setFocusId(1001)
 	else:
+		print "Drawmainwin: "
 		view = win.handle.getProperty('browseview')
 		list_instance = app.get_var('view_matrix')[view]
 		win.list_id = app.get_var('list_matrix')[win.getProperty('browseview')]

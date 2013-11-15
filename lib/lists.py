@@ -116,10 +116,10 @@ class ContentList():
 			self.add_lizitem_to_winlist(infos['listitem'])
 			if not id in store:
 				store[id] = infos[self.type]
-			self.win.setFocusId(self.win.list_id)
+			#self.win.setFocusId(self.win.list_id)
 			#del infos
 
-
+		#self.win.setFocusId(self.win.list_id)
 		self.built = True
 		#utils.prettyprint(self.data)
 

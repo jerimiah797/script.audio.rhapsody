@@ -131,7 +131,7 @@ class Api():
 
 	#------Library -----------
 	def get_library_albums(self):
-		print "Rhapapi: getting library albums"
+		print "Rhapapi: getting library albums ******************"
 		url = "%sme/library/albums" %(self.S_BASEURL)
 		req = self.__build_member_req(url)
 		results = self.__get_data_from_rhapsody(req, 20)
