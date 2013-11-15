@@ -20,7 +20,7 @@ class Api():
 
 	def __get_data_from_rhapsody(self, req, timeout):
 		succeed = 0
-		while succeed < 2:
+		while succeed < 1:
 			#print "Rhapapi: trying to get data..."
 			#print "timeout = "+str(timeout)
 			try:
@@ -40,10 +40,9 @@ class Api():
 				succeed += 1
 		return False
 
-	def __post_data_to_rhapsody(self, req, timeout):
-		data = ""
+	def __post_data_to_rhapsody(self, req, timeout, data):
 		succeed = 0
-		while succeed < 2:
+		while succeed < 1:
 			#print "Rhapapi: trying to get data..."
 			#print "timeout = "+str(timeout)
 			try:
@@ -117,9 +116,10 @@ class Api():
 
 	def get_session(self):
 		print "Rhapapi: Creating Playback Session"
+		data = ""
 		url = "%ssessions" %(self.S_BASEURL)
 		req = self.__build_member_req(url)
-		results = self.__post_data_to_rhapsody(req, 5)
+		results = self.__post_data_to_rhapsody(req, 5, data)
 		print results
 		return results
 
