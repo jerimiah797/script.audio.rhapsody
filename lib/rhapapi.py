@@ -53,7 +53,6 @@ class Api():
 				return results
 			except urllib2.HTTPError, e:
 				print "------------------  Bad server response ----------------"
-				print e.headers
 				print e
 				#xbmc.sleep(1000)
 				succeed += 1
