@@ -13,7 +13,7 @@ def draw_mainwin(win, app):
 		app.set_var(list, list_instance.data)
 		win.make_visible(300, win.list_id)
 		list_instance.make_active()
-		win.getControl(201).controlDown(win.clist)
+		#win.getControl(301).controlDown(win.clist)
 		win.setFocusId(win.list_id)
 		if list_instance.pos:
 			win.clist.selectItem(list_instance.pos)
@@ -177,7 +177,7 @@ class MainWin(WinBase):
 
 
 	def manage_action(self):
-		if self.getFocusId() == 201:
+		if self.getFocusId() == 301 or self.getFocusId() == 501:
 			draw_mainwin(self, self.app)
 			self.app.view_keeper = {'browseview': self.getProperty('browseview'), 'frame': self.getProperty('frame')}
 
