@@ -127,26 +127,25 @@
                 <description>Browse, new releases - default view</description>
                 <!--visible>SubString(Window.Property(view),Browse)</visible-->
                 <visible>StringCompare(Window.Property(frame),Browse)</visible>
-                <control type="button" id="202">
+                <!--control type="button" id="202">
                     <description>dummy button to set initial view</description>
                     <posx>0</posx>
                     <posy>0</posy>
                     <texturenofocus>-</texturenofocus>
                     <texturefocus>-</texturefocus>
-                    <!--onfocus>SetFocus(50)</onfocus-->
                     <ondown>50</ondown>
                     <onup>201</onup>
                     <onleft>50</onleft>
                     <onright>50</onright>
-                </control>
+                </control-->
                 <!--Top Nav Menu -->
-                <control type="wraplist" id="201">
+                <control type="wraplist" id="301">
                     <posx>14</posx>
                     <posy>10</posy>
                     <width>920</width>
                     <height>45</height>
                     <onright>-</onright>
-                    <ondown>50</ondown>
+                    <ondown>3300</ondown>
                     <orientation>horizontal</orientation>
                     <itemlayout width="230">
                         <control type="label">
@@ -194,7 +193,7 @@
                     </content>
                 </control>
                 <control type="image">
-                    <visible>Control.HasFocus(201)</visible>
+                    <visible>Control.HasFocus(301)</visible>
                     <width>200</width>
                     <height>2</height>
                     <posx>14</posx>
@@ -209,11 +208,13 @@
                     <textcolor>DD171717</textcolor>
                     <!-- darkgrey -->
                 </control>
+
+                <control type="group" id="3300">
                 <!-- Albums Panel View, New Releases -->
                 <control type="panel" id="3350">
                     <visible>StringCompare(Window.Property(browseview),Browse_newreleases)</visible>
-                    <onup>201</onup>
-                    <ondown>50</ondown>
+                    <onup>301</onup>
+                    <ondown>3350</ondown>
                     <onright>-</onright>
                     <posy>90</posy>
                     <width>1200</width>
@@ -318,8 +319,8 @@
                 <!-- Albums Panel View , Top Albums-->
                 <control type="panel" id="3351">
                     <visible>StringCompare(Window.Property(browseview),Browse_topalbums)</visible>
-                    <onup>201</onup>
-                    <ondown>50</ondown>
+                    <onup>301</onup>
+                    <ondown>3351</ondown>
                     <onright>-</onright>
                     <posy>90</posy>
                     <width>1200</width>
@@ -426,8 +427,8 @@
                 <!-- Top Artists View -->
                 <control type="panel" id="3352">
                     <visible>StringCompare(Window.Property(browseview),Browse_topartists)</visible>
-                    <onup>201</onup>
-                    <ondown>50</ondown>
+                    <onup>301</onup>
+                    <ondown>3352</ondown>
                     <onright>-</onright>
                     <posy>90</posy>
                     <width>1200</width>
@@ -532,8 +533,8 @@
                 <!-- Top Tracks View -->
                 <control type="list" id="3353">
                     <visible>StringCompare(Window.Property(browseview),Browse_toptracks)</visible>
-                    <onup>201</onup>
-                    <ondown>50</ondown>
+                    <onup>301</onup>
+                    <ondown>3353</ondown>
                     <onright>-</onright>
                     <posy>185</posy>
                     <width>600</width>
@@ -651,6 +652,8 @@
 
                     </focusedlayout>
                 </control>
+                </control>
+
                 <control type="group" id="29">
                     <visible>StringCompare(Window.Property(browseview),Browse_toptracks)</visible>
                     <description>container for all controls under review</description>
@@ -815,14 +818,13 @@
                     <onright>50</onright>
                 </control-->
                 <!--Top Nav Menu -->
-                <control type="wraplist" id="201">
+                <control type="wraplist" id="501">
                     <posx>14</posx>
                     <posy>10</posy>
                     <width>340</width>
                     <height>45</height>
                     <onright>-</onright>
-                    <ondown>50</ondown>
-                    <onclick>-</onclick>
+                    <ondown>3500</ondown>
                     <orientation>horizontal</orientation>
                     <itemlayout width="230">
                         <control type="label">
@@ -874,18 +876,20 @@
                     </content>
                 </control>
                 <control type="image">
-                    <visible>Control.HasFocus(201)</visible>
+                    <visible>Control.HasFocus(501)</visible>
                     <width>200</width>
                     <height>2</height>
                     <posx>14</posx>
                     <posy>55</posy>
                     <texture border="0">box.png</texture>
                 </control>
+
+                <control type="group" id="3500">
                 <!-- Albums Panel View, Library -->
                 <control type="panel" id="3550">
                     <visible>StringCompare(Window.Property(browseview),library_albums)</visible>
-                    <onup>201</onup>
-                    <ondown>50</ondown>
+                    <onup>501</onup>
+                    <ondown>3550</ondown>
                     <onright>-</onright>
                     <posy>90</posy>
                     <width>1200</width>
@@ -990,8 +994,8 @@
                 <!-- Artist Panel View , LIbrary-->
                 <control type="panel" id="3551">
                     <visible>StringCompare(Window.Property(browseview),library_artists)</visible>
-                    <onup>201</onup>
-                    <ondown>50</ondown>
+                    <onup>501</onup>
+                    <ondown>3551</ondown>
                     <onright>-</onright>
                     <posy>90</posy>
                     <width>1200</width>
@@ -1426,7 +1430,9 @@
                         </control>
                     </focusedlayout>
                 </control>
+                </control>
             </control>
+
             <control type="group" id="600">
                 <visible>StringCompare(Window.Property(frame),Playlists)</visible>
                 <control type="button" id="202">
