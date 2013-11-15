@@ -140,6 +140,7 @@ class Player(xbmc.Player):
 			self.get_session()
 			return True
 
+
 	def get_session(self):
 		print "player.get_session:"
 		self.session = self.api.get_session()

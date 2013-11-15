@@ -10,6 +10,7 @@ def draw_mainwin(win, app):
 		print "Drawmain: No lists to draw. Passing..."
 		win.handle.setFocusId(1001)
 	else:
+		print "Drawmainwin: "
 		view = win.handle.getProperty('browseview')
 		list_instance = app.get_var('view_matrix')[view]
 		win.list_id = app.get_var('list_matrix')[win.getProperty('browseview')]
@@ -19,8 +20,7 @@ def draw_mainwin(win, app):
 		#win.make_visible(300, win.list_id)
 		win.setFocusId(win.list_id)
 		list_instance.make_active()
-		win.getControl(201).controlDown(win.clist)
-		#win.setFocusId(win.list_id)
+		win.setFocusId(win.list_id)
 		if list_instance.pos:
 			win.clist.selectItem(list_instance.pos)
 			print "auto-selected list item "+str(list_instance.pos)
@@ -187,7 +187,7 @@ class MainWin(WinBase):
 
 
 	def manage_action(self):
-		if self.getFocusId() == 201:
+		if self.getFocusId() == 301 or self.getFocusId() == 501:
 			draw_mainwin(self, self.app)
 			self.app.view_keeper = {'browseview': self.getProperty('browseview'), 'frame': self.getProperty('frame')}
 

@@ -222,7 +222,6 @@ class ContentList():
 			self.win.clist.addItem(self.liz[i])
 
 
-
 	def save_data(self):
 		self.cache.save_album_data()
 		self.cache.save_artist_data()
