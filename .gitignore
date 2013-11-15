@@ -4,6 +4,7 @@ resources/skins/Default/media/artist/
 .*.obj
 .idea/*
 lib/*.pyc
+lib/*.pyo
 pysrc
 .project
 .pydevproject

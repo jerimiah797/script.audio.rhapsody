@@ -40,6 +40,28 @@ class Api():
 				succeed += 1
 		return False
 
+	def __post_data_to_rhapsody(self, req, timeout):
+		data = ""
+		succeed = 0
+		while succeed < 2:
+			#print "Rhapapi: trying to get data..."
+			#print "timeout = "+str(timeout)
+			try:
+				response = urllib2.urlopen(req, timeout=timeout, data=data)
+				results = json.load(response)
+				#print "Rhapapi: received data from servers!"
+				return results
+			except urllib2.HTTPError, e:
+				print "------------------  Bad server response ----------------"
+				print e
+				#xbmc.sleep(1000)
+				succeed += 1
+			except urllib2.URLError, e:
+				print 'We failed to reach a server.'
+				print 'Reason: ', e.reason
+				succeed += 1
+		return False
+
 
 #----------- Secure API calls requiring auth headers ---------
 
@@ -81,17 +103,31 @@ class Api():
 			return results['url']
 
 
-	def validate_session(self):
-		pass
+	def validate_session(self, session):
+		print "Rhapapi: Validating Playback Session"
+		print session[u'id']
+		url = "%ssessions/%s" %(self.S_BASEURL, session[u'id'])
+		req = self.__build_member_req(url)
+		results = self.__get_data_from_rhapsody(req, 20)
+		if results:
+			print results
+			return results
+		else:
+			return False
 
 	def get_session(self):
-		pass
+		print "Rhapapi: Creating Playback Session"
+		url = "%ssessions" %(self.S_BASEURL)
+		req = self.__build_member_req(url)
+		results = self.__post_data_to_rhapsody(req, 5)
+		print results
+		return results
 
 	def log_playstart(self):
-		pass
+		print "logging playstart notification"
 
 	def log_playstop(self):
-		pass
+		print "logging playstop notification"
 
 	#------Library -----------
 	def get_library_albums(self):

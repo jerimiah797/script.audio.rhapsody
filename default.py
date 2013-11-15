@@ -49,8 +49,10 @@ while app.get_var('running'):
 		loadwin.getControl(10).setLabel('Logging you out...')
 	else:
 		loadwin.getControl(10).setLabel('Finishing up...')
-	del app.win
-	time.sleep(1)
+	app.cache.save_album_data()
+	app.cache.save_artist_data()
+del app.win
+time.sleep(1)
 loadwin.close()
 del loadwin
 del app

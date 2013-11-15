@@ -5,6 +5,12 @@ import os
 from lib import utils
 
 def draw_mainwin(win, app):
+	frame = win.handle.getProperty('frame')
+	if frame == "Settings":
+		print "Drawmain: No lists to draw. Passing..."
+		win.handle.setFocusId(1001)
+	else:
+		print "Drawmainwin: "
 		view = win.handle.getProperty('browseview')
 		list_instance = app.get_var('view_matrix')[view]
 		win.list_id = app.get_var('list_matrix')[win.getProperty('browseview')]
@@ -160,6 +166,7 @@ class MainWin(WinBase):
 		self.handle.setProperty("full_name", self.mem.first_name+" "+self.mem.last_name)
 		self.handle.setProperty("country", self.mem.catalog)
 		self.handle.setProperty("logged_in", "true")
+		self.handle.setProperty("username", self.mem.username)
 		#self.clist = self.getControl(201)
 		self.frame_label = self.getControl(121)
 		draw_mainwin(self, self.app)
@@ -219,7 +226,7 @@ class MainWin(WinBase):
 		self.player.now_playing = {'pos': 0, 'type':'playlist', 'item':self.toptracks.data, 'id':'toptracks'}  #['data']}
 		self.player.build()
 		if id == 3353:
-			self.player.now_playing['pos'] = self.getSelectedPosition()
+			self.player.now_playing['pos'] = self.clist.getSelectedPosition()
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
 		track = self.player.add_playable_track(0)
 		if not track:
@@ -245,7 +252,8 @@ class MainWin(WinBase):
 
 
 	def empty_list(self):
-		if self.getListSize() < 2:
+		if self.clist.size() < 2:
+			print "window list is empty.. redrawing"
 			return True
 
 
