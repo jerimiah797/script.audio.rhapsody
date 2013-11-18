@@ -115,6 +115,10 @@
                         <label>Settings</label>
                         <onclick>SetProperty(frame,Settings)</onclick>
                     </item>
+                    <item id="110">
+                        <label>Visualizer</label>
+                        <onclick>ActivateWindow(visualisation)</onclick>
+                    </item>
                 </content>
             </control>
         </control>
