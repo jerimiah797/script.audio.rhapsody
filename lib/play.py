@@ -1,5 +1,6 @@
 import xbmc
 import xbmcgui
+import time
 
 
 
@@ -14,6 +15,7 @@ class Player(xbmc.Player):
 		self.playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC) #player=self, app=self.app, api=self.api, img=self.img)
 		self.now_playing = {'pos': 0, 'type': None,'item':[], 'id': None}
 		self.session = {'valid': None, 'id': None}
+		self.notify = Notifier()
 		#self.now_playing['item']['album_id'] = 'blank'
 		self.onplay_lock = False
 
@@ -37,6 +39,7 @@ class Player(xbmc.Player):
 				self.now_playing['pos'] = pos2
 				self.add_playable_track(1)
 				self.add_playable_track(-1)
+			self.notify.report_playback(self, self.api)
 			xbmc.sleep(2)
 			self.onplay_lock = False
 		else:
@@ -63,7 +66,7 @@ class Player(xbmc.Player):
 				self.now_playing['pos'] = pos2
 				self.add_playable_track(1)
 				self.add_playable_track(-1)
-
+			self.notify.report_playback(self, self.api)
 			xbmc.sleep(2)
 			self.onplay_lock = False
 		else:
@@ -71,9 +74,11 @@ class Player(xbmc.Player):
 
 	def onPlayBackEnded(self):
 		print "onPlaybackEnded was detected!"
+		self.notify.report_playback(self, self.api)
 
 	def onPlayBackStopped(self):
 		print "onPlaybackStopped was detected!"
+		self.notify.report_playback(self, self.api)
 
 	def onQueueNextItem(self):
 		print "onQueueNextItem was detected!"
@@ -132,6 +137,7 @@ class Player(xbmc.Player):
 		self.playlist.add(playurl, listitem=li, index=circ_pos)
 		return True
 
+
 	def validate_session(self, session):
 		valid = self.api.validate_session(session)
 		if valid:
@@ -145,3 +151,34 @@ class Player(xbmc.Player):
 		print "player.get_session:"
 		self.session = self.api.get_session()
 		print "Session:"+str(self.session)
+
+
+class Notifier():
+
+	def __init__(self):
+		self.current_track = None
+		self.ztime = None
+		self.duration = None
+		self.time = None
+
+	def report_playback(self, player, api):
+		pos = player.playlist.getposition()
+		print player.now_playing['item'][pos]
+		track_id = player.now_playing['item'][pos]['trackId']
+		print "report playback: "+track_id
+		if self.current_track:
+			print "reporting stop event for current track"
+			now = time.time()
+			self.duration = int(now - self.time)
+			print "duration"+str(self.duration)
+			api.log_playstop(self.current_track, self.ztime, self.duration)
+			print "clearing current track info"
+			self.current_track = None
+			self.duration = None
+			self.ztime = None
+			self.time = None
+		if player.isPlaying():
+			print "setting current track info and reporting play start event"
+			self.current_track = track_id
+			self.ztime = api.log_playstart(self.current_track)
+			self.time = time.time()

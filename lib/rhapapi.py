@@ -3,7 +3,10 @@ import urllib
 import urllib2
 import json
 import base64
+import datetime
+import time
 import utils
+
 
 
 
@@ -47,9 +50,12 @@ class Api():
 			#print "timeout = "+str(timeout)
 			try:
 				response = urllib2.urlopen(req, timeout=timeout, data=data)
-				results = json.load(response)
-				#print "Rhapapi: received data from servers!"
-				return results
+				try:
+					results = json.load(response)
+					return results
+				except:
+					#print "Rhapapi: received data from servers!"
+					return True
 			except urllib2.HTTPError, e:
 				print "------------------  Bad server response ----------------"
 				print e
@@ -123,11 +129,29 @@ class Api():
 		print results
 		return results
 
-	def log_playstart(self):
+	def log_playstart(self, track_id):
 		print "logging playstart notification"
+		ztime = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+		url = "%sevents" %(self.S_BASEURL)
+		data = json.dumps({"type": "playbackStart", "playback": { "id": track_id, "started": ztime, "format": "AAC", "bitrate": 192 } })
+		req = self.__build_member_req(url)
+		req.add_header('Content-Type', 'application/json')
+		results = self.__post_data_to_rhapsody(req, 5, data)
+		print results
+		return ztime
 
-	def log_playstop(self):
+
+	def log_playstop(self, track_id, duration, ztime):
 		print "logging playstop notification"
+		url = "%sevents" %(self.S_BASEURL)
+		data = json.dumps({"type": "playbackStop", "duration": duration, "playback": { "id": track_id, "started": ztime, "format": "AAC", "bitrate": 192 } })
+		utils.prettyprint(data)
+		req = self.__build_member_req(url)
+		req.add_header('Content-Type', 'application/json')
+		results = self.__post_data_to_rhapsody(req, 5, data)
+		print results
+		return results
+
 
 	#------Library -----------
 	def get_library_albums(self):
