@@ -78,6 +78,7 @@ class ContentList():
 			     'toptracks':     self.api.get_top_tracks,
 			     'lib_albums':    self.api.get_library_albums,
 			     'lib_artists':   self.api.get_library_artists,
+			     'hist_tracks':   self.api.get_listening_history,
 			     #'lib_tracks':    api.get_library_artist_tracks,
 			     #'lib_stations':  api.get_library_stations,
 			     #'lib_favorites': api.get_library_favorites

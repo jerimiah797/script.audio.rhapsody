@@ -217,7 +217,7 @@ class MainWin(WinBase):
 			self.clist.selectItem(self.alb_dialog.pos)
 			#self.cache.save_album_data()
 
-		elif control == 3353:
+		elif control == 3353 or control == 3950:
 			self.start_playback(control)
 
 

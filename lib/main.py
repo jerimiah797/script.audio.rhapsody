@@ -56,18 +56,20 @@ class Application():
 		self.toptracks =     lists.ContentList('track',   'toptracks',     self.__addon_path__+'/resources/.toptracks.obj', self)
 		self.lib_albums =    lists.ContentList('album',   'lib_albums',    self.__addon_path__+'/resources/.lib_albums.obj', self)
 		self.lib_artists =   lists.ContentList('artist',  'lib_artists',   self.__addon_path__+'/resources/.lib_artists.obj', self)
+		self.hist_tracks =   lists.ContentList('track',   'hist_tracks',   self.__addon_path__+'/resources/.hist_tracks.obj', self)
 		#lib_tracks =    ContentList('track',   'lib_tracks',    __addon_path__+'/resources/.lib_tracks.obj')
 		#lib_stations =  ContentList('station', 'lib_stations',  __addon_path__+'/resources/.lib_stations.obj')
 		#lib_favorites = ContentList('tracks',  'lib_favorites', __addon_path__+'/resources/.lib_favorites.obj')
 		self.windowtracklist = lists.WindowTrackList()
 
 	def init_vars(self):
-		self.set_var('view_matrix' , {"browse_newreleases": self.newreleases,
+		self.set_var('view_matrix' , {"browse_newreleases":   self.newreleases,
 						                "browse_topalbums":   self.topalbums,
 						                "browse_topartists":  self.topartists,
 						                "browse_toptracks":   self.toptracks,
 						                "library_albums":     self.lib_albums,
 						                "library_artists":    self.lib_artists,
+		                                "history_tracks":     self.hist_tracks,
 						                #"library_tracks":     lib_tracks,
 						                #"library_stations":   lib_stations,
 						                #"library_favorites":  lib_favorites,
@@ -79,6 +81,7 @@ class Application():
 						              "browse_toptracks":      3353,
 						              "library_albums":        3550,
 						              "library_artists":       3551,
+		                              "history_tracks":        3950,
 						                })
 
 		self.set_var('running', True)

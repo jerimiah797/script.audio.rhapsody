@@ -164,6 +164,21 @@ class Api():
 			return False
 
 
+#------Listening History -----------
+
+	def get_listening_history(self):
+		print "Rhapapi: getting listening history tracks"
+		url = "%sme/listens?apikey=%s" % (self.S_BASEURL, self.APIKEY)
+		req = self.__build_member_req(url)
+		results = self.__get_data_from_rhapsody(req, 20)
+		if results:
+			utils.prettyprint(results)
+			return results
+		else:
+			return False
+
+
+
 #----------- Normal API calls  ---------
 
 	def get_album_review(self, album_id):
