@@ -24,42 +24,17 @@ class Api():
 	def __get_data_from_rhapsody(self, req, timeout):
 		succeed = 0
 		while succeed < 1:
-			#print "Rhapapi: trying to get data..."
-			#print "timeout = "+str(timeout)
 			try:
 				response = urllib2.urlopen(req, timeout=timeout)
-				results = json.load(response)
-				#print "Rhapapi: received data from servers!"
-				return results
-			except urllib2.HTTPError, e:
-				print "------------------  Bad server response ----------------"
-				print e.headers
-				print e
-				#xbmc.sleep(1000)
-				succeed += 1
-			except urllib2.URLError, e:
-				print 'We failed to reach a server.'
-				print 'Reason: ', e.reason
-				succeed += 1
-		return False
-
-	def __post_data_to_rhapsody(self, req, timeout, data):
-		succeed = 0
-		while succeed < 1:
-			#print "Rhapapi: trying to get data..."
-			#print "timeout = "+str(timeout)
-			try:
-				response = urllib2.urlopen(req, timeout=timeout, data=data)
 				try:
 					results = json.load(response)
 					return results
 				except:
-					#print "Rhapapi: received data from servers!"
 					return True
 			except urllib2.HTTPError, e:
 				print "------------------  Bad server response ----------------"
+				print e.headers
 				print e
-				#xbmc.sleep(1000)
 				succeed += 1
 			except urllib2.URLError, e:
 				print 'We failed to reach a server.'
@@ -110,46 +85,49 @@ class Api():
 
 	def validate_session(self, session):
 		print "Rhapapi: Validating Playback Session"
-		print session[u'id']
-		url = "%ssessions/%s" %(self.S_BASEURL, session[u'id'])
-		req = self.__build_member_req(url)
-		results = self.__get_data_from_rhapsody(req, 20)
-		if results:
-			print results
-			return results
+		if 'id' in session:
+			url = "%ssessions/%s" %(self.S_BASEURL, session[u'id'])
+			req = self.__build_member_req(url)
+			results = self.__get_data_from_rhapsody(req, 20)
+			if results:
+				return results
+			else:
+				return False
 		else:
-			return False
+			print "No existing session to check. Let's get one. "
+			pass
 
 	def get_session(self):
 		print "Rhapapi: Creating Playback Session"
-		data = ""
+		data = {}
 		url = "%ssessions" %(self.S_BASEURL)
 		req = self.__build_member_req(url)
-		results = self.__post_data_to_rhapsody(req, 5, data)
-		print results
+		req.add_data(data)
+		results = self.__get_data_from_rhapsody(req, 5)
 		return results
 
 	def log_playstart(self, track_id):
-		print "logging playstart notification"
+		print "Rhapapi: logging playstart notification"
 		ztime = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 		url = "%sevents" %(self.S_BASEURL)
-		data = json.dumps({"type": "playbackStart", "playback": { "id": track_id, "started": ztime, "format": "AAC", "bitrate": 192 } })
+		data = {"type": "playbackStart", "client": "xbmc_internal", "playback": { "id": track_id, "started": ztime, "format": "AAC", "bitrate": 192 } }
+		data = json.dumps(data)
 		req = self.__build_member_req(url)
 		req.add_header('Content-Type', 'application/json')
-		results = self.__post_data_to_rhapsody(req, 5, data)
-		print results
+		req.add_data(data)
+		results = self.__get_data_from_rhapsody(req, 5)
 		return ztime
 
 
-	def log_playstop(self, track_id, duration, ztime):
-		print "logging playstop notification"
+	def log_playstop(self, track_id, ztime, duration):
+		print "Rhapapi: logging playstop notification"
 		url = "%sevents" %(self.S_BASEURL)
-		data = json.dumps({"type": "playbackStop", "duration": duration, "playback": { "id": track_id, "started": ztime, "format": "AAC", "bitrate": 192 } })
-		utils.prettyprint(data)
+		data = {"type": "playbackStop", "duration": duration, "client": "xbmc_internal", "playback": { "id": track_id, "started": ztime, "format": "AAC", "bitrate": 192 } }
+		data = json.dumps(data)
 		req = self.__build_member_req(url)
 		req.add_header('Content-Type', 'application/json')
-		results = self.__post_data_to_rhapsody(req, 5, data)
-		print results
+		req.add_data(data)
+		results = self.__get_data_from_rhapsody(req, 5)
 		return results
 
 
@@ -180,7 +158,7 @@ class Api():
 		req = self.__build_member_req(url)
 		results = self.__get_data_from_rhapsody(req, 20)
 		if results:
-			utils.prettyprint(results)
+			#utils.prettyprint(results)
 			return results
 		else:
 			return False

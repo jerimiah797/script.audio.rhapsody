@@ -14,7 +14,7 @@ class Player(xbmc.Player):
 		self.api = self.app.api
 		self.playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC) #player=self, app=self.app, api=self.api, img=self.img)
 		self.now_playing = {'pos': 0, 'type': None,'item':[], 'id': None}
-		self.session = {'valid': None, 'id': None}
+		self.session = {'valid': None}#, 'id': None}
 		self.notify = Notifier()
 		#self.now_playing['item']['album_id'] = 'blank'
 		self.onplay_lock = False
@@ -31,7 +31,6 @@ class Player(xbmc.Player):
 			self.add_playable_track(-1)
 			self.win.sync_playlist_pos()
 			pos2 = self.playlist.getposition()
-			#print "pos: "+str(pos)+" pos2: "+str(pos2)
 			if pos != pos2:
 				print "Oh wait! We're not playing track "+str(pos+1)+"!"
 				print "Playing track "+str(pos2+1)
@@ -139,6 +138,7 @@ class Player(xbmc.Player):
 
 
 	def validate_session(self, session):
+		print "player.validate_session"
 		valid = self.api.validate_session(session)
 		if valid:
 			return True
@@ -150,7 +150,7 @@ class Player(xbmc.Player):
 	def get_session(self):
 		print "player.get_session:"
 		self.session = self.api.get_session()
-		print "Session:"+str(self.session)
+		#print "Session:"+str(self.session)
 
 
 class Notifier():
@@ -163,14 +163,14 @@ class Notifier():
 
 	def report_playback(self, player, api):
 		pos = player.playlist.getposition()
-		print player.now_playing['item'][pos]
+		#print player.now_playing['item'][pos]
 		track_id = player.now_playing['item'][pos]['trackId']
-		print "report playback: "+track_id
+		#print "report playback: "+track_id
 		if self.current_track:
 			print "reporting stop event for current track"
 			now = time.time()
 			self.duration = int(now - self.time)
-			print "duration"+str(self.duration)
+			print "duration: "+str(self.duration)
 			api.log_playstop(self.current_track, self.ztime, self.duration)
 			print "clearing current track info"
 			self.current_track = None
