@@ -1955,10 +1955,31 @@
                             <onclick>ClearProperty(country)</onclick>
                             <onclick>ClearProperty(logged_in)</onclick>
                             <!--onclick>RunScript(special://skin/scripts/login.py)</onclick-->
-                            <ondown>-</ondown>
-                            <onup>-</onup>
+                            <ondown>1002</ondown>
+
                             <onleft>100</onleft>
-                            <onright>-</onright>
+
+                        </control>
+                        <control type="button" id="1002">
+                            <posx>0</posx>
+                            <posy>270</posy>
+                            <width>420</width>
+                            <height>50</height>
+                            <align>center</align>
+                            <textoffsety>8</textoffsety>
+                            <label>Pull latest from github</label>
+                            <texturenofocus>white.png</texturenofocus>
+                            <texturefocus border="8">selectoutline_solid.png</texturefocus>
+                            <font>rhapsody_font24_title</font>
+                            <textcolor>DD171717</textcolor>
+                            <focusedcolor>DD171717</focusedcolor>
+                    <!-- darkgrey -->
+                            <onclick>System.Exec(git pull)</onclick>
+                            <!--onclick>RunScript(special://skin/scripts/login.py)</onclick-->
+
+                            <onup>1001</onup>
+                            <onleft>100</onleft>
+
                         </control>
                     </control>
                     <control type="group">
