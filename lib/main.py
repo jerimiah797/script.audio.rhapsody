@@ -29,6 +29,7 @@ class Application():
 		self.toptracks =     None
 		self.lib_albums =    None
 		self.lib_artists =   None
+		self.hist_tracks =   None
 		self.windowtracklist = None
 
 		self.player = None
@@ -45,7 +46,7 @@ class Application():
 
 		self.player = play.Player(app=self)
 		self.playlist = self.player.playlist
-		self.win.toptracks = self.toptracks
+		#self.win.toptracks = self.toptracks
 		self.win.player = self.player
 		self.win.playlist = self.playlist
 
@@ -57,10 +58,12 @@ class Application():
 		self.lib_albums =    lists.ContentList('album',   'lib_albums',    self.__addon_path__+'/resources/.lib_albums.obj', self)
 		self.lib_artists =   lists.ContentList('artist',  'lib_artists',   self.__addon_path__+'/resources/.lib_artists.obj', self)
 		self.hist_tracks =   lists.ContentList('track',   'hist_tracks',   self.__addon_path__+'/resources/.hist_tracks.obj', self)
+		self.lib_playlists = lists.ContentList('playlist','lib_playlists', self.__addon_path__+'/resources/.lib_playlists.obj', self)
 		#lib_tracks =    ContentList('track',   'lib_tracks',    __addon_path__+'/resources/.lib_tracks.obj')
 		#lib_stations =  ContentList('station', 'lib_stations',  __addon_path__+'/resources/.lib_stations.obj')
 		#lib_favorites = ContentList('tracks',  'lib_favorites', __addon_path__+'/resources/.lib_favorites.obj')
 		self.windowtracklist = lists.WindowTrackList()
+
 
 	def init_vars(self):
 		self.set_var('view_matrix' , {"browse_newreleases":   self.newreleases,
@@ -70,6 +73,7 @@ class Application():
 						                "library_albums":     self.lib_albums,
 						                "library_artists":    self.lib_artists,
 		                                "history_tracks":     self.hist_tracks,
+		                                "library_playlists":  self.lib_playlists,
 						                #"library_tracks":     lib_tracks,
 						                #"library_stations":   lib_stations,
 						                #"library_favorites":  lib_favorites,
@@ -82,6 +86,7 @@ class Application():
 						              "library_albums":        3550,
 						              "library_artists":       3551,
 		                              "history_tracks":        3950,
+		                              "library_playlists":     3650
 						                })
 
 		self.set_var('running', True)

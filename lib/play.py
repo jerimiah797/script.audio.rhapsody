@@ -13,7 +13,7 @@ class Player(xbmc.Player):
 		self.img = self.app.img
 		self.api = self.app.api
 		self.playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC) #player=self, app=self.app, api=self.api, img=self.img)
-		self.now_playing = {'pos': 0, 'type': None,'item':[], 'id': None}
+		self.now_playing = {'pos': 0, 'type': None, 'item':[], 'id': None}
 		self.session = {'valid': None}#, 'id': None}
 		self.notify = Notifier()
 		#self.now_playing['item']['album_id'] = 'blank'
@@ -86,20 +86,15 @@ class Player(xbmc.Player):
 	def build(self):
 		print "Playlist: build dummy playlist"
 		self.playlist.clear()
-		liz = None
-		#utils.prettyprint(player.now_playing['item'])
-		if self.now_playing['type'] == "album":
-			liz = self.now_playing['item']
-			#win.current_playlist_albumId = player.now_playing['item']["album_id"]  #can probably eliminate this variable
-		elif self.now_playing['type'] == 'playlist':
-			liz = self.now_playing['item']
-			#win.current_playlist_albumId = None
-		#utils.prettyprint(liz)
+		#liz = None
+		#if self.now_playing['type'] == "album":
+		#	liz = self.now_playing['item']
+		#elif self.now_playing['type'] == 'playlist':
+		#	liz = self.now_playing['item']
+		liz = self.now_playing['item']
 		for i, track in enumerate(liz):
 			self.playlist.add(track['previewURL'], listitem=xbmcgui.ListItem(''))
-		#print "Okay let's play some music! Added "+str(i)+" tracks to the playlist for "+player.now_playing['item']["album_id"]
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Preparing to play..., 2000, %s)" %(self.app.__addon_icon__))
-		#win.current_playlist_albumId = player.now_playing['item']["album_id"]  #can probably eliminate this variable
 
 
 	def add_playable_track(self, offset):

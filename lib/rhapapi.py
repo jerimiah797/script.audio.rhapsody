@@ -172,11 +172,23 @@ class Api():
 		req = self.__build_member_req(url)
 		results = self.__get_data_from_rhapsody(req, 20)
 		if results:
-			utils.prettyprint(results)
+			#utils.prettyprint(results)
 			return results
 		else:
 			return False
 
+
+#------------Playlists-------------------
+
+	def get_library_playlists(self):
+		print "Rhapapi: getting member playlists"
+		url = "%sme/playlists" %(self.S_BASEURL)
+		req = self.__build_member_req(url)
+		results = self.__get_data_from_rhapsody(req, 20)
+		if results:
+			return results
+		else:
+			return False
 
 
 #----------- Normal API calls  ---------

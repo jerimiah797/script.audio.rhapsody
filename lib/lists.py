@@ -1,7 +1,7 @@
 import time
 import pickle
 import xbmcgui
-import gc
+from lib import utils
 
 
 class ContentList():
@@ -43,9 +43,7 @@ class ContentList():
 			print "Doing full data fetch and list building for mainwin"
 			self.build()
 		self.app.set_var('last_rendered_list', self.name)
-		#if self.name == 'toptracks':
-		#	win.sync_playlist_pos()
-		#print app.get_var('last_rendered_list')
+
 
 
 	def build(self):
@@ -79,13 +77,14 @@ class ContentList():
 			     'lib_albums':    self.api.get_library_albums,
 			     'lib_artists':   self.api.get_library_artists,
 			     'hist_tracks':   self.api.get_listening_history,
+			     'lib_playlists': self.api.get_library_playlists
 			     #'lib_tracks':    api.get_library_artist_tracks,
 			     #'lib_stations':  api.get_library_stations,
 			     #'lib_favorites': api.get_library_favorites
 			     }
 			r = d[self.name]()
 			#self.save_raw_data(r)
-		#utils.prettyprint(r)
+		utils.prettyprint(r)
 		return r
 
 	def ingest_list(self, results):
@@ -96,6 +95,7 @@ class ContentList():
 
 		d = {'album': self.cache.album,
 			 'artist': self.cache.artist,
+		     'playlist': __,
 		     'track':  __,
 		     'station': __}
 
@@ -113,6 +113,9 @@ class ContentList():
 			elif self.type == 'track':
 				infos = self.process_track(i, item, recycle)
 				self.data.append(infos[self.type])
+			elif self.type == 'playlist':
+				infos = self.process_playlist(i, item, recycle)
+				self.data.append(infos[self.type])
 			self.liz.append(infos['listitem'])
 			self.add_lizitem_to_winlist(infos['listitem'])
 			if not id in store:
@@ -121,7 +124,7 @@ class ContentList():
 
 
 		self.built = True
-		#utils.prettyprint(self.data)
+		utils.prettyprint(self.data)
 
 
 
@@ -211,6 +214,21 @@ class ContentList():
 		data['listitem'].setInfo("music", info)
 		return data
 
+
+	def process_playlist(self, count, item, data):
+		#data = {}
+		#thumb = self.img.handler('none.jpg', 'small', 'album')
+		data['playlist'] = {'playlist_id': item["id"],
+		         'name': item["name"],
+		         'date_created': time.strftime('%B %Y', time.localtime(int(item["created"]) / 1000)),
+		         'author': item['author'],
+		         'tracks': {},
+		         'track_count': 0,
+		         'total_time': 0
+		         }
+		data['listitem'] = xbmcgui.ListItem(item["name"], data['playlist']['date_created'], "", "none.png")
+		return data
+
 	def add_lizitem_to_winlist(self, li):
 		self.win.clist.addItem(li)
 
@@ -244,3 +262,4 @@ class WindowTrackList():
 			list.append(newlistitem)
 		print "Showing "+str(i+1)+" tracks"
 		return list
+

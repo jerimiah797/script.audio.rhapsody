@@ -11,10 +11,9 @@ def draw_mainwin(win, app):
 		win.handle.setFocusId(1001)
 	else:
 		print "Drawmainwin: "
-		view = win.handle.getProperty('browseview')
-		list_instance = app.get_var('view_matrix')[view]
-		win.list_id = app.get_var('list_matrix')[win.getProperty('browseview')]
-		print "list id: "+str(win.list_id)
+		view = win.handle.getProperty('browseview'); print "view: "+view
+		list_instance = app.get_var('view_matrix')[view]; print "list instance: "+list_instance.name
+		win.list_id = app.get_var('list_matrix')[win.getProperty('browseview')]; print "list id: "+str(win.list_id)
 		win.clist = win.getControl(win.list_id)
 		app.set_var(list, list_instance.data)
 		win.make_visible(300, win.list_id)
@@ -140,12 +139,13 @@ class MainWin(WinBase):
 		self.cache = self.app.cache
 		self.img = self.app.img
 		self.api = self.app.api
-		self.toptracks = self.app.toptracks
+		#self.toptracks = self.app.toptracks
 		self.player = self.app.player
 		self.playlist = self.app.playlist
 		self.setup = False
 		self.list_id = None
-
+		self.handle = None
+		self.frame_label = None
 
 
 
@@ -154,20 +154,14 @@ class MainWin(WinBase):
 		self.handle = xbmcgui.Window(xbmcgui.getCurrentWindowId())
 		self.handle.setProperty("browseview", self.app.view_keeper['browseview'])
 		self.handle.setProperty("frame", self.app.view_keeper['frame'])
-		#self.list_id = self.app.get_var('list_matrix')[self.getProperty('browseview')]
-		#print "list id: "+str(self.list_id)
-		#self.clist = self.getControl(self.list_id)
 		self.main()
 
 	def main(self):
-		#self.list_id = self.app.get_var('list_matrix')[self.getProperty('browseview')]
-		#print "list id: "+str(self.list_id)
-		#self.clist = self.getControl(self.list_id)
+
 		self.handle.setProperty("full_name", self.mem.first_name+" "+self.mem.last_name)
 		self.handle.setProperty("country", self.mem.catalog)
 		self.handle.setProperty("logged_in", "true")
 		self.handle.setProperty("username", self.mem.username)
-		#self.clist = self.getControl(201)
 		self.frame_label = self.getControl(121)
 		draw_mainwin(self, self.app)
 
@@ -223,9 +217,11 @@ class MainWin(WinBase):
 
 	def start_playback(self, id):
 
-		self.player.now_playing = {'pos': 0, 'type':'playlist', 'item':self.toptracks.data, 'id':'toptracks'}  #['data']}
+		view = self.handle.getProperty('browseview')
+		list_instance = self.app.get_var('view_matrix')[view]
+		self.player.now_playing = {'pos': 0, 'type':'playlist', 'item':list_instance.data, 'id':list_instance.name}  #['data']}
 		self.player.build()
-		if id == 3353:
+		if id == 3353 or id == 3950:
 			self.player.now_playing['pos'] = self.clist.getSelectedPosition()
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
 		track = self.player.add_playable_track(0)
