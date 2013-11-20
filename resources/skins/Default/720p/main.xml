@@ -1974,7 +1974,7 @@
                             <textcolor>DD171717</textcolor>
                             <focusedcolor>DD171717</focusedcolor>
                     <!-- darkgrey -->
-                            <onclick>System.Exec(git pull)</onclick>
+                            <onclick>-</onclick>
                             <!--onclick>RunScript(special://skin/scripts/login.py)</onclick-->
 
                             <onup>1001</onup>

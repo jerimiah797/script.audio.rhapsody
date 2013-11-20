@@ -214,6 +214,9 @@ class MainWin(WinBase):
 		elif control == 3353 or control == 3950:
 			self.start_playback(control)
 
+		elif control == 3650:
+			self.process_playlist_detail("mp.164270894")
+
 
 	def start_playback(self, id):
 
@@ -264,6 +267,10 @@ class MainWin(WinBase):
 				self.alb_dialog.clist.selectItem(self.playlist.getposition())
 		except:
 			pass
+
+	def process_playlist_detail(self, id):
+		data = self.api.get_playlist_details(id)
+		utils.prettyprint(data)
 
 
 class AlbumDialog(DialogBase):

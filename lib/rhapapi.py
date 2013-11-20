@@ -190,6 +190,16 @@ class Api():
 		else:
 			return False
 
+	def get_playlist_details(self, plist_id):
+		print "Rhapapi: getting playlist details"
+		url = "%sme/playlists/%s/tracks" %(self.S_BASEURL, plist_id)
+		req = self.__build_member_req(url)
+		results = self.__get_data_from_rhapsody(req, 20)
+		if results:
+			return results
+		else:
+			return False
+
 
 #----------- Normal API calls  ---------
 
