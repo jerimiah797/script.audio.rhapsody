@@ -2,6 +2,7 @@ import xbmcgui
 import xbmc
 
 import os
+import subprocess
 from lib import utils
 
 def draw_mainwin(win, app):
@@ -195,6 +196,12 @@ class MainWin(WinBase):
 			self.player.stop()
 			self.playlist.clear()
 			self.close()
+
+		elif self.getFocusId() == 1002:
+			try:
+				subprocess.call(['git','pull'])
+			except: pass
+			print "git pull completed. relaunch plugin for newest version"
 
 	def onClick(self, control):
 		pos = self.clist.getSelectedPosition()
