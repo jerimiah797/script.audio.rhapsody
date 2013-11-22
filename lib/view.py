@@ -199,8 +199,11 @@ class MainWin(WinBase):
 
 		elif self.getFocusId() == 1002:
 			try:
-				subprocess.call(['git','pull'])
-			except: pass
+				temp = subprocess.Popen(['git', 'pull'], shell=False, stdout=subprocess.PIPE)
+				#print temp.communicate()
+			except:
+				print "subprocess.call exception"
+			#print temp.communicate()
 			print "git pull completed. relaunch plugin for newest version"
 
 	def onClick(self, control):
