@@ -84,7 +84,7 @@ class ContentList():
 			     }
 			r = d[self.name]()
 			#self.save_raw_data(r)
-		utils.prettyprint(r)
+		#utils.prettyprint(r)
 		return r
 
 	def ingest_list(self, results):
@@ -95,7 +95,7 @@ class ContentList():
 
 		d = {'album': self.cache.album,
 			 'artist': self.cache.artist,
-		     'playlist': __,
+		     'playlist': self.cache.playlist,
 		     'track':  __,
 		     'station': __}
 
@@ -124,7 +124,7 @@ class ContentList():
 
 
 		self.built = True
-		utils.prettyprint(self.data)
+		#utils.prettyprint(self.data)
 
 
 
@@ -247,10 +247,10 @@ class ContentList():
 class WindowTrackList():
 	def __init__(self):
 		pass
-	#handle albums, playlists, radio, queue, listening history
+	#handle albums, playlists
 
-	def get_litems(self, cache, id):
-		print "Tracklist: adding dummy tracks for gui list"
+	def get_album_litems(self, cache, id):
+		print "Tracklist(album): adding dummy tracks for gui list"
 		src = cache[id]
 		list = []
 		for i, item in enumerate(src["tracks"]):
@@ -258,6 +258,21 @@ class WindowTrackList():
 			newlistitem.setInfo('music', { 'tracknumber':   int(src["tracks"][i]["trackIndex"]),
 			                               'title':         src["tracks"][i]["name"],
 			                               'duration':      int(src["tracks"][i]["playbackSeconds"])
+			                               })
+			list.append(newlistitem)
+		print "Showing "+str(i+1)+" tracks"
+		return list
+
+	def get_playlist_litems(self, cache, id):
+		print "Tracklist(playlist): adding dummy tracks for gui list"
+		src = cache[id]
+		list = []
+		for i, item in enumerate(src["tracks"]):
+			utils.prettyprint(item['name'])
+			newlistitem = xbmcgui.ListItem(path="http://dummyurl.org")
+			newlistitem.setInfo('music', { 'tracknumber':   i,                      #int(src["tracks"][i]["trackIndex"]),
+			                               'title':         item['name'],           #src["tracks"][i]["name"],
+			                               'duration':      int(src["tracks"][i]["duration"])
 			                               })
 			list.append(newlistitem)
 		print "Showing "+str(i+1)+" tracks"

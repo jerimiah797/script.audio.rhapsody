@@ -1510,7 +1510,7 @@
                     <textcolor>black</textcolor>
                 </control>
                 <control type="group" id="3600">
-                    <!-- Listening History Tracks View -->
+                    <!-- Member list of Playlists View -->
                     <control type="list" id="3650">
                         <visible>StringCompare(Window.Property(browseview),library_playlists)</visible>
 
@@ -1520,6 +1520,7 @@
                         <width>600</width>
                         <height>457</height>
                         <onleft>100</onleft>
+                        <onright>3651</onright>
                         <orientation>vertical</orientation>
                         <itemlayout height="27">
                             <control type="label">
@@ -1626,6 +1627,131 @@
                                 <posy>0</posy>
                                 <width>150</width>
                                 <info>ListItem.Label2</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <aligny>top></aligny>
+                                <align>right</align>
+                            </control>
+
+                        </focusedlayout>
+                    </control>
+                    <!-- Member Playlist tracklist -->
+                    <control type="list" id="3651">
+                        <visible>StringCompare(Window.Property(browseview),library_playlists)</visible>
+
+                        <ondown>3650</ondown>
+                        <posx>600</posx>
+                        <posy>185</posy>
+                        <width>600</width>
+                        <height>457</height>
+                        <onleft>3650</onleft>
+                        <orientation>vertical</orientation>
+                        <itemlayout height="27">
+                            <control type="label">
+                                <posx>40</posx>
+                                <posy>0</posy>
+                                <width>440</width>
+                                <info>ListItem.Title</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                            </control>
+                            <control type="label">
+                                <posx>10</posx>
+                                <posy>0</posy>
+                                <width>30</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <posx>510</posx>
+                                <posy>0</posy>
+                                <width>154</width>
+                                <info>ListItem.Duration</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <aligny>left></aligny>
+                                <align>right</align>
+                            </control>
+                        </itemlayout>
+                        <focusedlayout height="27">
+                            <control type="image">
+                                <!--visible>Control.HasFocus(51)</visible-->
+                                <width>520</width>
+                                <height>27</height>
+                                <texture>button180x25.png</texture>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3650)</visible>
+                                <posx>40</posx>
+                                <posy>0</posy>
+                                <width>440</width>
+                                <info>ListItem.Title</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3650)</visible>
+                                <posx>10</posx>
+                                <posy>0</posy>
+                                <width>30</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3650)</visible>
+                                <posx>510</posx>
+                                <posy>0</posy>
+                                <width>154</width>
+                                <info>ListItem.Duration</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <aligny>top></aligny>
+                                <align>right</align>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3650)</visible>
+                                <posx>40</posx>
+                                <posy>0</posy>
+                                <width>450</width>
+                                <info>ListItem.Title</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3650)</visible>
+                                <posx>10</posx>
+                                <posy>0</posy>
+                                <width>30</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3650)</visible>
+                                <posx>510</posx>
+                                <posy>0</posy>
+                                <width>150</width>
+                                <info>ListItem.Duration</info>
                                 <font>rhapsody_font12</font>
                                 <textcolor>F3FFFFFF</textcolor>
                                 <!-- white -->

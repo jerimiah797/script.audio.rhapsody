@@ -18,6 +18,9 @@ class Cache():
 		self.album = {}  #object to store cached data
 		self.album_file = self.__addon_path__+'/resources/.albumdb.obj'  #picklefile
 
+		self.playlist = {}  #object to store cached data
+		self.playlist_file = self.__addon_path__+'/resources/.playlistdb.obj'  #picklefile
+
 		self.genre = {}  #object to store cached data
 		self.genre_file = self.__addon_path__+'/resources/.genres.obj'  #picklefile
 

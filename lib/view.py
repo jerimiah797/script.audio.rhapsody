@@ -26,6 +26,19 @@ def draw_mainwin(win, app):
 			print "auto-selected list item "+str(list_instance.pos)
 
 		#list_instance.save_data()
+def draw_playlist_sublist(win, app, thing):
+	print "Draw playlist_sublist"
+
+	cache = app.cache.playlist
+	win.manage_playlist_detail(app.cache.playlist, thing, thing['playlist_id'])
+	win.dlist = win.getControl(3651)
+	win.dlist.reset()
+	liz = app.windowtracklist.get_playlist_litems(cache, thing['playlist_id'])
+	for item in liz:
+		win.dlist.addItem(item)
+	#win.sync_playlist_pos()
+	win.make_visible(3651)
+
 
 
 class WinBase(xbmcgui.WindowXML):
@@ -76,7 +89,6 @@ class InputDialog(xbmcgui.WindowXMLDialog):
 
 	def onInit(self):
 		self.name_select = self.getControl(10)
-		#self.name_select.setVisible(False)
 		self.pswd_select = self.getControl(11)
 		self.pswd_select.setVisible(False)
 		self.addControl(self.name)
@@ -140,13 +152,15 @@ class MainWin(WinBase):
 		self.cache = self.app.cache
 		self.img = self.app.img
 		self.api = self.app.api
-		#self.toptracks = self.app.toptracks
 		self.player = self.app.player
 		self.playlist = self.app.playlist
 		self.setup = False
-		self.list_id = None
+		self.list_id = None #main list xml id
+		self.playlist_list_id = None #playlist tracks xml id
 		self.handle = None
 		self.frame_label = None
+		self.clist = None #main list for active view
+		self.dlist = None #list for playlist tracks view
 
 
 
@@ -208,11 +222,11 @@ class MainWin(WinBase):
 
 	def onClick(self, control):
 		pos = self.clist.getSelectedPosition()
-		id = self.app.get_var(list)[pos]#["album_id"]
-		print "mainwin onClick: id: "+str(id)
+		thing = self.app.get_var(list)[pos]#["album_id"]
+		#print "mainwin onClick: id: "+str(id)
 		if (control == 3350) or (control == 3351) or (control == 3352) or (control == 3550) or (control == 3551):
 			self.alb_dialog = AlbumDialog("album.xml", self.app.__addon_path__, 'Default', '720p', current_list=self.app.get_var(list),
-			                         pos=pos, cache=self.cache.album, alb_id=id, app=self.app)
+			                         pos=pos, cache=self.cache.album, alb_id=thing, app=self.app)
 			self.alb_dialog.setProperty("review", "has_review")
 			self.alb_dialog.doModal()
 			self.alb_dialog.id = None
@@ -225,7 +239,8 @@ class MainWin(WinBase):
 			self.start_playback(control)
 
 		elif control == 3650:
-			self.process_playlist_detail("mp.164270894")
+			#self.manage_playlist_detail(thing['playlist_id'])
+			pass
 
 
 	def start_playback(self, id):
@@ -252,7 +267,10 @@ class MainWin(WinBase):
 
 	def onFocus(self, control):
 		#print("onfocus(): control %i" % control)
-		pass
+		if control == 3650:
+			pos = self.clist.getSelectedPosition()
+			thing = self.app.get_var(list)[pos]
+			draw_playlist_sublist(self, self.app, thing)
 
 
 	def make_visible(self, *args):
@@ -275,12 +293,34 @@ class MainWin(WinBase):
 			elif self.player.now_playing['id'] == self.alb_dialog.id:
 				print "syncing playlist pos because player.now_player id is current album id"
 				self.alb_dialog.clist.selectItem(self.playlist.getposition())
+			elif self.player.now_playing['id'] == 'playlist':
+				print "syncing playlist pos because player.now_playing id is 'playlist'"
+				self.dlist.selectItem(self.playlist.getposition())
+				self.toptracks.pos = self.playlist.getposition()
 		except:
 			pass
 
-	def process_playlist_detail(self, id):
-		data = self.api.get_playlist_details(id)
-		utils.prettyprint(data)
+
+
+	def manage_playlist_detail(self, cache, playlist, pl_id):
+		#alb_id = playlist["album_id"]
+		if playlist["tracks"] == {}:
+			# try to get info from cached album data
+			if cache.has_key(pl_id) and (cache[pl_id]['tracks'] != {}):
+				print "Using tracks from cached album data"
+			else:
+				print "Getting tracks from Rhapsody"
+				results = self.api.get_playlist_details(pl_id)
+				if results:
+					#playlist["label"] = results["label"]
+					playlist["tracks"] = results
+					#playlist["style"] = results["primaryStyle"]
+				else:
+					print "Playlist Detail api not returning response"
+		else:
+			print "Using tracks from cached playlist data"
+
+
 
 
 class AlbumDialog(DialogBase):
@@ -334,7 +374,7 @@ class AlbumDialog(DialogBase):
 
 	def manage_windowtracklist(self, cache, album):
 		print "AlbumDialog: Manage tracklist for gui list"
-		liz = self.app.windowtracklist.get_litems(cache, album["album_id"])
+		liz = self.app.windowtracklist.get_album_litems(cache, album["album_id"])
 		for item in liz:
 			self.clist.addItem(item)
 		self.win.sync_playlist_pos()
