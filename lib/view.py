@@ -30,13 +30,19 @@ def draw_playlist_sublist(win, app, thing):
 	print "Draw playlist_sublist"
 
 	cache = app.cache.playlist
-	win.manage_playlist_detail(app.cache.playlist, thing, thing['playlist_id'])
 	win.dlist = win.getControl(3651)
 	win.dlist.reset()
-	liz = app.windowtracklist.get_playlist_litems(cache, thing['playlist_id'])
-	for item in liz:
-		win.dlist.addItem(item)
-	#win.sync_playlist_pos()
+	if win.manage_playlist_detail(app.cache.playlist, thing, thing['playlist_id']):
+		#win.dlist = win.getControl(3651)
+		#win.dlist.reset()
+		liz = app.windowtracklist.get_playlist_litems(cache, thing['playlist_id'])
+		for item in liz:
+			win.dlist.addItem(item)
+		###win.sync_playlist_pos()
+		#win.make_visible(3651)
+	else:
+		print "resetting list"
+		win.dlist.reset()
 	win.make_visible(3651)
 
 
@@ -161,7 +167,7 @@ class MainWin(WinBase):
 		self.frame_label = None
 		self.clist = None #main list for active view
 		self.dlist = None #list for playlist tracks view
-
+		self.mem_playlist_selection = None
 
 
 	def onInit(self):
@@ -182,8 +188,13 @@ class MainWin(WinBase):
 
 
 	def onAction(self, action):
+
 		if action.getId() == 7:
-			self.manage_action()
+			self.manage_action(7)
+		elif action.getId() == 3:    #up
+			self.manage_action(3)
+		elif action.getId() == 4:    #down
+			self.manage_action(4)
 		if action.getId() == 10:
 			utils.goodbye(self.app)
 		elif action.getId() == 92:
@@ -192,33 +203,47 @@ class MainWin(WinBase):
 			pass
 
 
-	def manage_action(self):
-		if self.getFocusId() == 301 or self.getFocusId() == 501:
-			draw_mainwin(self, self.app)
-			self.app.view_keeper = {'browseview': self.getProperty('browseview'), 'frame': self.getProperty('frame')}
+	def manage_action(self, id):
 
-		elif self.getFocusId() == 101:
-			draw_mainwin(self, self.app)
-			self.app.view_keeper = {'browseview': self.getProperty('browseview'), 'frame': self.getProperty('frame')}
+		if id == 3 or id == 4:
 
-		elif self.getFocusId() == 1001:
-			self.app.set_var('logged_in', False)
-			try:
-				os.remove(self.mem.filename)
-			except OSError, e:  ## if failed, report it back to the user ##
-				print ("Error: %s - %s." % (e.filename,e.strerror))
-			self.player.stop()
-			self.playlist.clear()
-			self.close()
+			if self.getFocusId() == 3650:
+				print "doing stuff since playlist list is focused"
+				pos = self.clist.getSelectedPosition()
+				if pos != self.mem_playlist_selection:
+					self.mem_playlist_selection = self.clist.getSelectedPosition()
+					thing = self.app.get_var(list)[self.mem_playlist_selection]
+					draw_playlist_sublist(self, self.app, thing)
 
-		elif self.getFocusId() == 1002:
-			try:
-				temp = subprocess.Popen(['git', 'pull'], shell=False, stdout=subprocess.PIPE)
+		if id == 7:
+
+			if self.getFocusId() == 301 or self.getFocusId() == 501:
+				draw_mainwin(self, self.app)
+				self.app.view_keeper = {'browseview': self.getProperty('browseview'), 'frame': self.getProperty('frame')}
+
+			elif self.getFocusId() == 101:
+				draw_mainwin(self, self.app)
+				self.app.view_keeper = {'browseview': self.getProperty('browseview'), 'frame': self.getProperty('frame')}
+
+			elif self.getFocusId() == 1001:
+				self.app.set_var('logged_in', False)
+				try:
+					os.remove(self.mem.filename)
+				except OSError, e:  ## if failed, report it back to the user ##
+					print ("Error: %s - %s." % (e.filename,e.strerror))
+				self.player.stop()
+				self.playlist.clear()
+				self.close()
+
+			elif self.getFocusId() == 1002:
+				try:
+					temp = subprocess.Popen(['git', 'pull'], shell=False, stdout=subprocess.PIPE)
+					#print temp.communicate()
+				except:
+					print "subprocess.call exception"
 				#print temp.communicate()
-			except:
-				print "subprocess.call exception"
-			#print temp.communicate()
-			print "git pull completed. relaunch plugin for newest version"
+				print "git pull completed. relaunch plugin for newest version"
+
 
 	def onClick(self, control):
 		pos = self.clist.getSelectedPosition()
@@ -267,10 +292,13 @@ class MainWin(WinBase):
 
 	def onFocus(self, control):
 		#print("onfocus(): control %i" % control)
-		if control == 3650:
+		if self.getFocusId() == 3650:
+			print "doing stuff since playlist list is focused"
 			pos = self.clist.getSelectedPosition()
-			thing = self.app.get_var(list)[pos]
-			draw_playlist_sublist(self, self.app, thing)
+			if pos != self.mem_playlist_selection:
+				self.mem_playlist_selection = self.clist.getSelectedPosition()
+				thing = self.app.get_var(list)[self.mem_playlist_selection]
+				draw_playlist_sublist(self, self.app, thing)
 
 
 	def make_visible(self, *args):
@@ -308,6 +336,7 @@ class MainWin(WinBase):
 			# try to get info from cached album data
 			if cache.has_key(pl_id) and (cache[pl_id]['tracks'] != {}):
 				print "Using tracks from cached album data"
+				return True
 			else:
 				print "Getting tracks from Rhapsody"
 				results = self.api.get_playlist_details(pl_id)
@@ -315,10 +344,13 @@ class MainWin(WinBase):
 					#playlist["label"] = results["label"]
 					playlist["tracks"] = results
 					#playlist["style"] = results["primaryStyle"]
+					return True
 				else:
-					print "Playlist Detail api not returning response"
+					print "Playlist contains no tracks!"
+					return False
 		else:
-			print "Using tracks from cached playlist data"
+			print "Using tracks from memory playlist data"
+			return True
 
 
 

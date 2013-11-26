@@ -253,6 +253,7 @@ class WindowTrackList():
 		print "Tracklist(album): adding dummy tracks for gui list"
 		src = cache[id]
 		list = []
+		i = None
 		for i, item in enumerate(src["tracks"]):
 			newlistitem = xbmcgui.ListItem(path="http://dummyurl.org")
 			newlistitem.setInfo('music', { 'tracknumber':   int(src["tracks"][i]["trackIndex"]),
@@ -260,21 +261,25 @@ class WindowTrackList():
 			                               'duration':      int(src["tracks"][i]["playbackSeconds"])
 			                               })
 			list.append(newlistitem)
-		print "Showing "+str(i+1)+" tracks"
+		if i:
+			print "Showing "+str(i+1)+" tracks"
 		return list
 
 	def get_playlist_litems(self, cache, id):
 		print "Tracklist(playlist): adding dummy tracks for gui list"
 		src = cache[id]
 		list = []
+		i = None
 		for i, item in enumerate(src["tracks"]):
-			utils.prettyprint(item['name'])
 			newlistitem = xbmcgui.ListItem(path="http://dummyurl.org")
-			newlistitem.setInfo('music', { 'tracknumber':   i,                      #int(src["tracks"][i]["trackIndex"]),
-			                               'title':         item['name'],           #src["tracks"][i]["name"],
-			                               'duration':      int(src["tracks"][i]["duration"])
+			newlistitem.setInfo('music', { 'tracknumber':   i+1,
+			                               'title':         item['name'],
+			                               'duration':      item['duration'],
 			                               })
 			list.append(newlistitem)
-		print "Showing "+str(i+1)+" tracks"
+		if i:
+			print "Showing "+str(i+1)+" tracks"
+		else:
+			print "Playlist contains no tracks!"
 		return list
 

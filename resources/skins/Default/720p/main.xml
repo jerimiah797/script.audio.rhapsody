@@ -1639,8 +1639,8 @@
                     <!-- Member Playlist tracklist -->
                     <control type="list" id="3651">
                         <visible>StringCompare(Window.Property(browseview),library_playlists)</visible>
-
-                        <ondown>3650</ondown>
+                        <onup>3651</onup>
+                        <ondown>3651</ondown>
                         <posx>600</posx>
                         <posy>185</posy>
                         <width>600</width>
