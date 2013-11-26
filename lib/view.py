@@ -283,6 +283,7 @@ class MainWin(WinBase):
 			print "Unplayable track. Can't play this track"
 			#player.stop()
 			return False
+		self.player.get_session()
 		self.player.playselected(self.player.now_playing['pos'])
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
 		if id == 21:
@@ -465,6 +466,7 @@ class AlbumDialog(DialogBase):
 			print "Unplayable track. Can't play this track"
 			#player.stop()
 			return False
+		self.app.player.get_session()
 		self.app.player.playselected(self.app.player.now_playing['pos'])
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
 		if id == 21:

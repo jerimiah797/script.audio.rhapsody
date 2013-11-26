@@ -138,8 +138,9 @@ class Player(xbmc.Player):
 		if valid:
 			return True
 		else:
-			self.get_session()
-			return True
+			#self.get_session()
+			#return True
+			self.stop()
 
 
 	def get_session(self):
