@@ -448,15 +448,15 @@ class AlbumDialog(DialogBase):
 		print "Album dialog: start playback"
 		#utils.prettyprint(album['tracks'])
 		if not self.now_playing_matches_album_dialog():
-			print "hit the first if. building playlist"
+			print "hit the first if: now_playing does not match album dialog. building playlist"
 			self.app.player.now_playing = {'pos': 0, 'type':'album', 'item':album['tracks'], 'id':album['album_id']}
 			self.app.player.build()
 		if self.app.player.now_playing['type'] != 'album':
-			print "hit the second if. building playlist"
+			print "hit the second if: now playing _type_ is not _album_. building playlist"
 			self.app.player.now_playing = {'pos': 0, 'type':'album', 'item':album['tracks'], 'id':album['album_id']}
 			self.app.player.build()
 		#print "Now playing item list follows!"
-		#utils.prettyprint(player.now_playing['item'])
+		#utils.prettyprint(self.app.player.now_playing['item'])
 		if id == self.listcontrol_id:
 			self.app.player.now_playing['pos'] = self.clist.getSelectedPosition()
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
@@ -467,9 +467,11 @@ class AlbumDialog(DialogBase):
 			#player.stop()
 			return False
 		self.app.player.get_session()
+		print "Gonna try to play the selected track at self.app.player.pos = "+str(self.app.player.now_playing['pos'])
 		self.app.player.playselected(self.app.player.now_playing['pos'])
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
 		if id == 21:
+			print "id is 21, so doing that stuff"
 			self.clist.selectItem(self.app.playlist.getposition())
 			self.setFocusId(self.listcontrol_id)
 
