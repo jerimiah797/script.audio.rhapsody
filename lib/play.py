@@ -6,7 +6,8 @@ import time
 
 class Player(xbmc.Player):
 
-	def __init__(self, **kwargs):
+	def __init__(self, *args, **kwargs):
+		xbmc.Player.__init__( self )
 		self.app = kwargs.get('app')
 		self.win = self.app.win
 		self.cache = self.app.cache
@@ -22,11 +23,12 @@ class Player(xbmc.Player):
 	def onPlayBackStarted(self):
 		if not self.onplay_lock:
 			self.onplay_lock = True
+			print "Locking playback routine to block multiple calls +++++++++++++++++++"
 			self.validate_session(self.session)
 			self.win.sync_playlist_pos()
 			pos = self.playlist.getposition()
 			self.now_playing['pos'] = pos
-			print "Playing track "+str(pos+1)
+			print "OnPlaybackStarted: Playing track "+str(pos+1)
 			self.add_playable_track(1)
 			self.add_playable_track(-1)
 			self.win.sync_playlist_pos()
@@ -52,7 +54,7 @@ class Player(xbmc.Player):
 			self.win.sync_playlist_pos()
 			pos = self.playlist.getposition()
 			self.now_playing['pos'] = pos
-			print "Playing track "+str(pos+1)
+			print "OnPlaybackResumed: Playing track "+str(pos+1)
 			self.add_playable_track(1)
 			self.add_playable_track(-1)
 			self.win.sync_playlist_pos()
@@ -94,11 +96,16 @@ class Player(xbmc.Player):
 		liz = self.now_playing['item']
 		for i, track in enumerate(liz):
 			self.playlist.add(track['previewURL'], listitem=xbmcgui.ListItem(''))
+			#self.playlist.add("./dummy.m4a", listitem=xbmcgui.ListItem(''))
+			print "set track to dummy.m4a"
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Preparing to play..., 2000, %s)" %(self.app.__addon_icon__))
 
 
 	def add_playable_track(self, offset):
 		print "Playlist: add playable track"
+		print "offset = "+str(offset)
+		print "self.now_playing pos = "+str(self.now_playing['pos'])
+		print str(self.playlist.size())
 		circ_pos = (self.now_playing['pos']+offset)%self.playlist.size()
 		print "Fetching track "+str(circ_pos+1)
 		item = self.now_playing['item'][circ_pos]
@@ -111,6 +118,7 @@ class Player(xbmc.Player):
 		tid = item['trackId']
 		tname = self.playlist.__getitem__(circ_pos).getfilename()
 		playurl = self.api.get_playable_url(tid)
+		print playurl
 		if not playurl:
 			return False
 		self.playlist.remove(tname)
@@ -136,6 +144,7 @@ class Player(xbmc.Player):
 		print "player.validate_session"
 		valid = self.api.validate_session(session)
 		if valid:
+			print "Valid playback session!"
 			return True
 		else:
 			#self.get_session()
@@ -146,7 +155,7 @@ class Player(xbmc.Player):
 	def get_session(self):
 		print "player.get_session:"
 		self.session = self.api.get_session()
-		#print "Session:"+str(self.session)
+		print "Session:"+str(self.session)
 
 
 class Notifier():
