@@ -44,4 +44,4 @@ Working: Popular albums, New Releases, Popular Tracks, Library Albums, Listening
 
 Still to do: Playlists, Search, Queue, Radio, Artist Pages for Browse and Library, automatic font installation for any skin
 
-Special features: Quick browse all albums in a category while in the album detail view. Press 'down' to eneble quicknav, then left / right for previous/next album in current list. 
+Special features: Quick browse all albums in a category while in the album detail view. Press 'down' to enable quicknav, then left / right for previous/next album in current list. 

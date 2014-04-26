@@ -116,6 +116,7 @@ class Api():
 		req.add_header('Content-Type', 'application/json')
 		req.add_data(data)
 		results = self.__get_data_from_rhapsody(req, 5)
+		print "Logging a Play Start event. "+str(results)
 		return ztime
 
 

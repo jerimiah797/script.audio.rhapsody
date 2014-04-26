@@ -1,3 +1,4 @@
+import xbmc
 import xbmcgui
 import time
 import sys
@@ -26,9 +27,15 @@ app = main.Application()
 
 loadwin = xbmcgui.WindowXML("loading.xml", app.__addon_path__, 'Default', '720p')
 loadwin.show()
-loadwin.getControl(10).setLabel('Getting things ready...')
-app.cache.load_cached_data()
-time.sleep(1)
+print "Do we have network?"+str(app.api.get_new_releases())
+if app.api.get_new_releases():
+	loadwin.getControl(10).setLabel('Getting things ready...')
+	app.cache.load_cached_data()
+	time.sleep(1)
+else:
+	loadwin.getControl(10).setLabel('Can\'t reach Rhapsody servers. \nMust be online to use Rhapsody.\nExiting...')
+	time.sleep(2)
+	app.set_var('running', False)
 
 
 while app.get_var('running'):
