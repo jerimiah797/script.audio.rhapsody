@@ -29,6 +29,8 @@ loadwin = xbmcgui.WindowXML("loading.xml", app.__addon_path__, 'Default', '720p'
 loadwin.show()
 print "Do we have network?"+str(app.api.get_new_releases())
 if app.api.get_new_releases():
+	loadwin.getControl(10).setLabel('Installing fonts...')
+	app.init_fonts()
 	loadwin.getControl(10).setLabel('Getting things ready...')
 	app.cache.load_cached_data()
 	time.sleep(1)

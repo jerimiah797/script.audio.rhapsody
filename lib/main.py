@@ -7,6 +7,7 @@ from lib import play
 from lib import view
 from lib import lists
 from lib import caching
+from lib import MyFont
 
 
 
@@ -94,6 +95,31 @@ class Application():
 		self.set_var('logged_in', False)
 		self.set_var('bad_creds', False)
 		self.set_var('last_rendered_list', None)
+
+	def init_fonts(self):
+		MyFont.addFont( "rhapsody_font8" , "segoeuisl.ttf" , "10", self.__addon_path__ )
+		MyFont.addFont( "rhapsody_font9" , "segoeuisl.ttf" , "12", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_font10" , "segoeuisl.ttf" , "14", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_font12" , "segoeuisl.ttf" , "17", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_font13" , "segoeuisl.ttf" , "20", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_font14" , "segoeuisl.ttf" , "22", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_font16" , "segoeuisl.ttf" , "25", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_font30" , "segoeuisl.ttf" , "30", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_fontContextMenu" , "segoeuisl.ttf" , "18", self.__addon_path__  )
+
+		MyFont.addFont( "rhapsody_font10_title" , "seguisb.ttf" , "12", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_font12_title" , "seguisb.ttf" , "17", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_font13_title" , "seguisb.ttf" , "20", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_font24_title" , "seguisb.ttf" , "24", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_font28_title" , "seguisb.ttf" , "28", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_font30_title" , "seguisb.ttf" , "30", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_font35_title" , "seguisb.ttf" , "35", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_font45caps_title" , "seguisb.ttf" , "45", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_WeatherTemp" , "seguisb.ttf" , "80", self.__addon_path__  )
+
+		MyFont.addFont( "rhapsody_symbol72" , "RhapsodySymbol.ttf" , "72", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_symbol96" , "RhapsodySymbol.ttf" , "96", self.__addon_path__  )
+		MyFont.addFont( "rhapsody_symbol144" , "RhapsodySymbol.ttf" , "144", self.__addon_path__  )
 
 
 
