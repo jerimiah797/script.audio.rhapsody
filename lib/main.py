@@ -8,6 +8,7 @@ from lib import view
 from lib import lists
 from lib import caching
 from lib import MyFont
+import sys
 
 
 
@@ -97,6 +98,7 @@ class Application():
 		self.set_var('last_rendered_list', None)
 
 	def init_fonts(self):
+		print "Installing Rhapsody fonts"
 		MyFont.addFont( "rhapsody_font8" , "segoeuisl.ttf" , "10", self.__addon_path__ )
 		MyFont.addFont( "rhapsody_font9" , "segoeuisl.ttf" , "12", self.__addon_path__  )
 		MyFont.addFont( "rhapsody_font10" , "segoeuisl.ttf" , "14", self.__addon_path__  )

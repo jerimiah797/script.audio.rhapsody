@@ -22,9 +22,6 @@ script_font_path = "temp"
 skin_dir = xbmc.translatePath("special://skin/")
 list_dir = os.listdir( skin_dir )
 
-print skin_font_path
-print script_font_path
-
 
 def getFontsXML():
     fontxml_paths = []
@@ -43,10 +40,10 @@ def getFontsXML():
 def isFontInstalled( fontxml_path, fontname ):
     name = "<name>%s</name>" % fontname
     if not name in file( fontxml_path, "r" ).read():
-        print "font name not installed!", fontname
+        #print "font name not installed!", fontname
         return False
     else:
-        print "font name already installed!", fontname
+        #print "font name already installed!", fontname
         return True
 
 
@@ -59,11 +56,11 @@ def addFont( fontname, filename, size, addon_path, style="", aspect="" ):
 
         if fontxml_paths:
             for fontxml_path in fontxml_paths:
-                print "file analysis: " + fontxml_path
+                #print "file analysis: " + fontxml_path
                 if not isFontInstalled( fontxml_path, fontname ):
                     tree = ET.parse(fontxml_path)
                     root = tree.getroot()
-                    print "file modification: " + fontxml_path
+                    #print "file modification: " + fontxml_path
                     for sets in root.getchildren():
                         sets.findall( "font" )[ -1 ].tail = "\n\t\t" #"\n\n\t\t"
                         new = ET.SubElement(sets, "font")
@@ -101,7 +98,7 @@ def addFont( fontname, filename, size, addon_path, style="", aspect="" ):
         #print script_font_path
         if not os.path.exists( os.path.join( skin_font_path, filename ) ) and os.path.exists( os.path.join( script_font_path, filename ) ):
             shutil.copyfile( os.path.join( script_font_path, filename ), os.path.join( skin_font_path, filename ) )
-            print "copying fonts from "+script_font_path
+            #print "copying fonts from "+script_font_path
 
         xbmc.executebuiltin( "XBMC.ReloadSkin()" )
         return True

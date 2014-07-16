@@ -4,6 +4,7 @@ import time
 import sys
 from lib import view
 from lib import main
+from lib import skincheck
 
 REMOTE_DBG = False
 
@@ -21,13 +22,13 @@ if REMOTE_DBG:
 		sys.exit(1)
 
 
-
+skincheck.skinfix()
 
 app = main.Application()
 
 loadwin = xbmcgui.WindowXML("loading.xml", app.__addon_path__, 'Default', '720p')
 loadwin.show()
-print "Do we have network?"+str(app.api.get_new_releases())
+print "Do we have network?"#+str(app.api.get_new_releases())
 if app.api.get_new_releases():
 	loadwin.getControl(10).setLabel('Installing fonts...')
 	app.init_fonts()
