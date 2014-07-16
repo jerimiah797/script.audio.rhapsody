@@ -1987,7 +1987,7 @@
                     <control type="label">
                         <posx>0</posx>
                         <posy>140</posy>
-                        <label>Version 1.0.2   [CR]Coded by Jerimiah Ham</label>
+                        <label>Version 1.0.3   [CR]Coded by Jerimiah Ham</label>
                         <align>left</align>
                         <aligny>top</aligny>
                         <font>rhapsody_font13</font>

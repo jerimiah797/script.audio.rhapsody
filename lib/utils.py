@@ -1,5 +1,6 @@
 import xbmcgui
 import json
+import subprocess
 
 def remove_html_markup(s):
 	tag = False
@@ -29,3 +30,14 @@ def goodbye(app):
 			#app.cache.save_artist_data()
 			#app.cache.save_album_data()
 			app.win.close()
+
+def update():
+	try:
+		#subprocess.check_output(["git", "pull"])
+		process = subprocess.Popen(["git", "pull"]),
+		stdout = subprocess.PIPE
+		output = subprocess.communicate()[0]
+		print "performed git pull command. "
+	except:
+		print "something not right with the git pull command"
+	
