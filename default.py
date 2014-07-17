@@ -64,7 +64,6 @@ while app.get_var('running'):
 		loadwin.getControl(10).setLabel('Finishing up...')
 	app.cache.save_album_data()
 	app.cache.save_artist_data()
-	#utils.update()
 del app.win
 time.sleep(1)
 loadwin.close()
