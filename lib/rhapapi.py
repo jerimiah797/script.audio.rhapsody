@@ -15,9 +15,7 @@ class Api():
 	def __init__(self):
 		self.BASEURL = "http://api.rhapsody.com/v1/"
 		self.S_BASEURL = "https://api.rhapsody.com/v1/"
-		self.AUTHURL = "https://api.rhapsody.com/oauth/token"
 		self.APIKEY = "22Q1bFiwGxYA2eaG4vVAGsJqi3SQWzmd"
-		self.SECRET = "Z1AAYBC1JEtnMJGm"
 		self.token = None
 
 
@@ -51,6 +49,7 @@ class Api():
 		req = urllib2.Request(url)
 		req.add_header('Authorization', header)
 		return req
+		
 
 	def __build_req(self, url):
 		req = urllib2.Request(url)
@@ -59,12 +58,13 @@ class Api():
 
 	def login_member(self, username, password):
 		print "Rhapapi: getting access token"
-		data = urllib.urlencode({'username': username, 'password': password, 'grant_type': 'password'})
-		header = b'Basic ' + base64.b64encode(self.APIKEY + b':' + self.SECRET)
-		req = urllib2.Request(self.AUTHURL, data)
-		req.add_header('Authorization', header)
+		encuser = base64.b64encode(username)
+		encpass = base64.b64encode(password)
+		url = "http://rhap-xbmc-auth.herokuapp.com/auth?user=%s&pass=%s" % (encuser, encpass)
+		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 5)
 		if results:
+			print results
 			return results
 		else:
 			return False
