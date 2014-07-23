@@ -65,6 +65,25 @@ def skinfix():
 			else:
 				print 'Font install declined. Aborting Rhapsody launch'
 				exit()
+
+		elif platform == 'linux' and "share" in skinpath:
+			print "Non-writeable confluence skin in use. Need to make a copy in userdata folder so we can install fonts."
+			dialog = xbmcgui.Dialog()
+			if dialog.yesno("Install Fonts?", "Rhapsody needs to restart XBMC to install fonts. Cool?"):
+				dest = xbmc.translatePath("special://home/")
+				dest2 = os.path.join(dest, 'addons', 'skin.confluence')
+				print "checking for obsolete confluence copy"
+				if xbmcvfs.exists(dest2):
+					print "deleting obsolete confluence copy"
+					shutil.rmtree(dest2)
+				print "making a writeable confluence copy"
+				shutil.copytree(skinpath, dest2)
+				print "Finished copy. retarting app"
+				xbmc.executebuiltin( "XBMC.RestartApp()" )
+				exit()
+			else:
+				print 'Font install declined. Aborting Rhapsody launch'
+				exit()
 			
 		else:
 			print "All is okay. Confluence in use is a writeable copy"
