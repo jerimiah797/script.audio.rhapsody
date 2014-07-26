@@ -95,9 +95,11 @@ class Player(xbmc.Player):
 		#	liz = self.now_playing['item']
 		liz = self.now_playing['item']
 		for i, track in enumerate(liz):
-			self.playlist.add(track['previewURL'], listitem=xbmcgui.ListItem(''))
+			item = xbmcgui.ListItem('')
+			item.setProperty('mimetype','audio/mp4')
+			self.playlist.add(track['previewURL'], listitem=item)
 			#self.playlist.add("./dummy.m4a", listitem=xbmcgui.ListItem(''))
-			print "set track to dummy.m4a"
+			print "added dummy ListItem"
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Preparing to play..., 2000, %s)" %(self.app.__addon_icon__))
 
 
@@ -136,6 +138,7 @@ class Player(xbmc.Player):
 	            "tracknumber": int(item["trackIndex"]),
 				}
 		li.setInfo("music", info)
+		li.setProperty('mimetype','audio/mp4')
 		self.playlist.add(playurl, listitem=li, index=circ_pos)
 		return True
 
