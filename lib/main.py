@@ -47,7 +47,7 @@ class Application():
 		self.init_lists()
 		self.init_vars()
 
-		self.player = play.Player(xbmc.PLAYER_CORE_AUTO, app=self)
+		self.player = play.Player(xbmc.PLAYER_CORE_DVDPLAYER, app=self)
 		self.playlist = self.player.playlist
 		#self.win.toptracks = self.toptracks
 		self.win.player = self.player
