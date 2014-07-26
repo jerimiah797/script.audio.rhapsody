@@ -64,7 +64,7 @@ class Api():
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 20)
 		if results:
-			print results
+			#print results
 			return results
 		else:
 			return False
