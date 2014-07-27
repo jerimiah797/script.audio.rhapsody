@@ -86,7 +86,7 @@ class Player(xbmc.Player):
 
 
 	def build(self):
-		print "Playlist: build dummy playlist"
+		print "Playlist: build playlist"
 		self.playlist.clear()
 		#liz = None
 		#if self.now_playing['type'] == "album":
@@ -95,51 +95,77 @@ class Player(xbmc.Player):
 		#	liz = self.now_playing['item']
 		liz = self.now_playing['item']
 		for i, track in enumerate(liz):
-			item = xbmcgui.ListItem('')
-			item.setProperty('mimetype','audio/mp4')
-			self.playlist.add(track['previewURL'], listitem=item)
+			print "track "+str(i+1)+": "+track['name']
+			alb_id = track['albumId']
+			try:
+				thumb = self.img.base_path+self.img.handler(self.cache.album[alb_id]['thumb_url'], 'small', 'album')
+			except:
+				thumb = "none.png"
+			tid = track['trackId']
+			print tid
+			print self.app.mem.access_token
+			playurl = "plugin://script.audio.rhapsody/?track=%s&token=%s" % (tid, self.app.mem.access_token)
+			print playurl
+
+			li = xbmcgui.ListItem(
+	            track["name"],
+	            path=playurl,
+	            iconImage=thumb,
+	            thumbnailImage=thumb
+				)
+			info = {
+	            "title": track["name"],
+	            "album": track["displayAlbumName"],
+	            "artist": track["displayArtistName"],
+	            "duration": track["playbackSeconds"],
+	            "tracknumber": int(track["trackIndex"]),
+				}
+			li.setInfo("music", info)
+			li.setProperty('mimetype','audio/mp4')
+			self.playlist.add(playurl, listitem=li)
 			#self.playlist.add("./dummy.m4a", listitem=xbmcgui.ListItem(''))
 			print "added dummy ListItem"
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Preparing to play..., 2000, %s)" %(self.app.__addon_icon__))
 
 
 	def add_playable_track(self, offset):
-		print "Playlist: add playable track"
-		print "offset = "+str(offset)
-		print "self.now_playing pos = "+str(self.now_playing['pos'])
-		print str(self.playlist.size())
-		circ_pos = (self.now_playing['pos']+offset)%self.playlist.size()
-		print "Fetching track "+str(circ_pos+1)
-		item = self.now_playing['item'][circ_pos]
-		alb_id = item['albumId']
-		try:
-			thumb = self.img.base_path+self.img.handler(self.cache.album[alb_id]['thumb_url'], 'small', 'album')
-		except:
-			thumb = "none.png"
-		#thumb = "none.png"
-		tid = item['trackId']
-		tname = self.playlist.__getitem__(circ_pos).getfilename()
-		playurl = self.api.get_playable_url(tid)
-		print playurl
-		if not playurl:
-			return False
-		self.playlist.remove(tname)
-		li = xbmcgui.ListItem(
-	            item["name"],
-	            path=item["previewURL"],
-	            iconImage=thumb,
-	            thumbnailImage=thumb
-				)
-		info = {
-	            "title": item["name"],
-	            "album": item["displayAlbumName"],
-	            "artist": item["displayArtistName"],
-	            "duration": item["playbackSeconds"],
-	            "tracknumber": int(item["trackIndex"]),
-				}
-		li.setInfo("music", info)
-		li.setProperty('mimetype','audio/mp4')
-		self.playlist.add(playurl, listitem=li, index=circ_pos)
+		# print "Playlist: add playable track"
+		# print "offset = "+str(offset)
+		# print "self.now_playing pos = "+str(self.now_playing['pos'])
+		# print str(self.playlist.size())
+		# circ_pos = (self.now_playing['pos']+offset)%self.playlist.size()
+		# print "Fetching track "+str(circ_pos+1)
+		# item = self.now_playing['item'][circ_pos]
+		# alb_id = item['albumId']
+		# try:
+		# 	thumb = self.img.base_path+self.img.handler(self.cache.album[alb_id]['thumb_url'], 'small', 'album')
+		# except:
+		# 	thumb = "none.png"
+		# #thumb = "none.png"
+		# tid = item['trackId']
+		# tname = self.playlist.__getitem__(circ_pos).getfilename()
+		# playurl = self.api.get_playable_url(tid)
+		# print playurl
+		# if not playurl:
+		# 	return False
+		# self.playlist.remove(tname)
+		# li = xbmcgui.ListItem(
+	 #            item["name"],
+	 #            path=item["previewURL"],
+	 #            iconImage=thumb,
+	 #            thumbnailImage=thumb
+		# 		)
+		# info = {
+	 #            "title": item["name"],
+	 #            "album": item["displayAlbumName"],
+	 #            "artist": item["displayArtistName"],
+	 #            "duration": item["playbackSeconds"],
+	 #            "tracknumber": int(item["trackIndex"]),
+		# 		}
+		# li.setInfo("music", info)
+		# li.setProperty('mimetype','audio/mp4')
+		# self.playlist.add(playurl, listitem=li, index=circ_pos)
+		print "add_playable_track called, but is not doing anything"
 		return True
 
 
