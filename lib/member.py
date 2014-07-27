@@ -30,7 +30,7 @@ class Member():
 		try:
 			self.user_info = pickle.load(open(self.filename, 'rb'))
 			print "Using saved user credentials for "+self.user_info['username']
-			#prettyprint(self.user_info)
+			#print(self.user_info)
 			self.username = self.user_info['username']
 			self.password = base64.b64decode(self.user_info['password'])
 			self.guid = self.user_info['guid']
