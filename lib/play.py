@@ -29,8 +29,8 @@ class Player(xbmc.Player):
 			pos = self.playlist.getposition()
 			self.now_playing['pos'] = pos
 			print "OnPlaybackStarted: Playing track "+str(pos+1)
-			self.add_playable_track(1)
-			self.add_playable_track(-1)
+			#self.add_playable_track(1)
+			#self.add_playable_track(-1)
 			self.win.sync_playlist_pos()
 			pos2 = self.playlist.getposition()
 			if pos != pos2:
@@ -38,8 +38,8 @@ class Player(xbmc.Player):
 				print "Playing track "+str(pos2+1)
 				print "There, fixed it for ya. "
 				self.now_playing['pos'] = pos2
-				self.add_playable_track(1)
-				self.add_playable_track(-1)
+				#self.add_playable_track(1)
+				#self.add_playable_track(-1)
 			self.notify.report_playback(self, self.api)
 			xbmc.sleep(2)
 			self.onplay_lock = False
@@ -55,8 +55,8 @@ class Player(xbmc.Player):
 			pos = self.playlist.getposition()
 			self.now_playing['pos'] = pos
 			print "OnPlaybackResumed: Playing track "+str(pos+1)
-			self.add_playable_track(1)
-			self.add_playable_track(-1)
+			#self.add_playable_track(1)
+			#self.add_playable_track(-1)
 			self.win.sync_playlist_pos()
 			pos2 = self.playlist.getposition()
 			#print "pos: "+str(pos)+" pos2: "+str(pos2)
@@ -65,8 +65,8 @@ class Player(xbmc.Player):
 				print "Playing track "+str(pos2+1)
 				print "There, fixed it for ya. "
 				self.now_playing['pos'] = pos2
-				self.add_playable_track(1)
-				self.add_playable_track(-1)
+				#self.add_playable_track(1)
+				#self.add_playable_track(-1)
 			self.notify.report_playback(self, self.api)
 			xbmc.sleep(2)
 			self.onplay_lock = False
@@ -95,17 +95,17 @@ class Player(xbmc.Player):
 		#	liz = self.now_playing['item']
 		liz = self.now_playing['item']
 		for i, track in enumerate(liz):
-			print "track "+str(i+1)+": "+track['name']
+			#print "track "+str(i+1)+": "+track['name']
 			alb_id = track['albumId']
 			try:
 				thumb = self.img.base_path+self.img.handler(self.cache.album[alb_id]['thumb_url'], 'small', 'album')
 			except:
 				thumb = "none.png"
 			tid = track['trackId']
-			print tid
-			print self.app.mem.access_token
+			#print tid
+			#print self.app.mem.access_token
 			playurl = "plugin://script.audio.rhapsody/?track=%s&token=%s" % (tid, self.app.mem.access_token)
-			print playurl
+			#print playurl
 
 			li = xbmcgui.ListItem(
 	            track["name"],
@@ -124,7 +124,7 @@ class Player(xbmc.Player):
 			li.setProperty('mimetype','audio/mp4')
 			self.playlist.add(playurl, listitem=li)
 			#self.playlist.add("./dummy.m4a", listitem=xbmcgui.ListItem(''))
-			print "added dummy ListItem"
+			#print "added dummy ListItem"
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Preparing to play..., 2000, %s)" %(self.app.__addon_icon__))
 
 

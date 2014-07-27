@@ -28,6 +28,7 @@ class ContentList():
 		return True
 
 	def make_active(self):
+
 		if (self.app.get_var('last_rendered_list') == self.name) and self.win.getListSize()>2:
 			print "Window already has that list in memory. Skipping list building"
 			return
@@ -36,7 +37,9 @@ class ContentList():
 		print "current view: "+self.win.getProperty('browseview')
 		print "Built: "+str(self.built)
 		print "Fresh: "+str(self.fresh())
-		if self.built and self.fresh():
+		if (self.name == "hist_tracks"):
+			self.build()
+		elif self.built and self.fresh():
 			print "doing simple list building for mainwin"
 			self.build_winlist()
 		else:
