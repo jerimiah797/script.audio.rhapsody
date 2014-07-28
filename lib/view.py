@@ -226,6 +226,7 @@ class MainWin(WinBase):
 				self.app.view_keeper = {'browseview': self.getProperty('browseview'), 'frame': self.getProperty('frame')}
 
 			elif self.getFocusId() == 1001:
+				# Logout happens here
 				self.app.set_var('logged_in', False)
 				try:
 					os.remove(self.mem.filename)
@@ -277,12 +278,12 @@ class MainWin(WinBase):
 		if id == 3353 or id == 3950:
 			self.player.now_playing['pos'] = self.clist.getSelectedPosition()
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
-		track = self.player.add_playable_track(0)
-		if not track:
-			xbmc.executebuiltin("XBMC.Notification(Rhapsody, Problem with this song. Aborting..., 2000, %s)" %(self.app.__addon_icon__))
-			print "Unplayable track. Can't play this track"
-			#player.stop()
-			return False
+		#track = self.player.add_playable_track(0)
+		#if not track:
+		#	xbmc.executebuiltin("XBMC.Notification(Rhapsody, Problem with this song. Aborting..., 2000, %s)" %(self.app.__addon_icon__))
+		#	print "Unplayable track. Can't play this track"
+		#	#player.stop()
+		#	return False
 		self.player.get_session()
 		self.player.playselected(self.player.now_playing['pos'])
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
@@ -460,12 +461,12 @@ class AlbumDialog(DialogBase):
 		if id == self.listcontrol_id:
 			self.app.player.now_playing['pos'] = self.clist.getSelectedPosition()
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
-		track = self.app.player.add_playable_track(0)
-		if not track:
-			xbmc.executebuiltin("XBMC.Notification(Rhapsody, Problem with this song. Aborting..., 2000, %s)" %(self.app.__addon_icon__))
-			print "Unplayable track. Can't play this track"
-			#player.stop()
-			return False
+		#track = self.app.player.add_playable_track(0)
+		#if not track:
+		#	xbmc.executebuiltin("XBMC.Notification(Rhapsody, Problem with this song. Aborting..., 2000, %s)" %(self.app.__addon_icon__))
+		#	print "Unplayable track. Can't play this track"
+		#	#player.stop()
+		#	return False
 		self.app.player.get_session()
 		print "Gonna try to play the selected track at self.app.player.pos = "+str(self.app.player.now_playing['pos'])
 		self.app.player.playselected(self.app.player.now_playing['pos'])

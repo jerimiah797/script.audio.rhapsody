@@ -11,6 +11,7 @@ class ContentList():
 		self.data = []
 		self.liz = []
 		self.built = False
+		self.fresh = False
 		self.pos = None
 		self.timestamp = time.time()
 		self.type = args[0]
@@ -24,10 +25,11 @@ class ContentList():
 		self.raw = None
 		print 'running init code for '+self.name
 
-	def fresh(self):
-		return True
+	#def fresh(self):
+	#	return True
 
 	def make_active(self):
+
 		if (self.app.get_var('last_rendered_list') == self.name) and self.win.getListSize()>2:
 			print "Window already has that list in memory. Skipping list building"
 			return
@@ -35,8 +37,10 @@ class ContentList():
 		print "current frame: "+self.win.getProperty('frame')
 		print "current view: "+self.win.getProperty('browseview')
 		print "Built: "+str(self.built)
-		print "Fresh: "+str(self.fresh())
-		if self.built and self.fresh():
+		print "Fresh: "+str(self.fresh)
+		if (self.name == "hist_tracks"):
+			self.build()
+		elif self.built and self.fresh:
 			print "doing simple list building for mainwin"
 			self.build_winlist()
 		else:
@@ -51,6 +55,7 @@ class ContentList():
 		results = self.download_list()
 		if results:
 			self.ingest_list(results)
+			self.fresh = True
 		else:
 			print "Couldn't get info from rhapsody about "+self.name
 
@@ -90,6 +95,7 @@ class ContentList():
 	def ingest_list(self, results):
 
 		print "Ingest list. Type: "+self.type
+		print "$$$$$$$$$$$ List has %s items" % (str(len(results)))
 		self.win.clist.reset()
 		__ = {}
 
@@ -132,19 +138,19 @@ class ContentList():
 		#data = {}
 		thumb = self.img.handler(item["images"][0]["url"], 'small', 'album')
 		data['album'] = {'album_id': item["id"],
-		         'album': item["name"],
-		         'thumb': thumb,
-		         'thumb_url': item["images"][0]["url"],
-		         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
-		         'orig_date': "",
-		         'label': "",
-		         'review': "",
-		         'bigthumb': "",
-		         'tracks': "",
-		         'style': '',
-		         'artist': item["artist"]["name"],
-		         'list_id': count,
-		         'artist_id': item["artist"]["id"]}
+				         'album': item["name"],
+				         'thumb': thumb,
+				         'thumb_url': item["images"][0]["url"],
+				         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
+				         'orig_date': "",
+				         'label': "",
+				         'review': "",
+				         'bigthumb': "",
+				         'tracks': "",
+				         'style': '',
+				         'artist': item["artist"]["name"],
+				         'list_id': count,
+				         'artist_id': item["artist"]["id"]}
 		data['listitem'] = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', thumb)
 		return data
 
