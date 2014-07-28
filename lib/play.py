@@ -1,8 +1,7 @@
 import xbmc
 import xbmcgui
 import time
-
-
+from lib import view
 
 class Player(xbmc.Player):
 
@@ -29,8 +28,6 @@ class Player(xbmc.Player):
 			pos = self.playlist.getposition()
 			self.now_playing['pos'] = pos
 			print "OnPlaybackStarted: Playing track "+str(pos+1)
-			#self.add_playable_track(1)
-			#self.add_playable_track(-1)
 			self.win.sync_playlist_pos()
 			pos2 = self.playlist.getposition()
 			if pos != pos2:
@@ -38,9 +35,13 @@ class Player(xbmc.Player):
 				print "Playing track "+str(pos2+1)
 				print "There, fixed it for ya. "
 				self.now_playing['pos'] = pos2
-				#self.add_playable_track(1)
-				#self.add_playable_track(-1)
+
 			self.notify.report_playback(self, self.api)
+			# update listening history if current view
+			if self.win.getProperty('browseview') == "history_tracks":
+				self.app.hist_tracks.build()
+				print "rebuilt history tracklist"
+				view.draw_mainwin(self.win, self.app)
 			xbmc.sleep(2)
 			self.onplay_lock = False
 		else:
@@ -76,10 +77,20 @@ class Player(xbmc.Player):
 	def onPlayBackEnded(self):
 		print "onPlaybackEnded was detected!"
 		self.notify.report_playback(self, self.api)
+		# update listening history if current view
+		if self.win.getProperty('browseview') == "history_tracks":
+			self.app.hist_tracks.build()
+			print "rebuilt history tracklist"
+			view.draw_mainwin(self.win, self.app)
 
 	def onPlayBackStopped(self):
 		print "onPlaybackStopped was detected!"
 		self.notify.report_playback(self, self.api)
+		#update listening history if current view
+		if self.win.getProperty('browseview') == "history_tracks":
+			self.app.hist_tracks.build()
+			print "rebuilt history tracklist"
+			view.draw_mainwin(self.win, self.app)
 
 	def onQueueNextItem(self):
 		print "onQueueNextItem was detected!"

@@ -226,6 +226,7 @@ class MainWin(WinBase):
 				self.app.view_keeper = {'browseview': self.getProperty('browseview'), 'frame': self.getProperty('frame')}
 
 			elif self.getFocusId() == 1001:
+				# Logout happens here
 				self.app.set_var('logged_in', False)
 				try:
 					os.remove(self.mem.filename)

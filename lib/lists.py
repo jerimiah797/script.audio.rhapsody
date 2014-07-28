@@ -11,6 +11,7 @@ class ContentList():
 		self.data = []
 		self.liz = []
 		self.built = False
+		self.fresh = False
 		self.pos = None
 		self.timestamp = time.time()
 		self.type = args[0]
@@ -24,8 +25,8 @@ class ContentList():
 		self.raw = None
 		print 'running init code for '+self.name
 
-	def fresh(self):
-		return True
+	#def fresh(self):
+	#	return True
 
 	def make_active(self):
 
@@ -36,10 +37,10 @@ class ContentList():
 		print "current frame: "+self.win.getProperty('frame')
 		print "current view: "+self.win.getProperty('browseview')
 		print "Built: "+str(self.built)
-		print "Fresh: "+str(self.fresh())
+		print "Fresh: "+str(self.fresh)
 		if (self.name == "hist_tracks"):
 			self.build()
-		elif self.built and self.fresh():
+		elif self.built and self.fresh:
 			print "doing simple list building for mainwin"
 			self.build_winlist()
 		else:
@@ -54,6 +55,7 @@ class ContentList():
 		results = self.download_list()
 		if results:
 			self.ingest_list(results)
+			self.fresh = True
 		else:
 			print "Couldn't get info from rhapsody about "+self.name
 
