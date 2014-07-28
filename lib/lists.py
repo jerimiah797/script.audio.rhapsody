@@ -95,6 +95,7 @@ class ContentList():
 	def ingest_list(self, results):
 
 		print "Ingest list. Type: "+self.type
+		print "$$$$$$$$$$$ List has %s items" % (str(len(results)))
 		self.win.clist.reset()
 		__ = {}
 
@@ -137,19 +138,19 @@ class ContentList():
 		#data = {}
 		thumb = self.img.handler(item["images"][0]["url"], 'small', 'album')
 		data['album'] = {'album_id': item["id"],
-		         'album': item["name"],
-		         'thumb': thumb,
-		         'thumb_url': item["images"][0]["url"],
-		         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
-		         'orig_date': "",
-		         'label': "",
-		         'review': "",
-		         'bigthumb': "",
-		         'tracks': "",
-		         'style': '',
-		         'artist': item["artist"]["name"],
-		         'list_id': count,
-		         'artist_id': item["artist"]["id"]}
+				         'album': item["name"],
+				         'thumb': thumb,
+				         'thumb_url': item["images"][0]["url"],
+				         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
+				         'orig_date': "",
+				         'label': "",
+				         'review': "",
+				         'bigthumb': "",
+				         'tracks': "",
+				         'style': '',
+				         'artist': item["artist"]["name"],
+				         'list_id': count,
+				         'artist_id': item["artist"]["id"]}
 		data['listitem'] = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', thumb)
 		return data
 
