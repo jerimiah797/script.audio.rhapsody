@@ -46,7 +46,7 @@ class Image():
 			full_path = self.base_path+prefix_path+img_filename
 			if not os.path.isfile(full_path):
 				self.download_image(url, full_path)
-				print "downloaded "+prefix_path+img_filename
+				print "image handler: downloaded "+prefix_path+img_filename
 			return prefix_path+img_filename
 
 

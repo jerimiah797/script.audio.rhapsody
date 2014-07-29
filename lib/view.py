@@ -19,11 +19,20 @@ def draw_mainwin(win, app):
 		app.set_var(list, list_instance.data)
 		win.make_visible(300, win.list_id)
 		list_instance.make_active()
+		#print str(list_instance.data)
+		#print str(win.clist.size())
 		#win.getControl(301).controlDown(win.clist)
 		win.setFocusId(win.list_id)
 		if list_instance.pos:
 			win.clist.selectItem(list_instance.pos)
 			print "auto-selected list item "+str(list_instance.pos)
+		for index in range(win.clist.size()):
+			li = win.clist.getListItem(index)
+			#print li.getLabel()
+			#item = app.cache.album[list_instance.data[index]]
+			#print li.getProperty('thumb_url')
+			li.setThumbnailImage(app.img.handler(li.getProperty('thumb_url'), 'small', 'album'))
+			
 
 		#list_instance.save_data()
 def draw_playlist_sublist(win, app, thing):
