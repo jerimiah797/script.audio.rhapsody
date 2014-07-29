@@ -3,6 +3,7 @@ import xbmc
 
 import os
 import subprocess
+import thread
 from lib import utils
 
 def draw_mainwin(win, app):
@@ -28,11 +29,12 @@ def draw_mainwin(win, app):
 			print "auto-selected list item "+str(list_instance.pos)
 		for index in range(win.clist.size()):
 			li = win.clist.getListItem(index)
-			#print li.getLabel()
-			#item = app.cache.album[list_instance.data[index]]
-			#print li.getProperty('thumb_url')
-			li.setThumbnailImage(app.img.handler(li.getProperty('thumb_url'), 'small', 'album'))
+			url = li.getProperty('thumb_url')
+			#li.setThumbnailImage(app.img.handler(url, 'small', 'album'))
+			thread.start_new_thread(load_image, (li, app, url))
 			
+def load_image(li, app, url):
+	li.setThumbnailImage(app.img.handler(url, 'small', 'album'))
 
 		#list_instance.save_data()
 def draw_playlist_sublist(win, app, thing):
