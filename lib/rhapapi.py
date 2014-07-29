@@ -88,7 +88,7 @@ class Api():
 		if 'id' in session:
 			url = "%ssessions/%s" %(self.S_BASEURL, session[u'id'])
 			req = self.__build_member_req(url)
-			results = self.__get_data_from_rhapsody(req, 20)
+			results = self.__get_data_from_rhapsody(req, 2)
 			if results:
 				return results
 			else:
@@ -103,7 +103,7 @@ class Api():
 		url = "%ssessions" %(self.S_BASEURL)
 		req = self.__build_member_req(url)
 		req.add_data(data)
-		results = self.__get_data_from_rhapsody(req, 5)
+		results = self.__get_data_from_rhapsody(req, 2)
 		return results
 
 	def log_playstart(self, track_id):
@@ -115,7 +115,7 @@ class Api():
 		req = self.__build_member_req(url)
 		req.add_header('Content-Type', 'application/json')
 		req.add_data(data)
-		results = self.__get_data_from_rhapsody(req, 5)
+		results = self.__get_data_from_rhapsody(req, 2)
 		print "Logging a Play Start event. "+str(results)
 		return ztime
 
