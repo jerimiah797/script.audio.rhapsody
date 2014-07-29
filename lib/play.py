@@ -38,10 +38,10 @@ class Player(xbmc.Player):
 
 			self.notify.report_playback(self, self.api)
 			# update listening history if current view
-			if self.win.getProperty('browseview') == "history_tracks":
-				self.app.hist_tracks.build()
-				print "rebuilt history tracklist"
-				view.draw_mainwin(self.win, self.app)
+			#if self.win.getProperty('browseview') == "history_tracks":
+			#	self.app.hist_tracks.build()
+			#	print "rebuilt history tracklist"
+			#	view.draw_mainwin(self.win, self.app)
 			xbmc.sleep(2)
 			self.onplay_lock = False
 		else:
