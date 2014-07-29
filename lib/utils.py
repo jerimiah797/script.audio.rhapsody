@@ -1,6 +1,10 @@
 import xbmcgui
+import xbmc
 import json
+import commands
 import subprocess
+import os
+import sys
 
 def remove_html_markup(s):
 	tag = False
@@ -21,13 +25,22 @@ def remove_html_markup(s):
 def prettyprint(string):
 	print(json.dumps(string, sort_keys=True, indent=4, separators=(',', ': ')))
 
-def goodbye(app):
-		dialog = xbmcgui.Dialog()
-		if dialog.yesno("Quit Rhapsody?", "Nobody like a quitter. Nobody. "):
-			app.set_var('running',False)
-			app.player.stop()
-			app.player.playlist.clear()
-			#app.cache.save_artist_data()
-			#app.cache.save_album_data()
-			app.win.close()
 
+
+def git_pull():
+	plugin_dir = xbmc.translatePath("special://home/addons/script.audio.rhapsody/")
+	pr = subprocess.Popen( "git pull" , cwd = plugin_dir, shell = True, stdout = subprocess.PIPE, stderr = subprocess.PIPE )
+	(out, error) = pr.communicate()
+	#print "Error : " + str(error) 
+	print "git pull : " + str(out)
+
+def goodbye(app):
+	dialog = xbmcgui.Dialog()
+	if dialog.yesno("Quit Rhapsody?", "Nobody like a quitter. Nobody. "):
+		app.set_var('running',False)
+		app.player.stop()
+		app.player.playlist.clear()
+		#app.cache.save_artist_data()
+		#app.cache.save_album_data()
+		git_pull()
+		app.win.close()
