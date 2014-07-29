@@ -32,8 +32,8 @@ if len(sys.argv) < 2:
 
 	loadwin = xbmcgui.WindowXML("loading.xml", app.__addon_path__, 'Default', '720p')
 	loadwin.show()
-	print "Do we have network?"#+str(app.api.get_new_releases())
-	if app.api.get_new_releases():
+	print "Do we have network?"  #+str(app.api.get_new_releases())
+	if app.api.get_artist_genre("Art.954"):
 		loadwin.getControl(10).setLabel('Installing fonts...')
 		app.init_fonts()
 		loadwin.getControl(10).setLabel('Getting things ready...')
@@ -73,9 +73,11 @@ if len(sys.argv) < 2:
 	del loadwin
 	del app
 	print "Rhapsody addon has exited"
+	#return
 else:
 	print "got a conditional met for extended commmand line arguments"
-	x = plugin.get_it(sys.argv)
+	plugin.get_it(sys.argv)
+	
 
 
 

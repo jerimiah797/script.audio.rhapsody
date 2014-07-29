@@ -17,7 +17,7 @@
 '''
 
 
-# call plugin like this: plugin://plugin.rhapsody/?track=ABC&token=XYZ
+# call plugin like this: plugin://script.audio.rhapsody/?track=ABC&token=XYZ
         
 
 import xbmc
@@ -52,9 +52,9 @@ def get_it(args):
   plugin_handle = int(args[1])
   plugin_queries = parse_query(args[2][1:])
 
-  print('plugin url: ' + plugin_url)
-  print('plugin queries: ' + str(plugin_queries))
-  print('plugin handle: ' + str(plugin_handle))
+  #print('plugin url: ' + plugin_url)
+  #print('plugin queries: ' + str(plugin_queries))
+  #print('plugin handle: ' + str(plugin_handle))
 
   track = plugin_queries['track']
   token = plugin_queries['token']
@@ -89,7 +89,7 @@ def get_it(args):
     return req
 
   def get_playable_url(track_id):
-    print "Rhapapi: getting playable url"
+    print "Rhapsody Plugin: getting playable url"
     url = "%splay/%s" %(S_BASEURL, track_id)
     req = __build_member_req(url)
     results = __get_data_from_rhapsody(req, 5)
@@ -109,5 +109,6 @@ def get_it(args):
     xbmcplugin.setResolvedUrl(int(args[1]), True, item)
     #xbmcplugin.endOfDirectory(plugin_handle)
   except:
-    xbmcplugin.endOfDirectory(plugin_handle)
+    #xbmcplugin.endOfDirectory(plugin_handle)
     pass
+
