@@ -1,6 +1,7 @@
 import xbmc
 import xbmcgui
 import time
+import thread
 from lib import view
 
 class Player(xbmc.Player):
@@ -14,7 +15,7 @@ class Player(xbmc.Player):
 		self.api = self.app.api
 		self.playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC) #player=self, app=self.app, api=self.api, img=self.img)
 		self.now_playing = {'pos': 0, 'type': None, 'item':[], 'id': None}
-		self.session = {'valid': None}#, 'id': None}
+		self.session = []
 		self.notify = Notifier()
 		#self.now_playing['item']['album_id'] = 'blank'
 		self.onplay_lock = False
@@ -23,7 +24,10 @@ class Player(xbmc.Player):
 		if not self.onplay_lock:
 			self.onplay_lock = True
 			print "Locking playback routine to block multiple calls +++++++++++++++++++"
-			self.validate_session(self.session)
+			#thread.start_new_thread(self.validate_session, (self.session))
+			#print str(self.session)
+			thread.start_new_thread(self.validate_session, (self, self.session) )
+			print str(self.session)
 			self.win.sync_playlist_pos()
 			pos = self.playlist.getposition()
 			self.now_playing['pos'] = pos
@@ -36,7 +40,7 @@ class Player(xbmc.Player):
 				print "There, fixed it for ya. "
 				self.now_playing['pos'] = pos2
 
-			self.notify.report_playback(self, self.api)
+			thread.start_new_thread(self.notify.report_playback, (self, self.api))
 			# update listening history if current view
 			if self.win.getProperty('browseview') == "history_tracks":
 				self.app.hist_tracks.build()
@@ -51,7 +55,7 @@ class Player(xbmc.Player):
 	def onPlayBackResumed(self):
 		if not self.onplay_lock:
 			self.onplay_lock = True
-			self.validate_session(self.session)
+			thread.start_new_thread(self.validate_session, (self.session))
 			self.win.sync_playlist_pos()
 			pos = self.playlist.getposition()
 			self.now_playing['pos'] = pos
@@ -68,7 +72,7 @@ class Player(xbmc.Player):
 				self.now_playing['pos'] = pos2
 				#self.add_playable_track(1)
 				#self.add_playable_track(-1)
-			self.notify.report_playback(self, self.api)
+			thread.start_new_thread(self.notify.report_playback, (self, self.api))
 			xbmc.sleep(2)
 			self.onplay_lock = False
 		else:
@@ -76,7 +80,7 @@ class Player(xbmc.Player):
 
 	def onPlayBackEnded(self):
 		print "onPlaybackEnded was detected!"
-		self.notify.report_playback(self, self.api)
+		thread.start_new_thread(self.notify.report_playback, (self, self.api))
 		# update listening history if current view
 		if self.win.getProperty('browseview') == "history_tracks":
 			self.app.hist_tracks.build()
@@ -85,7 +89,7 @@ class Player(xbmc.Player):
 
 	def onPlayBackStopped(self):
 		print "onPlaybackStopped was detected!"
-		self.notify.report_playback(self, self.api)
+		thread.start_new_thread(self.notify.report_playback, (self, self.api))
 		#update listening history if current view
 		if self.win.getProperty('browseview') == "history_tracks":
 			self.app.hist_tracks.build()
@@ -139,54 +143,14 @@ class Player(xbmc.Player):
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Preparing to play..., 2000, %s)" %(self.app.__addon_icon__))
 
 
-	def add_playable_track(self, offset):
-		# print "Playlist: add playable track"
-		# print "offset = "+str(offset)
-		# print "self.now_playing pos = "+str(self.now_playing['pos'])
-		# print str(self.playlist.size())
-		# circ_pos = (self.now_playing['pos']+offset)%self.playlist.size()
-		# print "Fetching track "+str(circ_pos+1)
-		# item = self.now_playing['item'][circ_pos]
-		# alb_id = item['albumId']
-		# try:
-		# 	thumb = self.img.base_path+self.img.handler(self.cache.album[alb_id]['thumb_url'], 'small', 'album')
-		# except:
-		# 	thumb = "none.png"
-		# #thumb = "none.png"
-		# tid = item['trackId']
-		# tname = self.playlist.__getitem__(circ_pos).getfilename()
-		# playurl = self.api.get_playable_url(tid)
-		# print playurl
-		# if not playurl:
-		# 	return False
-		# self.playlist.remove(tname)
-		# li = xbmcgui.ListItem(
-	 #            item["name"],
-	 #            path=item["previewURL"],
-	 #            iconImage=thumb,
-	 #            thumbnailImage=thumb
-		# 		)
-		# info = {
-	 #            "title": item["name"],
-	 #            "album": item["displayAlbumName"],
-	 #            "artist": item["displayArtistName"],
-	 #            "duration": item["playbackSeconds"],
-	 #            "tracknumber": int(item["trackIndex"]),
-		# 		}
-		# li.setInfo("music", info)
-		# li.setProperty('mimetype','audio/mp4')
-		# self.playlist.add(playurl, listitem=li, index=circ_pos)
-		print "add_playable_track called, but is not doing anything"
-		return True
-
-
-	def validate_session(self, session):
+	def validate_session(self, s, session):
 		print "player.validate_session"
 		valid = self.api.validate_session(session)
 		if valid:
 			print "Valid playback session!"
 			return True
 		else:
+			print "Playback session invalid. Stopping Playback"
 			#self.get_session()
 			#return True
 			self.stop()
@@ -194,8 +158,13 @@ class Player(xbmc.Player):
 
 	def get_session(self):
 		print "player.get_session:"
+		#temp = self.api.get_session()
+		#print temp
+		#self.session = tuple(temp.iteritems())
 		self.session = self.api.get_session()
-		print "Session:"+str(self.session)
+		#print self.session
+		#print self.session[1]
+		#print self.session[1][1]
 
 
 class Notifier():
@@ -217,7 +186,7 @@ class Notifier():
 			self.duration = int(now - self.time)
 			print "duration: "+str(self.duration)
 			api.log_playstop(self.current_track, self.ztime, self.duration)
-			print "clearing current track info"
+			#print "clearing current track info"
 			self.current_track = None
 			self.duration = None
 			self.ztime = None

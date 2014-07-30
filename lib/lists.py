@@ -136,7 +136,8 @@ class ContentList():
 
 	def process_album(self, count, item, data):
 		#data = {}
-		thumb = self.img.handler(item["images"][0]["url"], 'small', 'album')
+		#thumb = self.img.handler(item["images"][0]["url"], 'small', 'album')
+		thumb = self.img.default_album_img
 		data['album'] = {'album_id': item["id"],
 				         'album': item["name"],
 				         'thumb': thumb,
@@ -151,7 +152,9 @@ class ContentList():
 				         'artist': item["artist"]["name"],
 				         'list_id': count,
 				         'artist_id': item["artist"]["id"]}
-		data['listitem'] = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', thumb)
+		#print data["album"]["thumb_url"]
+		data['listitem'] = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', thumb )
+		data['listitem'].setProperty('thumb_url', data["album"]["thumb_url"])
 		return data
 
 	def process_artist(self, count, item, data):

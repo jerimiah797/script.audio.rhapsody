@@ -3,6 +3,7 @@ import xbmc
 
 import os
 import subprocess
+import thread
 from lib import utils
 
 def draw_mainwin(win, app):
@@ -19,11 +20,22 @@ def draw_mainwin(win, app):
 		app.set_var(list, list_instance.data)
 		win.make_visible(300, win.list_id)
 		list_instance.make_active()
+		#print str(list_instance.data)
+		#print str(win.clist.size())
 		#win.getControl(301).controlDown(win.clist)
 		win.setFocusId(win.list_id)
 		if list_instance.pos:
 			win.clist.selectItem(list_instance.pos)
 			print "auto-selected list item "+str(list_instance.pos)
+		for index in range(win.clist.size()):
+			li = win.clist.getListItem(index)
+			url = li.getProperty('thumb_url')
+			#li.setThumbnailImage(app.img.handler(url, 'small', 'album'))
+			thread.start_new_thread(load_image, (li, app, url))
+			
+#threadsafe wrapper for image loading
+def load_image(li, app, url):
+	li.setThumbnailImage(app.img.handler(url, 'small', 'album'))
 
 		#list_instance.save_data()
 def draw_playlist_sublist(win, app, thing):
@@ -378,11 +390,44 @@ class AlbumDialog(DialogBase):
 		self.view = self.win.handle.getProperty('browseview')
 		self.list_instance = self.app.get_var('view_matrix')[self.view]
 		self.clist = self.getControl(self.listcontrol_id)
+		self.app.set_var('alb_dialog_id', self.id)
+		print self.app.get_var('alb_dialog_id')
 		self.show_info(self.id, self.cache)
 
 
 	def show_info(self, alb_id, cache):
-		print "AlbumDialog: album id = "+self.id
+
+		def get_art(self, cache, album):
+			static_id = self.id[:]
+			#print "Get art for "+static_id
+			self.manage_artwork(cache, album)
+			if static_id == self.id:
+				self.getControl(7).setImage(album["bigthumb"])
+			else:
+				print "********* got image but not showing it right now ******"
+
+		def get_review(self, cache, album):
+			static_id = self.id[:]
+			#print "Get review for "+self.id
+			self.manage_review(cache, album)
+			if static_id == self.id:
+				#print self.id
+				self.getControl(14).setText(album["review"])
+			else:
+				print "********* got review but not showing it right now ******"
+
+		def get_details(self, cache, album):
+			static_id = self.id[:]
+			#print "Get details for "+self.id
+			self.manage_details(cache, album)
+			if static_id == self.id:
+				self.getControl(10).setLabel(album["label"])
+				self.getControl(6).setLabel(album["style"])
+			else:
+				print "********* got details but not showing it right now ******"
+
+
+		#print "AlbumDialog: album id = "+self.id
 		album = cache[alb_id]
 		self.reset_fields()
 		#self.clearList()
@@ -390,24 +435,22 @@ class AlbumDialog(DialogBase):
 		self.getControl(11).setText(album["album"])
 		self.getControl(13).setLabel(album["artist"])
 		self.getControl(8).setLabel(album["album_date"])
-		self.manage_artwork(cache, album)
-		self.getControl(7).setImage(album["bigthumb"])
-		self.manage_review(cache, album)
-		self.getControl(14).setText(album["review"])
-		self.manage_details(cache, album)
-		self.getControl(10).setLabel(album["label"])
-		self.getControl(6).setLabel(album["style"])
+		thread.start_new_thread(get_art, (self, cache, album))
+		thread.start_new_thread(get_review, (self, cache, album))
+		thread.start_new_thread(get_details, (self, cache, album))
 		self.manage_windowtracklist(cache, album)
+
 
 	def show_next_album(self, offset):
 		self.pos = (self.pos+offset) % len(self.current_list)
 		self.id = self.current_list[self.pos]#['album_id']
+		self.app.set_var('alb_dialog_id', self.id)
 		self.show_info(self.id, self.cache)
-		print str(self.pos)
-		print len(self.current_list)
+		#print str(self.pos)
+		#print len(self.current_list)
 
 	def manage_windowtracklist(self, cache, album):
-		print "AlbumDialog: Manage tracklist for gui list"
+		#print "AlbumDialog: Manage tracklist for gui list"
 		liz = self.app.windowtracklist.get_album_litems(cache, album["album_id"])
 		for item in liz:
 			self.clist.addItem(item)
@@ -467,7 +510,7 @@ class AlbumDialog(DialogBase):
 		#	print "Unplayable track. Can't play this track"
 		#	#player.stop()
 		#	return False
-		self.app.player.get_session()
+		thread.start_new_thread(self.app.player.get_session, () )
 		print "Gonna try to play the selected track at self.app.player.pos = "+str(self.app.player.now_playing['pos'])
 		self.app.player.playselected(self.app.player.now_playing['pos'])
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))

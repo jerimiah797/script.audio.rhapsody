@@ -85,16 +85,19 @@ class Api():
 
 	def validate_session(self, session):
 		print "Rhapapi: Validating Playback Session"
+		#if session[1][1]:
+		#	url = "%ssessions/%s" %(self.S_BASEURL, session[1][1])
 		if 'id' in session:
 			url = "%ssessions/%s" %(self.S_BASEURL, session[u'id'])
 			req = self.__build_member_req(url)
-			results = self.__get_data_from_rhapsody(req, 20)
+			results = self.__get_data_from_rhapsody(req, 5)
 			if results:
 				return results
 			else:
+				print "Validate Session call timed out"
 				return False
 		else:
-			print "No existing session to check. Let's get one. "
+			print "No existing session to check. "
 			pass
 
 	def get_session(self):
