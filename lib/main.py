@@ -96,6 +96,7 @@ class Application():
 		self.set_var('logged_in', False)
 		self.set_var('bad_creds', False)
 		self.set_var('last_rendered_list', None)
+		#self.set_var('alb_dialog_id', None)
 
 	def init_fonts(self):
 		print "Installing Rhapsody fonts"

@@ -33,6 +33,7 @@ def draw_mainwin(win, app):
 			#li.setThumbnailImage(app.img.handler(url, 'small', 'album'))
 			thread.start_new_thread(load_image, (li, app, url))
 			
+#threadsafe wrapper for image loading
 def load_image(li, app, url):
 	li.setThumbnailImage(app.img.handler(url, 'small', 'album'))
 
@@ -389,11 +390,44 @@ class AlbumDialog(DialogBase):
 		self.view = self.win.handle.getProperty('browseview')
 		self.list_instance = self.app.get_var('view_matrix')[self.view]
 		self.clist = self.getControl(self.listcontrol_id)
+		self.app.set_var('alb_dialog_id', self.id)
+		print self.app.get_var('alb_dialog_id')
 		self.show_info(self.id, self.cache)
 
 
 	def show_info(self, alb_id, cache):
-		print "AlbumDialog: album id = "+self.id
+
+		def get_art(self, cache, album):
+			static_id = self.id[:]
+			#print "Get art for "+static_id
+			self.manage_artwork(cache, album)
+			if static_id == self.id:
+				self.getControl(7).setImage(album["bigthumb"])
+			else:
+				print "********* got image but not showing it right now ******"
+
+		def get_review(self, cache, album):
+			static_id = self.id[:]
+			#print "Get review for "+self.id
+			self.manage_review(cache, album)
+			if static_id == self.id:
+				#print self.id
+				self.getControl(14).setText(album["review"])
+			else:
+				print "********* got review but not showing it right now ******"
+
+		def get_details(self, cache, album):
+			static_id = self.id[:]
+			#print "Get details for "+self.id
+			self.manage_details(cache, album)
+			if static_id == self.id:
+				self.getControl(10).setLabel(album["label"])
+				self.getControl(6).setLabel(album["style"])
+			else:
+				print "********* got details but not showing it right now ******"
+
+
+		#print "AlbumDialog: album id = "+self.id
 		album = cache[alb_id]
 		self.reset_fields()
 		#self.clearList()
@@ -401,24 +435,22 @@ class AlbumDialog(DialogBase):
 		self.getControl(11).setText(album["album"])
 		self.getControl(13).setLabel(album["artist"])
 		self.getControl(8).setLabel(album["album_date"])
-		self.manage_artwork(cache, album)
-		self.getControl(7).setImage(album["bigthumb"])
-		self.manage_review(cache, album)
-		self.getControl(14).setText(album["review"])
-		self.manage_details(cache, album)
-		self.getControl(10).setLabel(album["label"])
-		self.getControl(6).setLabel(album["style"])
+		thread.start_new_thread(get_art, (self, cache, album))
+		thread.start_new_thread(get_review, (self, cache, album))
+		thread.start_new_thread(get_details, (self, cache, album))
 		self.manage_windowtracklist(cache, album)
+
 
 	def show_next_album(self, offset):
 		self.pos = (self.pos+offset) % len(self.current_list)
 		self.id = self.current_list[self.pos]#['album_id']
+		self.app.set_var('alb_dialog_id', self.id)
 		self.show_info(self.id, self.cache)
-		print str(self.pos)
-		print len(self.current_list)
+		#print str(self.pos)
+		#print len(self.current_list)
 
 	def manage_windowtracklist(self, cache, album):
-		print "AlbumDialog: Manage tracklist for gui list"
+		#print "AlbumDialog: Manage tracklist for gui list"
 		liz = self.app.windowtracklist.get_album_litems(cache, album["album_id"])
 		for item in liz:
 			self.clist.addItem(item)
