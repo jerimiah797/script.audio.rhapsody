@@ -510,7 +510,7 @@ class AlbumDialog(DialogBase):
 		#	print "Unplayable track. Can't play this track"
 		#	#player.stop()
 		#	return False
-		self.app.player.get_session()
+		thread.start_new_thread(self.app.player.get_session, () )
 		print "Gonna try to play the selected track at self.app.player.pos = "+str(self.app.player.now_playing['pos'])
 		self.app.player.playselected(self.app.player.now_playing['pos'])
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
