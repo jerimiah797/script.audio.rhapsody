@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="script.audio.rhapsody" version="1.0-beta1" name="Rhapsody" provider-name="Jerimiah Ham">
+<addon id="script.audio.rhapsody" version="1.0.4" name="Rhapsody" provider-name="Jerimiah Ham">
     <requires>
         <import addon="xbmc.python" version="2.0"/>
 		<!--import addon="script.module.simplejson" version="2.0.10"/-->
