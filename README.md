@@ -1,7 +1,7 @@
 rhapsody-xbmc
 =============
 
-XMBC addon for the Rhapsody music service. Uses the new public developer API (aka Motorhead API).
+XMBC addon for the Rhapsody music service. Uses the new public developer API (aka Motorhead API). Only supports accounts with on-demand stream rights (no radio+ or unradio)
 
 
 Installation:
@@ -9,39 +9,27 @@ Installation:
 1) Install XBMC 12 or 13 
 
 2) clone the repo to your local user XBMC addons folder.
-    Windows: c:\Users\<username>\AppData\Roaming\XBMC\addons
 
-2a) rename the folder from rhapsody-xbmc to script.audio.rhapsody
+    Windows: 	C:\Users\<username>\AppData\Roaming\XBMC\addons
+    Mac: 		/Users/<username>/Library/Application Support/XBMC/addons/
+    Ubuntu:		/home/<username>/.xbmc/addons
 
-INSTRUCTIONS FOR CONFLUENCE ONLY: (See below for all other skins)
-    
-3) Copy the default skin folder (skin.confluence) from the main program directory to the user addons folder so you can modify it safely.
-    Windows: C:\Program Files (x86)\XBMC\addons
-    
-4) Copy the 3 fonts in script.audio.rhapsody to the fonts folder inside \addons\skin.confluence\
+3) Rename the folder from rhapsody-xbmc to script.audio.rhapsody
 
-5) Replace the Font.xml file in the skin.confluence folder with the one in script.audio.rhapsody\resources\
+4) Launch XBMC and then launch the plugin  (Select Music, then Addons, then Rhapsody). 
 
-Skip to step 6
+5) Sign in, then use the arrow keys, enter key, and delete key for navigation, select, and back. Tab toggles the visualizer. 
 
-**************** FOR ALL OTHER SKINS:
-    
-3) Copy the 3 fonts in script.audio.rhapsody to the fonts folder inside \addons\skin.the_name_of_the_skin\
+Working: 
 
-4) Open the Font.xml file in script.audio.rhapsody\resources\ in a text editor. Copy to the clipboard the xml starting with the "Normal Fonts (rhapsody)" starting at line 4, down including the closing font tag around line 115, right before there's a comment "Normal Fonts" .  
+- Playback for Popular albums, New Releases, Popular Tracks, Library Albums, Listening History
+- Sign in / out (restart rhapsody to update library, though)
+- auto-update with git-pull at every quit
+- Automatically install fonts
+- Invoke visualizer manually
+- Can browse playlists but can't play them yet
+- Listening history page updates in real time during playback
 
-5) Open the Fonts.xml file in the skin folder you are installing Rhapsody in (\addons\skin.the_name_of_the_skin\720p\font.xml). Paste the xml from the previous step into the file, right below the first <fontset> tag near the top of the file. Save the file. 
-
-***************************
-
-
-
-6) Launch XBMC and then launch the plugin  (Select Music, then Addons, then Rhapsody). 
-
-7) Sign in, then use the arrow keys, enter key, and delete key for navigation, select, and back. Tab toggles the visualizer. 
-
-Working: Popular albums, New Releases, Popular Tracks, Library Albums, Listening History
-
-Still to do: Playlists, Search, Queue, Radio, Artist Pages for Browse and Library, automatic font installation for any skin
+Still to do: Playlists, Search, Queue, Radio, Artist Pages for Browse and Library, Genre browsing and filtering, library/playlist/queue management, 1080i skin support
 
 Special features: Quick browse all albums in a category while in the album detail view. Press 'down' to enable quicknav, then left / right for previous/next album in current list. 

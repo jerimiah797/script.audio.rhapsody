@@ -1,0 +1,25 @@
+Upcoming:
+- clear cache data from settings page
+- update library if login with different user without having to restart Rhapsody addon
+- automatically close album detail window if visualizer activates automatically
+- Show correct now playing track in album detail tracklist if player is set to random playback
+- implement Search, and add/remove albums from library
+- implememt Programmed Radio and Artist Radio
+- enable playback of playlists
+
+v1.04
+- Many performance improvements with the use of threading and better image management
+	- List views are navigable even if images are not loaded yet
+	- Can switch albums quickly in the album browser window even if images and other data aren't loaded yet
+	- Playback is faster because it no longer waits for session management and playback notifications to complete
+- Added changelog and fanart
+
+v1.0.3
+- Rework the way streams are fetched for playback so they happen in real-time
+- Use private auth server (http://rhap-xbmc-auth.herokuapp.com/) as proxy for login/token retrieval to protect secret keys
+
+v1.02
+- Make font installation automatic
+
+v1.0.1
+-Initial release (alpha, feature limited)
