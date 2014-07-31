@@ -70,6 +70,16 @@ class Image():
 			#print "identified biggest image as: "+url
 			return url
 
+	def identify_artist_thumb(self, id):
+		results = None
+		api = rhapapi.Api()
+		results = api.get_artist_images(id)
+		if results:
+			url = results[0]["url"]
+			print "IMG.identify_artist_thumb - found artist image url: "+str(url)
+			return url
+		
+
 
 	def get_prefix_path(self, size, kind):
 

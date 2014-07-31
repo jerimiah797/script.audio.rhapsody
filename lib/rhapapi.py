@@ -254,9 +254,11 @@ class Api():
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 3)
 		if results:
-			return results["genre"]["id"]
-		else:
-			return False
+			try:
+				return results["genre"]["id"]
+			except:
+				print "Exception thrown getting genre id for "+artist_id
+
 
 	def get_new_releases(self):
 		print "Rhapapi: getting new releases"

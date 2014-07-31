@@ -9,57 +9,43 @@ from lib import utils
 def draw_mainwin(win, app):
 	frame = win.handle.getProperty('frame')
 	if frame == "Settings":
-		print "Drawmain: No lists to draw. Passing..."
+		print "Drawmain: No lists to draw on settings Page"
 		win.handle.setFocusId(1001)
 	else:
-		print "Drawmainwin: "
-		view = win.handle.getProperty('browseview'); print "view: "+view
-		list_instance = app.get_var('view_matrix')[view]; print "list instance: "+list_instance.name
-		win.list_id = app.get_var('list_matrix')[win.getProperty('browseview')]; print "list id: "+str(win.list_id)
+		view = win.handle.getProperty('browseview')
+		list_instance = app.get_var('view_matrix')[view]
+		win.list_id = app.get_var('list_matrix')[win.getProperty('browseview')]
 		win.clist = win.getControl(win.list_id)
+		print "Drawmainwin: view: %s list instance: %s list id: %s" % (view, list_instance.name, str(win.list_id))
 		app.set_var(list, list_instance.data)
 		win.make_visible(300, win.list_id)
 		list_instance.make_active()
-		#print str(list_instance.data)
-		#print str(win.clist.size())
-		#win.getControl(301).controlDown(win.clist)
 		win.setFocusId(win.list_id)
 		if list_instance.pos:
 			win.clist.selectItem(list_instance.pos)
-			print "auto-selected list item "+str(list_instance.pos)
 		for index in range(win.clist.size()):
 			li = win.clist.getListItem(index)
 			if list_instance.type == "album":
 				url = li.getProperty('thumb_url')
-				#li.setThumbnailImage(app.img.handler(url, 'small', 'album'))
 				thread.start_new_thread(load_album_thumb, (li, app, url))
 			elif list_instance.type == "artist":
-				id = li.getProperty('artist_id')
-				utils.prettyprint(app.cache.artist)
-				#print "processing "+id
-				#data = {}
-
-				if not id in app.cache.artist:
-					if id == 'Art.0':
+				artist_id = li.getProperty('artist_id')
+				if not artist_id in app.cache.artist:
+					if artist_id == 'Art.0':
 						print "detected artist 0 case!"
-						url = None
+						url = app.img.default_artist_img
 						genre = ""
 					else:
-						#url = self.img.identify_largest_image(item["id"], "artist")
-						thread.start_new_thread(load_artist_thumb, (li, id, app))
-						#g_id = self.api.get_artist_genre(item["id"])
-						#genre = self.cache.genre_dict__[g_id]
-						thread.start_new_thread(load_artist_genre, (li, id, app))
+						thread.start_new_thread(load_artist_thumb, (li, artist_id, app))
+						thread.start_new_thread(load_artist_genre, (li, artist_id, app))	
 				else:
-					print "start thread get_artist_image_from_cache"
-					thread.start_new_thread(get_artist_image_from_cache, (li, id, app))
-					#print 'using cached genre for artist'
-					#genre = self.cache.artist[id]['style']
-					thread.start_new_thread(get_artist_genre_from_cache, (li, id, app))
-
-
-
-		#list_instance.save_data()
+					if artist_id == 'Art.0':
+						print "detected artist 0 case!"
+						url = app.img.default_artist_img
+						genre = ""
+					else:
+						thread.start_new_thread(get_artist_image_from_cache, (li, artist_id, app))
+						thread.start_new_thread(get_artist_genre_from_cache, (li, artist_id, app))
 			
 #threadsafe wrapper for fetching and loading album thumbs 
 def load_album_thumb(li, app, url):
@@ -67,30 +53,35 @@ def load_album_thumb(li, app, url):
 
 #threadsafe wrapper for image loading
 def get_artist_image_from_cache(li, artist_id, app):
-	if app.cache.artist[artist_id]['thumb_url']:
-		print "thumb_url is in artist cache"
-		li.setThumbnailImage(app.img.handler(url, 'large', 'artist'))
+	if len(app.cache.artist[artist_id]['thumb_url']) > 5:
+		url = app.cache.artist[artist_id]['thumb_url']
+		li.setThumbnailImage(app.img.handler(url, 'small', 'artist'))
 	else:
-		print "thumb_url not in artist cache. Let's get it"
-		url = app.img.identify_largest_image(artist_id, "artist")
-		li.setThumbnailImage(app.img.handler(url, 'large', 'artist'))
+		url = app.img.identify_artist_thumb(artist_id)
+		if url:
+			app.cache.artist[artist_id]['thumb_url'] = url
+			li.setThumbnailImage(app.img.handler(url, 'small', 'artist'))
 
 def get_artist_genre_from_cache(li, artist_id, app):
 	if app.cache.artist[artist_id]['style']:
 		li.setLabel2(app.cache.artist[artist_id]['style'])
 	else:
 		g_id = app.api.get_artist_genre(artist_id)
-		li.setLabel2(app.cache.genre_dict__[g_id])
-		app.cache.artist[artist_id]['style'] = app.cache.genre_dict__[g_id]
+		if g_id:
+			li.setLabel2(app.cache.genre_dict__[g_id])
+			app.cache.artist[artist_id]['style'] = app.cache.genre_dict__[g_id]
 
 def load_artist_thumb(li, artist_id, app):
-	url = app.img.identify_largest_image(artist_id, "artist")
-	app.cache.artist[artist_id]['thumb_url'] = url 
-	li.setThumbnailImage(app.img.handler(url, 'large', 'artist'))
+	url = app.img.identify_artist_thumb(artist_id)
+	if url:
+		app.cache.artist[artist_id]['thumb_url'] = url
+		li.setThumbnailImage(app.img.handler(url, 'small', 'artist'))
 
 def load_artist_genre(li, artist_id, app):
 	g_id = app.api.get_artist_genre(artist_id)
-	li.setLabel2(app.cache.genre_dict__[g_id])
+	if g_id:
+		li.setLabel2(app.cache.genre_dict__[g_id])
+		app.cache.artist[artist_id]['style'] = app.cache.genre_dict__[g_id]
 
 
 def draw_playlist_sublist(win, app, thing):
