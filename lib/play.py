@@ -55,7 +55,7 @@ class Player(xbmc.Player):
 	def onPlayBackResumed(self):
 		if not self.onplay_lock:
 			self.onplay_lock = True
-			thread.start_new_thread(self.validate_session, (self.session))
+			thread.start_new_thread(self.validate_session, (self, self.session))
 			self.win.sync_playlist_pos()
 			pos = self.playlist.getposition()
 			self.now_playing['pos'] = pos

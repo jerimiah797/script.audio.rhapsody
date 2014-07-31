@@ -158,37 +158,39 @@ class ContentList():
 		return data
 
 	def process_artist(self, count, item, data):
-		id = item['id']
-		#print "processing "+id
-		#data = {}
+		# id = item['id']
+		# #print "processing "+id
+		# #data = {}
 
-		if not id in self.cache.artist:
-			if id == 'Art.0':
-				print "detected artist 0 case!"
-				url = None
-				genre = ""
-			else:
-				url = self.img.identify_largest_image(item["id"], "artist")
-				g_id = self.api.get_artist_genre(item["id"])
-				genre = self.cache.genre_dict__[g_id]
-		else:
-			#print 'using cached thumb url for artist image'
-			url = self.cache.artist[id]['thumb_url']
-			#print 'using cached genre for artist'
-			genre = self.cache.artist[id]['style']
+		# if not id in self.cache.artist:
+		# 	if id == 'Art.0':
+		# 		print "detected artist 0 case!"
+		# 		url = None
+		# 		genre = ""
+		# 	else:
+		# 		url = self.img.identify_largest_image(item["id"], "artist")
+		# 		g_id = self.api.get_artist_genre(item["id"])
+		# 		genre = self.cache.genre_dict__[g_id]
+		# else:
+		# 	#print 'using cached thumb url for artist image'
+		# 	url = self.cache.artist[id]['thumb_url']
+		# 	#print 'using cached genre for artist'
+		# 	genre = self.cache.artist[id]['style']
 
-		bigthumb = self.img.handler(url, 'large', 'artist')
+		#bigthumb = self.img.handler(url, 'large', 'artist')
+		bigthumb = self.img.default_artist_img
 
 		data['artist'] = {'artist_id': item["id"],
 		         'name': item["name"],
 		         'thumb': bigthumb,
-		         'thumb_url': url,
+		         'thumb_url': "",
 		         'bio': "",
 		         'bigthumb': bigthumb,
 		         'toptracks': "",
-		         'style': genre,
+		         'style': "",
 		         'list_id': count}
 		data['listitem'] = xbmcgui.ListItem(item["name"], data["artist"]["style"], '', bigthumb)
+		data['listitem'].setProperty('artist_id', data["artist"]["artist_id"])
 		return data
 
 	def process_track(self, count, item, data):

@@ -11,6 +11,7 @@ class Image():
 		self.artist_small_path = "artist/"
 		self.artist_large_path = "artist/large/"
 		self.default_album_img = self.base_path+"AlbumPlaceholder.png"
+		self.default_artist_img = self.base_path+"ArtistPlaceholder.png"
 		self.verify_image_dirs()
 		pass
 

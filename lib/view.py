@@ -29,15 +29,70 @@ def draw_mainwin(win, app):
 			print "auto-selected list item "+str(list_instance.pos)
 		for index in range(win.clist.size()):
 			li = win.clist.getListItem(index)
-			url = li.getProperty('thumb_url')
-			#li.setThumbnailImage(app.img.handler(url, 'small', 'album'))
-			thread.start_new_thread(load_image, (li, app, url))
-			
-#threadsafe wrapper for image loading
-def load_image(li, app, url):
-	li.setThumbnailImage(app.img.handler(url, 'small', 'album'))
+			if list_instance.type == "album":
+				url = li.getProperty('thumb_url')
+				#li.setThumbnailImage(app.img.handler(url, 'small', 'album'))
+				thread.start_new_thread(load_album_thumb, (li, app, url))
+			elif list_instance.type == "artist":
+				id = li.getProperty('artist_id')
+				utils.prettyprint(app.cache.artist)
+				#print "processing "+id
+				#data = {}
+
+				if not id in app.cache.artist:
+					if id == 'Art.0':
+						print "detected artist 0 case!"
+						url = None
+						genre = ""
+					else:
+						#url = self.img.identify_largest_image(item["id"], "artist")
+						thread.start_new_thread(load_artist_thumb, (li, id, app))
+						#g_id = self.api.get_artist_genre(item["id"])
+						#genre = self.cache.genre_dict__[g_id]
+						thread.start_new_thread(load_artist_genre, (li, id, app))
+				else:
+					print "start thread get_artist_image_from_cache"
+					thread.start_new_thread(get_artist_image_from_cache, (li, id, app))
+					#print 'using cached genre for artist'
+					#genre = self.cache.artist[id]['style']
+					thread.start_new_thread(get_artist_genre_from_cache, (li, id, app))
+
+
 
 		#list_instance.save_data()
+			
+#threadsafe wrapper for fetching and loading album thumbs 
+def load_album_thumb(li, app, url):
+	li.setThumbnailImage(app.img.handler(url, 'small', 'album'))
+
+#threadsafe wrapper for image loading
+def get_artist_image_from_cache(li, artist_id, app):
+	if app.cache.artist[artist_id]['thumb_url']:
+		print "thumb_url is in artist cache"
+		li.setThumbnailImage(app.img.handler(url, 'large', 'artist'))
+	else:
+		print "thumb_url not in artist cache. Let's get it"
+		url = app.img.identify_largest_image(artist_id, "artist")
+		li.setThumbnailImage(app.img.handler(url, 'large', 'artist'))
+
+def get_artist_genre_from_cache(li, artist_id, app):
+	if app.cache.artist[artist_id]['style']:
+		li.setLabel2(app.cache.artist[artist_id]['style'])
+	else:
+		g_id = app.api.get_artist_genre(artist_id)
+		li.setLabel2(app.cache.genre_dict__[g_id])
+		app.cache.artist[artist_id]['style'] = app.cache.genre_dict__[g_id]
+
+def load_artist_thumb(li, artist_id, app):
+	url = app.img.identify_largest_image(artist_id, "artist")
+	app.cache.artist[artist_id]['thumb_url'] = url 
+	li.setThumbnailImage(app.img.handler(url, 'large', 'artist'))
+
+def load_artist_genre(li, artist_id, app):
+	g_id = app.api.get_artist_genre(artist_id)
+	li.setLabel2(app.cache.genre_dict__[g_id])
+
+
 def draw_playlist_sublist(win, app, thing):
 	print "Draw playlist_sublist"
 
@@ -403,6 +458,7 @@ class AlbumDialog(DialogBase):
 			self.manage_artwork(cache, album)
 			if static_id == self.id:
 				self.getControl(7).setImage(album["bigthumb"])
+				self.manage_windowtracklist(cache, album)
 			else:
 				print "********* got image but not showing it right now ******"
 
@@ -438,7 +494,7 @@ class AlbumDialog(DialogBase):
 		thread.start_new_thread(get_art, (self, cache, album))
 		thread.start_new_thread(get_review, (self, cache, album))
 		thread.start_new_thread(get_details, (self, cache, album))
-		self.manage_windowtracklist(cache, album)
+		
 
 
 	def show_next_album(self, offset):
