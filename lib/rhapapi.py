@@ -21,7 +21,7 @@ class Api():
 
 	def __get_data_from_rhapsody(self, req, timeout):
 		succeed = 0
-		while succeed < 1:
+		while succeed < 3:
 			try:
 				response = urllib2.urlopen(req, timeout=timeout)
 				try:
@@ -29,12 +29,15 @@ class Api():
 					return results
 				except:
 					return True
+					"print Inner 'try' failed. What now?"
 			except urllib2.HTTPError, e:
+				print "url: "+ str(req.get_full_url())
 				print "------------------  Bad server response ----------------"
 				print e.headers
 				print e
 				succeed += 1
 			except urllib2.URLError, e:
+				print "url: "+ str(req.get_full_url())
 				print 'We failed to reach a server.'
 				print 'Reason: ', e.reason
 				succeed += 1

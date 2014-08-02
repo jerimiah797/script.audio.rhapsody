@@ -47,8 +47,8 @@ class ContentList():
 			print "Doing full data fetch and list building for mainwin"
 			self.build()
 		self.app.set_var('last_rendered_list', self.name)
-
-
+		self.app.set_var('list', self.data)
+		print "list inside 'make active'"
 
 	def build(self):
 		print "ContentList: build (full)"
@@ -97,6 +97,9 @@ class ContentList():
 		print "Ingest list. Type: "+self.type
 		print "$$$$$$$$$$$ List has %s items" % (str(len(results)))
 		self.win.clist.reset()
+		self.liz = []
+		self.data = []
+
 		__ = {}
 
 		d = {'album': self.cache.album,
@@ -244,7 +247,7 @@ class WindowTrackList():
 	def get_album_litems(self, cache, id):
 		print "Tracklist(album): adding dummy tracks for gui list"
 		src = cache[id]
-		list = []
+		mylist = []
 		i = None
 		for i, item in enumerate(src["tracks"]):
 			newlistitem = xbmcgui.ListItem(path="http://dummyurl.org")
@@ -252,15 +255,15 @@ class WindowTrackList():
 			                               'title':         src["tracks"][i]["name"],
 			                               'duration':      int(src["tracks"][i]["playbackSeconds"])
 			                               })
-			list.append(newlistitem)
+			mylist.append(newlistitem)
 		if i:
 			print "Showing "+str(i+1)+" tracks"
-		return list
+		return mylist
 
 	def get_playlist_litems(self, cache, id):
 		print "Tracklist(playlist): adding dummy tracks for gui list"
 		src = cache[id]
-		list = []
+		mylist = []
 		i = None
 		for i, item in enumerate(src["tracks"]):
 			newlistitem = xbmcgui.ListItem(path="http://dummyurl.org")
@@ -268,10 +271,10 @@ class WindowTrackList():
 			                               'title':         item['name'],
 			                               'duration':      item['duration'],
 			                               })
-			list.append(newlistitem)
+			mylist.append(newlistitem)
 		if i:
 			print "Showing "+str(i+1)+" tracks"
 		else:
 			print "Playlist contains no tracks!"
-		return list
+		return mylist
 

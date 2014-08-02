@@ -63,10 +63,11 @@ if len(sys.argv) < 2:
 		app.win.doModal()
 		if app.get_var('logged_in') == False:
 			loadwin.getControl(10).setLabel('Logging you out...')
+			app.reinit_lists()
 		else:
 			loadwin.getControl(10).setLabel('Finishing up...')
-		app.cache.save_album_data()
-		app.cache.save_artist_data()
+			app.cache.save_album_data()
+			app.cache.save_artist_data()
 	del app.win
 	time.sleep(1)
 	loadwin.close()
