@@ -61,6 +61,7 @@ class Api():
 		encuser = base64.b64encode(username)
 		encpass = base64.b64encode(password)
 		url = "http://rhap-xbmc-auth.herokuapp.com/auth?user=%s&pass=%s" % (encuser, encpass)
+		print url
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 20)
 		if results:
@@ -106,6 +107,15 @@ class Api():
 		url = "%ssessions" %(self.S_BASEURL)
 		req = self.__build_member_req(url)
 		req.add_data(data)
+		results = self.__get_data_from_rhapsody(req, 5)
+		return results
+
+	def get_account_info(self):
+		print "Rhapapi: Getting Account Details"
+		data = {}
+		url = "%sme/account" %(self.S_BASEURL)
+		req = self.__build_member_req(url)
+		#req.add_data(data)
 		results = self.__get_data_from_rhapsody(req, 5)
 		return results
 
