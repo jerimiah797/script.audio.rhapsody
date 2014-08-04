@@ -26,7 +26,7 @@ class Member():
 
 
 	def has_saved_creds(self):
-		print "checking saved creds"
+		print "checking for saved login info on disk"
 		try:
 			self.user_info = pickle.load(open(self.filename, 'rb'))
 			print "Using saved user credentials for "+self.user_info['username']
@@ -43,7 +43,7 @@ class Member():
 			self.catalog = self.user_info['catalog']
 			self.timestamp = self.user_info['timestamp']
 		except:
-			print "Couldn't read saved user data. Login please"
+			print "Couldn't find saved login info. Login please"
 			return False
 		#diff = time.time()-self.timestamp
 		#if diff < self.expires_in:
@@ -55,7 +55,7 @@ class Member():
 		#	return True
 		data = self.login_member(self.username, self.password)
 		if data['bad_creds'] == True:
-			print "unable to login at this time. Proceeding in anonymous mode"
+			print "Unable to login at this time. Proceeding in anonymous mode"
 		return True
 
 	def save_user_info(self):
@@ -72,19 +72,20 @@ class Member():
 		self.user_info['catalog'] = self.catalog
 		self.user_info['timestamp'] = time.time()
 		#prettyprint(self.user_info)
-		print "Saving userdata..."
+		print "Saving login info to disk..."
 		pickle.dump(self.user_info, open(self.filename, 'wb'))
 		#print "Userdata saved!"
 
 
 	def login_member(self, name, pswd):
-		print "attempting login..."
+		print "Trying to login..."
 		data = {}
 		self.username = name
 		self.password = pswd
 		api = rhapapi.Api()
 		result = api.login_member(name, pswd)
 		if result:
+			print "Successful!"
 			self.access_token =     result["access_token"]
 			self.catalog =          result["catalog"]
 			self.expires_in =       result["expires_in"]
@@ -98,7 +99,7 @@ class Member():
 			self.save_user_info()
 			return data
 		else:
-			print "login failed"
+			print "Login failed. Try again."
 			data['logged_in'] = False
 			data['bad_creds'] = True
 			return data

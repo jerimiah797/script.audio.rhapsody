@@ -32,11 +32,11 @@ def git_pull():
 	pr = subprocess.Popen( "git pull" , cwd = plugin_dir, shell = True, stdout = subprocess.PIPE, stderr = subprocess.PIPE )
 	(out, error) = pr.communicate()
 	#print "Error : " + str(error) 
-	print "git pull : " + str(out)
+	print "Checking for Rhapsody updates: " + str(out)
 
 def goodbye(app):
 	dialog = xbmcgui.Dialog()
-	if dialog.yesno("Quit Rhapsody?", "Nobody like a quitter. Nobody. "):
+	if dialog.yesno("Quit Rhapsody?", "Playback will stop and you will return to XBMC "):
 		app.set_var('running',False)
 		app.player.stop()
 		app.player.playlist.clear()

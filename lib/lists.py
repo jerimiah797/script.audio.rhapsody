@@ -23,7 +23,7 @@ class ContentList():
 		self.img = self.app.img
 		self.api = self.app.api
 		self.raw = None
-		print 'running init code for '+self.name
+		print 'Instantiating '+self.name
 
 	#def fresh(self):
 	#	return True
@@ -31,50 +31,50 @@ class ContentList():
 	def make_active(self):
 
 		if (self.app.get_var('last_rendered_list') == self.name) and self.win.getListSize()>2:
-			print "Window already has that list in memory. Skipping list building"
+			#print "Window already has that list in memory. Skipping list building"
 			return
-		print "ContentList: make active " +self.name
-		print "current frame: "+self.win.getProperty('frame')
-		print "current view: "+self.win.getProperty('browseview')
-		print "Built: "+str(self.built)
-		print "Fresh: "+str(self.fresh)
+		#print "ContentList: make active " +self.name
+		#print "current frame: "+self.win.getProperty('frame')
+		#print "current view: "+self.win.getProperty('browseview')
+		#print "Built: "+str(self.built)
+		#print "Fresh: "+str(self.fresh)
 		if (self.name == "hist_tracks"):
 			self.build()
 		elif self.built and self.fresh:
-			print "doing simple list building for mainwin"
+			#print "doing simple list building for mainwin"
 			self.build_winlist()
 		else:
-			print "Doing full data fetch and list building for mainwin"
+			#print "Doing full data fetch and list building for mainwin"
 			self.build()
 		self.app.set_var('last_rendered_list', self.name)
 		self.app.set_var('list', self.data)
-		print "list inside 'make active'"
+		
 
 	def build(self):
-		print "ContentList: build (full)"
+		#print "ContentList: build (full)"
 		results = self.download_list()
 		if results:
 			self.ingest_list(results)
 			self.fresh = True
 		else:
-			print "Couldn't get info from rhapsody about "+self.name
+			print "Couldn't get info from servers about "+self.name
 
 	def save_raw_data(self, data):
 		jar = open(self.filename, 'wb')
 		pickle.dump(data, jar)
 		jar.close()
-		print self.name+" info saved in cachefile!"
+		print self.name+" info cache saved to disk."
 
 	def download_list(self):
-		print "Download_list. self.filename: "+self.filename
+		#print "Download_list. self.filename: "+self.filename
 		try:
 			pkl_file = open(self.filename, 'rb')
 			self.raw = pickle.load(pkl_file)
 			pkl_file.close()
-			print "Loaded cache file"
+			print "Loaded cache file from disk"
 			r = self.raw
 		except:
-			print "No list cache file to load. Let's download it"
+			print "No list cache file found on disk. Let's download it"
 			d = {'newreleases':   self.api.get_new_releases,
 			     'topalbums':     self.api.get_top_albums,
 			     'topartists':    self.api.get_top_artists,
@@ -94,8 +94,7 @@ class ContentList():
 
 	def ingest_list(self, results):
 
-		print "Ingest list. Type: "+self.type
-		print "$$$$$$$$$$$ List has %s items" % (str(len(results)))
+		print "Processing %s list containing %s items."   % (self.type, str(len(results)))   
 		self.win.clist.reset()
 		self.liz = []
 		self.data = []
@@ -245,7 +244,7 @@ class WindowTrackList():
 	#handle albums, playlists
 
 	def get_album_litems(self, cache, id):
-		print "Tracklist(album): adding dummy tracks for gui list"
+		print "Tracklist(album): adding tracks for gui list"
 		src = cache[id]
 		mylist = []
 		i = None
@@ -257,11 +256,12 @@ class WindowTrackList():
 			                               })
 			mylist.append(newlistitem)
 		if i:
-			print "Showing "+str(i+1)+" tracks"
+			#print "Showing "+str(i+1)+" tracks"
+			pass
 		return mylist
 
 	def get_playlist_litems(self, cache, id):
-		print "Tracklist(playlist): adding dummy tracks for gui list"
+		print "Tracklist(playlist): adding tracks for gui list"
 		src = cache[id]
 		mylist = []
 		i = None
@@ -273,7 +273,8 @@ class WindowTrackList():
 			                               })
 			mylist.append(newlistitem)
 		if i:
-			print "Showing "+str(i+1)+" tracks"
+			pass
+			#print "Showing "+str(i+1)+" tracks"
 		else:
 			print "Playlist contains no tracks!"
 		return mylist

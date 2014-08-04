@@ -64,7 +64,7 @@ class Cache():
 			pkl_file.close()
 			print "Loaded Album cache"
 		except:
-			print "Couldn't read album cache file. Skipping..."
+			print "Couldn't find album cache on disk. "
 
 		try:
 			pkl_file = open(self.artist_file, 'rb')
@@ -72,7 +72,7 @@ class Cache():
 			pkl_file.close()
 			print "Loaded Artist cache"
 		except:
-			print "Couldn't read artist cache file. Skipping..."
+			print "Couldn't find artist cache on disk."
 
 		try:
 			pkl_file = open(self.genre_file, 'rb')
@@ -80,9 +80,9 @@ class Cache():
 			pkl_file.close()
 			self.genre_tree__ = self.genre['genretree']
 			self.genre_dict__ = self.genre['genredict']
-			print "Loaded Genre cache"
+			print "Loaded genre cache from disk."
 		except:
-			print("Couldn't read genre cache file. Regenerating...")
+			print("Couldn't find genre cache on disk. Regenerating...")
 			self.get_genre_tree()
 			self.flatten_genre_keys(self.genre_tree__)
 			self.save_genre_data()
@@ -92,7 +92,7 @@ class Cache():
 		if results:
 			self.genre_tree__ = results
 		else:
-			print "Couldn't retrieve genres!"
+			print "Couldn't retrieve genre list from server!"
 
 	def flatten_genre_keys(self, j):
 		for item in j:

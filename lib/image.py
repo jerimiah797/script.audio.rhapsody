@@ -47,7 +47,7 @@ class Image():
 			full_path = self.base_path+prefix_path+img_filename
 			if not os.path.isfile(full_path):
 				self.download_image(url, full_path)
-				print "image handler: downloaded "+prefix_path+img_filename
+				#print "image handler: downloaded "+prefix_path+img_filename
 			return prefix_path+img_filename
 
 
@@ -76,7 +76,7 @@ class Image():
 		results = api.get_artist_images(id)
 		if results:
 			url = results[0]["url"]
-			print "IMG.identify_artist_thumb - found artist image url: "+str(url)
+			#print "IMG.identify_artist_thumb - found artist image url: "+str(url)
 			return url
 		
 

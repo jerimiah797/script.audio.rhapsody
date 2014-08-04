@@ -50,7 +50,7 @@ def skinfix():
 		if platform == 'win32' and "Program" in skinpath:
 			print "Non-writeable confluence skin in use. Need to make a copy in userdata folder so we can install fonts."
 			dialog = xbmcgui.Dialog()
-			if dialog.yesno("Install Fonts?", "Rhapsody needs to restart XBMC to install fonts. Cool?"):
+			if dialog.yesno("Install Fonts?", "Rhapsody needs to restart XBMC and install fonts to proceed. Is this okay?"):
 				dest = xbmc.translatePath("special://home/")
 				dest2 = os.path.join(dest, 'addons', 'skin.confluence')
 				print "checking for obsolete confluence copy"
@@ -67,9 +67,9 @@ def skinfix():
 				exit()
 
 		elif platform == 'linux' and "share" in skinpath:
-			print "Non-writeable confluence skin in use. Need to make a copy in userdata folder so we can install fonts."
+			print "Non-writeable confluence skin in use. Need to make a copy in the userdata folder so we can install fonts."
 			dialog = xbmcgui.Dialog()
-			if dialog.yesno("Install Fonts?", "Rhapsody needs to restart XBMC to install fonts. Cool?"):
+			if dialog.yesno("Install Fonts?", "Rhapsody needs to restart XBMC and install fonts to proceed. Is this okay?"):
 				dest = xbmc.translatePath("special://home/")
 				dest2 = os.path.join(dest, 'addons', 'skin.confluence')
 				print "checking for obsolete confluence copy"
@@ -86,6 +86,7 @@ def skinfix():
 				exit()
 			
 		else:
-			print "All is okay. Confluence in use is a writeable copy"
+			pass
+			#print "All is okay. Confluence in use is a writeable copy"
 
 	return

@@ -103,7 +103,7 @@ def get_it(args):
 
   try:
     url = get_playable_url(track)
-    print url
+    #print url
     item = xbmcgui.ListItem(path=url)
     item.setProperty('mimetype','audio/mp4')
     xbmcplugin.setResolvedUrl(int(args[1]), True, item)

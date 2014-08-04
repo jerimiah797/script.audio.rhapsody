@@ -23,11 +23,11 @@ class Player(xbmc.Player):
 	def onPlayBackStarted(self):
 		if not self.onplay_lock:
 			self.onplay_lock = True
-			print "Locking playback routine to block multiple calls +++++++++++++++++++"
+			#print "Locking playback routine to block multiple calls +++++++++++++++++++"
 			#thread.start_new_thread(self.validate_session, (self.session))
 			#print str(self.session)
 			thread.start_new_thread(self.validate_session, (self, self.session) )
-			print str(self.session)
+			#print str(self.session)
 			self.win.sync_playlist_pos()
 			pos = self.playlist.getposition()
 			self.now_playing['pos'] = pos
@@ -44,12 +44,13 @@ class Player(xbmc.Player):
 			# update listening history if current view
 			if self.win.getProperty('browseview') == "history_tracks":
 				self.app.hist_tracks.build()
-				print "rebuilt history tracklist"
+				print "OnPlaybackStarted: rebuilt history tracklist"
 				view.draw_mainwin(self.win, self.app)
 			xbmc.sleep(2)
 			self.onplay_lock = False
 		else:
-			print "--------- blocked an extra play action from XBMC --------"
+			#print "--------- blocked an extra play action from XBMC --------"
+			pass
 
 
 	def onPlayBackResumed(self):
@@ -76,24 +77,25 @@ class Player(xbmc.Player):
 			xbmc.sleep(2)
 			self.onplay_lock = False
 		else:
-			print "--------- blocked an extra play action from XBMC --------"
+			#print "--------- blocked an extra play action from XBMC --------"
+			pass
 
 	def onPlayBackEnded(self):
-		print "onPlaybackEnded was detected!"
+		#print "onPlaybackEnded was detected!"
 		thread.start_new_thread(self.notify.report_playback, (self, self.api))
 		# update listening history if current view
 		if self.win.getProperty('browseview') == "history_tracks":
 			self.app.hist_tracks.build()
-			print "rebuilt history tracklist"
+			print "OnPlaybackEnded: rebuilt history tracklist"
 			view.draw_mainwin(self.win, self.app)
 
 	def onPlayBackStopped(self):
-		print "onPlaybackStopped was detected!"
+		#print "onPlaybackStopped was detected!"
 		thread.start_new_thread(self.notify.report_playback, (self, self.api))
 		#update listening history if current view
 		if self.win.getProperty('browseview') == "history_tracks":
 			self.app.hist_tracks.build()
-			print "rebuilt history tracklist"
+			print "OnPlaybackStopped: rebuilt history tracklist"
 			view.draw_mainwin(self.win, self.app)
 
 	def onQueueNextItem(self):
@@ -101,13 +103,8 @@ class Player(xbmc.Player):
 
 
 	def build(self):
-		print "Playlist: build playlist"
+		#print "Playlist: build playlist"
 		self.playlist.clear()
-		#liz = None
-		#if self.now_playing['type'] == "album":
-		#	liz = self.now_playing['item']
-		#elif self.now_playing['type'] == 'playlist':
-		#	liz = self.now_playing['item']
 		liz = self.now_playing['item']
 		for i, track in enumerate(liz):
 			#print "track "+str(i+1)+": "+track['name']
@@ -138,16 +135,14 @@ class Player(xbmc.Player):
 			li.setInfo("music", info)
 			li.setProperty('mimetype','audio/mp4')
 			self.playlist.add(playurl, listitem=li)
-			#self.playlist.add("./dummy.m4a", listitem=xbmcgui.ListItem(''))
-			#print "added dummy ListItem"
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Preparing to play..., 2000, %s)" %(self.app.__addon_icon__))
 
 
 	def validate_session(self, s, session):
-		print "player.validate_session"
+		#print "player.validate_session"
 		valid = self.api.validate_session(session)
 		if valid:
-			print "Valid playback session!"
+			print "Playback session validated."
 			return True
 		else:
 			print "Playback session invalid. Stopping Playback"
@@ -157,14 +152,8 @@ class Player(xbmc.Player):
 
 
 	def get_session(self):
-		print "player.get_session:"
-		#temp = self.api.get_session()
-		#print temp
-		#self.session = tuple(temp.iteritems())
+		print "Created playback session."
 		self.session = self.api.get_session()
-		#print self.session
-		#print self.session[1]
-		#print self.session[1][1]
 
 
 class Notifier():
@@ -181,10 +170,10 @@ class Notifier():
 		track_id = player.now_playing['item'][pos]['trackId']
 		#print "report playback: "+track_id
 		if self.current_track:
-			print "reporting stop event for current track"
+			#print "reporting stop event for current track"
 			now = time.time()
 			self.duration = int(now - self.time)
-			print "duration: "+str(self.duration)
+			#print "duration: "+str(self.duration)
 			api.log_playstop(self.current_track, self.ztime, self.duration)
 			#print "clearing current track info"
 			self.current_track = None
@@ -192,7 +181,7 @@ class Notifier():
 			self.ztime = None
 			self.time = None
 		if player.isPlaying():
-			print "setting current track info and reporting play start event"
+			#print "setting current track info and reporting play start event"
 			self.current_track = track_id
 			self.ztime = api.log_playstart(self.current_track)
 			self.time = time.time()

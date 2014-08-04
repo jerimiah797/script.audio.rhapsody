@@ -26,13 +26,14 @@ if REMOTE_DBG:
 print sys.argv
 
 if len(sys.argv) < 2:
+	# verify fonts are installed
 	skincheck.skinfix()
 
 	app = main.Application()
 
 	loadwin = xbmcgui.WindowXML("loading.xml", app.__addon_path__, 'Default', '720p')
 	loadwin.show()
-	print "Do we have network?"  #+str(app.api.get_new_releases())
+	# network check
 	if app.api.get_artist_genre("Art.954"):
 		loadwin.getControl(10).setLabel('Installing fonts...')
 		app.init_fonts()
@@ -72,10 +73,10 @@ if len(sys.argv) < 2:
 	loadwin.close()
 	del loadwin
 	del app
-	print "Rhapsody addon has exited"
+	print "Rhapsody addon has exited."
 	#return
 else:
-	print "got a conditional met for extended commmand line arguments"
+	print "Rhapsody plugin call invoked."
 	plugin.get_it(sys.argv)
 	
 

@@ -9,14 +9,14 @@ from lib import utils
 def draw_mainwin(win, app):
 	frame = win.handle.getProperty('frame')
 	if frame == "Settings":
-		print "Drawmain: No lists to draw on settings Page"
+		#print "Drawmain: No lists to draw on settings Page"
 		win.handle.setFocusId(1001)
 	else:
 		view = win.handle.getProperty('browseview')
 		list_instance = app.get_var('view_matrix')[view]
 		win.list_id = app.get_var('list_matrix')[win.getProperty('browseview')]
 		win.clist = win.getControl(win.list_id)
-		print "Drawmainwin: view: %s list instance: %s list id: %s" % (view, list_instance.name, str(win.list_id))
+		#print "Drawmainwin: view: %s list instance: %s list id: %s" % (view, list_instance.name, str(win.list_id))
 		win.make_visible(300, win.list_id)
 		list_instance.make_active()
 		win.setFocusId(win.list_id)
@@ -31,7 +31,7 @@ def draw_mainwin(win, app):
 				artist_id = li.getProperty('artist_id')
 				if not artist_id in app.cache.artist:
 					if artist_id == 'Art.0':
-						print "detected artist 0 case!"
+						#print "detected artist 0 case!"
 						url = app.img.default_artist_img
 						genre = ""
 					else:
@@ -39,7 +39,7 @@ def draw_mainwin(win, app):
 						thread.start_new_thread(load_artist_genre, (li, artist_id, app))	
 				else:
 					if artist_id == 'Art.0':
-						print "detected artist 0 case!"
+						#print "detected artist 0 case!"
 						url = app.img.default_artist_img
 						genre = ""
 					else:
@@ -84,7 +84,7 @@ def load_artist_genre(li, artist_id, app):
 
 
 def draw_playlist_sublist(win, app, thing):
-	print "Draw playlist_sublist"
+	#print "Draw playlist_sublist"
 
 	cache = app.cache.playlist
 	win.dlist = win.getControl(3651)
@@ -98,7 +98,7 @@ def draw_playlist_sublist(win, app, thing):
 		###win.sync_playlist_pos()
 		#win.make_visible(3651)
 	else:
-		print "resetting list"
+		#print "resetting list"
 		win.dlist.reset()
 	win.make_visible(3651)
 
@@ -117,21 +117,21 @@ class LoginWin(WinBase):
 		self.mem = self.app.mem
 
 	def onInit(self):
-		print "Starting onInit Loop"
+		#print "Starting login UI loop"
 		while not self.app.get_var('logged_in'):
 			if self.app.get_var('bad_creds'):
 				self.getControl(10).setLabel('Login failed! Try again...')
-				print "Set fail label message"
+				#print "Set fail label message"
 			self.inputwin = InputDialog("input.xml", self.app.__addon_path__, 'Default', '720p')
 			self.inputwin.doModal()
 			data = self.mem.login_member(self.inputwin.name_txt, self.inputwin.pswd_txt)
 			self.app.set_var('logged_in', data['logged_in'])
 			self.app.set_var('bad_creds', data['bad_creds'])
 			del self.inputwin
-			print "Logged_in value: " + str(self.app.get_var('logged_in'))
-			print "Bad Creds value: " + str(self.app.get_var('bad_creds'))
+			#print "Logged_in value: " + str(self.app.get_var('logged_in'))
+			#print "Bad Creds value: " + str(self.app.get_var('bad_creds'))
 
-		print "Exited the while loop! Calling the del function"
+		#print "Exited the login UI loop! Calling the del function"
 		self.close()
 
 
@@ -209,7 +209,7 @@ class MainWin(WinBase):
 
 	def __init__(self, *args, **kwargs):
 		WinBase.__init__(self, *args)
-		print "running _init_ for mainwin"
+		#print "running _init_ for mainwin"
 		self.app = kwargs.get('app')
 		self.mem = self.app.mem
 		self.cache = self.app.cache
@@ -228,7 +228,7 @@ class MainWin(WinBase):
 
 
 	def onInit(self):
-		print "running onInit for mainwin"
+		#print "running onInit for mainwin"
 		self.handle = xbmcgui.Window(xbmcgui.getCurrentWindowId())
 		self.handle.setProperty("browseview", self.app.view_keeper['browseview'])
 		self.handle.setProperty("frame", self.app.view_keeper['frame'])
@@ -265,7 +265,7 @@ class MainWin(WinBase):
 		if id == 3 or id == 4:
 
 			if self.getFocusId() == 3650:
-				print "doing stuff since playlist list is focused"
+				#print "doing stuff since playlist list is focused"
 				pos = self.clist.getSelectedPosition()
 				if pos != self.mem_playlist_selection:
 					self.mem_playlist_selection = self.clist.getSelectedPosition()
@@ -295,14 +295,14 @@ class MainWin(WinBase):
 				self.playlist.clear()
 				self.close()
 
-			elif self.getFocusId() == 1002:
-				try:
-					temp = subprocess.Popen(['git', 'pull'], shell=False, stdout=subprocess.PIPE)
-					#print temp.communicate()
-				except:
-					print "subprocess.call exception"
-				#print temp.communicate()
-				print "git pull completed. relaunch plugin for newest version"
+			# elif self.getFocusId() == 1002:
+			# 	try:
+			# 		temp = subprocess.Popen(['git', 'pull'], shell=False, stdout=subprocess.PIPE)
+			# 		#print temp.communicate()
+			# 	except:
+			# 		print "subprocess.call exception"
+			# 	#print temp.communicate()
+			# 	print "git pull completed. relaunch plugin for newest version"
 
 
 	def onClick(self, control):
@@ -354,7 +354,7 @@ class MainWin(WinBase):
 	def onFocus(self, control):
 		#print("onfocus(): control %i" % control)
 		if self.getFocusId() == 3650:
-			print "doing stuff since playlist list is focused"
+			#print "doing stuff since playlist list is focused"
 			pos = self.clist.getSelectedPosition()
 			if pos != self.mem_playlist_selection:
 				self.mem_playlist_selection = self.clist.getSelectedPosition()
@@ -369,21 +369,21 @@ class MainWin(WinBase):
 
 	def empty_list(self):
 		if self.clist.size() < 2:
-			print "window list is empty.. redrawing"
+			#print "window list is empty.. redrawing"
 			return True
 
 
 	def sync_playlist_pos(self):
 		try:
 			if self.player.now_playing['id'] == 'toptracks':
-				print "syncing playlist pos because player.now_playing id is 'toptracks'"
+				#print "syncing playlist pos because player.now_playing id is 'toptracks'"
 				self.clist.selectItem(self.playlist.getposition())
 				self.toptracks.pos = self.playlist.getposition()
 			elif self.player.now_playing['id'] == self.alb_dialog.id:
-				print "syncing playlist pos because player.now_player id is current album id"
+				#print "syncing playlist pos because player.now_player id is current album id"
 				self.alb_dialog.clist.selectItem(self.playlist.getposition())
 			elif self.player.now_playing['id'] == 'playlist':
-				print "syncing playlist pos because player.now_playing id is 'playlist'"
+				#print "syncing playlist pos because player.now_playing id is 'playlist'"
 				self.dlist.selectItem(self.playlist.getposition())
 				self.toptracks.pos = self.playlist.getposition()
 		except:
@@ -396,10 +396,10 @@ class MainWin(WinBase):
 		if playlist["tracks"] == {}:
 			# try to get info from cached album data
 			if cache.has_key(pl_id) and (cache[pl_id]['tracks'] != {}):
-				print "Using tracks from cached album data"
+				print "Using tracklist from cached album data"
 				return True
 			else:
-				print "Getting tracks from Rhapsody"
+				print "Getting playlist tracklist from Rhapsody"
 				results = self.api.get_playlist_details(pl_id)
 				if results:
 					#playlist["label"] = results["label"]
@@ -410,7 +410,7 @@ class MainWin(WinBase):
 					print "Playlist contains no tracks!"
 					return False
 		else:
-			print "Using tracks from memory playlist data"
+			print "Using playlist tracks from data in memory"
 			return True
 
 
@@ -452,7 +452,8 @@ class AlbumDialog(DialogBase):
 				self.getControl(7).setImage(album["bigthumb"])
 				self.manage_windowtracklist(cache, album)
 			else:
-				print "********* got image but not showing it right now ******"
+				pass
+				#print "********* got image but not showing it right now ******"
 
 		def get_review(self, cache, album):
 			static_id = self.id[:]
@@ -462,7 +463,8 @@ class AlbumDialog(DialogBase):
 				#print self.id
 				self.getControl(14).setText(album["review"])
 			else:
-				print "********* got review but not showing it right now ******"
+				pass
+				#print "********* got review but not showing it right now ******"
 
 		def get_details(self, cache, album):
 			static_id = self.id[:]
@@ -472,7 +474,8 @@ class AlbumDialog(DialogBase):
 				self.getControl(10).setLabel(album["label"])
 				self.getControl(6).setLabel(album["style"])
 			else:
-				print "********* got details but not showing it right now ******"
+				pass
+				#print "********* got details but not showing it right now ******"
 
 
 		#print "AlbumDialog: album id = "+self.id
@@ -540,11 +543,11 @@ class AlbumDialog(DialogBase):
 		print "Album dialog: start playback"
 		#utils.prettyprint(album['tracks'])
 		if not self.now_playing_matches_album_dialog():
-			print "hit the first if: now_playing does not match album dialog. building playlist"
+			#print "hit the first if: now_playing does not match album dialog. building playlist"
 			self.app.player.now_playing = {'pos': 0, 'type':'album', 'item':album['tracks'], 'id':album['album_id']}
 			self.app.player.build()
 		if self.app.player.now_playing['type'] != 'album':
-			print "hit the second if: now playing _type_ is not _album_. building playlist"
+			#print "hit the second if: now playing _type_ is not _album_. building playlist"
 			self.app.player.now_playing = {'pos': 0, 'type':'album', 'item':album['tracks'], 'id':album['album_id']}
 			self.app.player.build()
 		#print "Now playing item list follows!"
@@ -559,11 +562,11 @@ class AlbumDialog(DialogBase):
 		#	#player.stop()
 		#	return False
 		thread.start_new_thread(self.app.player.get_session, () )
-		print "Gonna try to play the selected track at self.app.player.pos = "+str(self.app.player.now_playing['pos'])
+		#print "Gonna try to play the selected track at self.app.player.pos = "+str(self.app.player.now_playing['pos'])
 		self.app.player.playselected(self.app.player.now_playing['pos'])
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
 		if id == 21:
-			print "id is 21, so doing that stuff"
+			#print "id is 21, so doing that stuff"
 			self.clist.selectItem(self.app.playlist.getposition())
 			self.setFocusId(self.listcontrol_id)
 
@@ -591,7 +594,7 @@ class AlbumDialog(DialogBase):
 	def manage_review(self, cache, album):
 		alb_id = album["album_id"]
 		if album["review"] == "":
-			print "Getting review from Rhapsody"
+			#print "Getting review from Rhapsody"
 			review = self.api.get_album_review(alb_id)
 			if not review:
 				if album['artist_id'] == "Art.0":
@@ -608,16 +611,18 @@ class AlbumDialog(DialogBase):
 				print "No bio available for this artist either. :-("
 				album["review"] = ""
 		else:
-			print "Already have the review in memory for this album"
+			#print "Already have the review in memory for this album"
+			pass
 
 	def manage_details(self, cache, album):
 		alb_id = album["album_id"]
 		if album["label"] == "":
 			# try to get info from cached album data
 			if cache.has_key(alb_id) and (cache[alb_id]['label'] != ""):
-				print "Using genre, track, and label from cached album data"
+				#print "Using genre, track, and label from cached album data"
+				pass
 			else:
-				print "Getting genre, tracks and label from Rhapsody"
+				#print "Getting genre, tracks and label from Rhapsody"
 				results = self.api.get_album_details(alb_id)
 				if results:
 					album["label"] = results["label"]
@@ -626,7 +631,8 @@ class AlbumDialog(DialogBase):
 				else:
 					print "Album Detail api not returning response"
 		else:
-			print "Using genre, track, and label from cached album data"
+			#print "Using genre, track, and label from cached album data"
+			pass
 
 	def manage_artwork(self, cache, album):
 		alb_id = album["album_id"]
