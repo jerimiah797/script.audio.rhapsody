@@ -1,11 +1,15 @@
 import xbmc
 import urllib
 import urllib2
-import json
 import base64
 import datetime
 import time
 import utils
+import sys
+if sys.version_info >=  (2, 7):
+    import json as json
+else:
+    import simplejson as json
 
 
 
