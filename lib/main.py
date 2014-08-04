@@ -67,6 +67,16 @@ class Application():
 		#lib_favorites = ContentList('tracks',  'lib_favorites', __addon_path__+'/resources/.lib_favorites.obj')
 		self.windowtracklist = lists.WindowTrackList()
 
+	def reinit_lists(self):
+		print "Reinitializing library lists"
+		self.win.clist = self.win.getControl(3550) #delete library album list cached in window control
+		self.win.clist.reset()
+		self.win.clist = self.win.getControl(3551) #delete library artist list cached in window control
+		self.win.clist.reset()
+		self.lib_albums.fresh = False
+		self.lib_artists.fresh = False
+		self.hist_tracks.fresh = False
+		self.lib_playlists.fresh = False
 
 	def init_vars(self):
 		self.set_var('view_matrix' , {"browse_newreleases":   self.newreleases,

@@ -17,7 +17,6 @@ def draw_mainwin(win, app):
 		win.list_id = app.get_var('list_matrix')[win.getProperty('browseview')]
 		win.clist = win.getControl(win.list_id)
 		print "Drawmainwin: view: %s list instance: %s list id: %s" % (view, list_instance.name, str(win.list_id))
-		app.set_var(list, list_instance.data)
 		win.make_visible(300, win.list_id)
 		list_instance.make_active()
 		win.setFocusId(win.list_id)
@@ -270,8 +269,10 @@ class MainWin(WinBase):
 				pos = self.clist.getSelectedPosition()
 				if pos != self.mem_playlist_selection:
 					self.mem_playlist_selection = self.clist.getSelectedPosition()
-					thing = self.app.get_var(list)[self.mem_playlist_selection]
+					thing = self.app.get_var('list')[self.mem_playlist_selection]
 					draw_playlist_sublist(self, self.app, thing)
+			else:
+				pass
 
 		if id == 7:
 
@@ -306,10 +307,10 @@ class MainWin(WinBase):
 
 	def onClick(self, control):
 		pos = self.clist.getSelectedPosition()
-		thing = self.app.get_var(list)[pos]#["album_id"]
+		thing = self.app.get_var('list')[pos]#["album_id"]
 		#print "mainwin onClick: id: "+str(id)
 		if (control == 3350) or (control == 3351) or (control == 3352) or (control == 3550) or (control == 3551):
-			self.alb_dialog = AlbumDialog("album.xml", self.app.__addon_path__, 'Default', '720p', current_list=self.app.get_var(list),
+			self.alb_dialog = AlbumDialog("album.xml", self.app.__addon_path__, 'Default', '720p', current_list=self.app.get_var('list'),
 			                         pos=pos, cache=self.cache.album, alb_id=thing, app=self.app)
 			self.alb_dialog.setProperty("review", "has_review")
 			self.alb_dialog.doModal()
@@ -357,7 +358,7 @@ class MainWin(WinBase):
 			pos = self.clist.getSelectedPosition()
 			if pos != self.mem_playlist_selection:
 				self.mem_playlist_selection = self.clist.getSelectedPosition()
-				thing = self.app.get_var(list)[self.mem_playlist_selection]
+				thing = self.app.get_var('list')[self.mem_playlist_selection]
 				draw_playlist_sublist(self, self.app, thing)
 
 

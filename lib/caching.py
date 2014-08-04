@@ -101,3 +101,4 @@ class Cache():
 			if 'subgenres' in item:
 				#print "found subgenres. Calling self recursively"
 				self.flatten_genre_keys(item['subgenres'])
+
