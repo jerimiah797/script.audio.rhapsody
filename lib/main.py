@@ -1,5 +1,6 @@
 import xbmcaddon
 import xbmc
+import xbmcgui
 from lib import rhapapi
 from lib import image
 from lib import member
@@ -54,6 +55,9 @@ class Application():
 		self.win.player = self.player
 		self.win.playlist = self.playlist
 
+		self.loadwin = xbmcgui.WindowXML("loading.xml", self.__addon_path__, 'Default', '720p')
+		self.loadwin.show()
+
 	def init_lists(self):
 		self.newreleases =   lists.ContentList('album',   'newreleases',   self.__addon_path__+'/resources/.newreleases.obj', self)
 		self.topalbums =     lists.ContentList('album',   'topalbums',     self.__addon_path__+'/resources/.topalbums.obj', self)
@@ -107,6 +111,7 @@ class Application():
 		self.set_var('logged_in', False)
 		self.set_var('bad_creds', False)
 		self.set_var('last_rendered_list', None)
+		self.set_var('exiting', False)
 		#self.set_var('alb_dialog_id', None)
 
 	def init_fonts(self):

@@ -31,17 +31,17 @@ if len(sys.argv) < 2:
 
 	app = main.Application()
 
-	loadwin = xbmcgui.WindowXML("loading.xml", app.__addon_path__, 'Default', '720p')
-	loadwin.show()
+	#loadwin = xbmcgui.WindowXML("loading.xml", app.__addon_path__, 'Default', '720p')
+	#loadwin.show()
 	# network check
 	if app.api.get_artist_genre("Art.954"):
-		loadwin.getControl(10).setLabel('Installing fonts...')
+		app.loadwin.getControl(10).setLabel('Installing fonts...')
 		app.init_fonts()
-		loadwin.getControl(10).setLabel('Getting things ready...')
+		app.loadwin.getControl(10).setLabel('Getting things ready...')
 		app.cache.load_cached_data()
 		time.sleep(1)
 	else:
-		loadwin.getControl(10).setLabel('Can\'t reach Rhapsody servers. \nMust be online to use Rhapsody.\nExiting...')
+		app.loadwin.getControl(10).setLabel('Can\'t reach Rhapsody servers. \nMust be online to use Rhapsody.\nExiting...')
 		time.sleep(2)
 		app.set_var('running', False)
 
@@ -51,27 +51,32 @@ if len(sys.argv) < 2:
 			if not app.mem.has_saved_creds():
 				logwin = view.LoginWin("login.xml", app.__addon_path__, 'Default', '720p', app=app)
 				logwin.doModal()
-				loadwin.getControl(10).setLabel('Logging you in...')
+				if not app.get_var('exiting'):
+					app.loadwin.getControl(10).setLabel('Logging you in...')
+				else:
+					app.loadwin.getControl(10).setLabel('Finishing up...')
 				del logwin
 				time.sleep(1)
 			else:
-				loadwin.getControl(10).setLabel('Logging you in...')
+				app.loadwin.getControl(10).setLabel('Logging you in ...')
 				app.set_var('logged_in', True)
 				time.sleep(1)
 			app.api.token = app.mem.access_token
-			utils.prettyprint(app.api.get_account_info())
-		app.win.doModal()
-		if app.get_var('logged_in') == False:
-			loadwin.getControl(10).setLabel('Logging you out...')
-			app.reinit_lists()
-		else:
-			loadwin.getControl(10).setLabel('Finishing up...')
-			app.cache.save_album_data()
-			app.cache.save_artist_data()
-	del app.win
+			#utils.prettyprint(app.api.get_account_info())
+		if not app.get_var('exiting'):
+			app.win.doModal()
+			if app.get_var('logged_in') == False:
+				app.loadwin.getControl(10).setLabel('Logging you out...')
+				app.reinit_lists()
+			else:
+				app.loadwin.getControl(10).setLabel('Finishing up...')
+				app.cache.save_album_data()
+				app.cache.save_artist_data()
+	if not app.get_var('exiting'):
+		del app.win
 	time.sleep(1)
-	loadwin.close()
-	del loadwin
+	app.loadwin.close()
+	del app.loadwin
 	del app
 	print "Rhapsody addon has exited."
 	#return

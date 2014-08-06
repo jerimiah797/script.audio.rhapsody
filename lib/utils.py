@@ -37,10 +37,36 @@ def git_pull():
 def goodbye(app):
 	dialog = xbmcgui.Dialog()
 	if dialog.yesno("Quit Rhapsody?", "Playback will stop and you will return to XBMC "):
+		app.set_var('logged_in', True)
 		app.set_var('running',False)
 		app.player.stop()
 		app.player.playlist.clear()
 		#app.cache.save_artist_data()
 		#app.cache.save_album_data()
+		try:
+			app.logwin.close()
+			print "closed logwin"
+		except:
+			print "didn't close logwin"
 		git_pull()
 		app.win.close()
+
+def goodbye_while_logged_out(app):
+	dialog = xbmcgui.Dialog()
+	if dialog.yesno("Quit Rhapsody?", "Pressing 'Yes' will exit the Rhapsody plugin and return you to XBMC."):
+		app.set_var('logged_in', False)
+		app.set_var('running',False)
+		app.player.stop()
+		app.player.playlist.clear()
+		#app.cache.save_artist_data()
+		#app.cache.save_album_data()
+		#try:
+		#	app.logwin.close()
+		#	print "closed logwin"
+		#except:
+		#	print "didn't close logwin"
+		#git_pull()
+		app.win.close()
+
+
+
