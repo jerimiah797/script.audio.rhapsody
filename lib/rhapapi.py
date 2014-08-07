@@ -93,8 +93,6 @@ class Api():
 
 	def validate_session(self, session):
 		print "Rhapapi: Validating Playback Session"
-		#if session[1][1]:
-		#	url = "%ssessions/%s" %(self.S_BASEURL, session[1][1])
 		if 'id' in session:
 			url = "%ssessions/%s" %(self.S_BASEURL, session[u'id'])
 			req = self.__build_member_req(url)

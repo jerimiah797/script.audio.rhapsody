@@ -1,6 +1,7 @@
 import base64
 import pickle
 import time
+import datetime
 import rhapapi
 import utils
 
@@ -24,6 +25,7 @@ class Member():
 		self.last_name = ""
 		self.catalog = ""
 		self.timestamp = ""
+		self.app = app
 
 
 	def has_saved_creds(self):
@@ -85,8 +87,9 @@ class Member():
 		self.password = pswd
 		api = rhapapi.Api()
 		result = api.login_member(name, pswd)
+		#result2 = api.get_account_info()
 		try:
-			if result:
+			if result: #and result2:
 				if "access_token" in result:
 					print "Successful!"
 					self.access_token =     result["access_token"]
@@ -97,16 +100,35 @@ class Member():
 					self.issued_at =        result["issued_at"]
 					self.last_name =        result["last_name"]
 					self.refresh_token =    result["refresh_token"]
+					#self.account_type =     result2[""]
+					#self.date_created =     result2[""]
 					data['logged_in'] = True
 					data['bad_creds'] = False
 					self.save_user_info()
 					return data
+				else:
+					print "Login failed. Try again."
+					data['logged_in'] = False
+					data['bad_creds'] = True
+					return data
 		except:
-			pass
-		else:
 			print "Login failed. Try again."
 			data['logged_in'] = False
 			data['bad_creds'] = True
 			return data
+
+	def get_member_details(self):
+		#api = rhapapi.Api()
+		result = self.app.api.get_account_info()
+		#try:
+		if result:
+			utils.prettyprint(result)
+			t = int(result["createDate"])/1000
+			self.account_type =     result["productName"]
+			self.date_created =     datetime.datetime.fromtimestamp(t).strftime('%B %d, %Y')
+			print "retrieved and set account details"
+		#except:
+		#	print "Couldn't set account details"
+		
 
 			

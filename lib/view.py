@@ -197,14 +197,14 @@ class InputDialog(DialogBase):
 				self.setFocus(self.name)
 			else: pass
 		elif action.getId() == 10:
-			print "ID 10 key"
+			print "ID 10 key - ESC"
 			self.app.set_var('exiting', True)
 			self.close()
 			utils.goodbye_while_logged_out(self.app)
-		elif action.getId() == 92:
-			self.app.set_var('exiting', True)
-			self.close()
-			utils.goodbye_while_logged_out(self.app)
+		#elif action.getId() == 92:
+		#	self.app.set_var('exiting', True)
+		#	self.close()
+		#	utils.goodbye_while_logged_out(self.app)
 		else:
 			pass
 

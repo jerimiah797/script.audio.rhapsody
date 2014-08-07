@@ -63,6 +63,8 @@ if len(sys.argv) < 2:
 				time.sleep(1)
 			app.api.token = app.mem.access_token
 			#utils.prettyprint(app.api.get_account_info())
+			if app.get_var("logged_in"):
+				app.mem.get_member_details()
 		if not app.get_var('exiting'):
 			app.win.doModal()
 			if app.get_var('logged_in') == False:
