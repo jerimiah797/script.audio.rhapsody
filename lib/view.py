@@ -634,18 +634,21 @@ class AlbumDialog(DialogBase):
 
 	def manage_details(self, cache, album):
 		alb_id = album["album_id"]
-		if album["label"] == "":
+		if album["tracks"] == "":
 			# try to get info from cached album data
-			if cache.has_key(alb_id) and (cache[alb_id]['label'] != ""):
+			if cache.has_key(alb_id) and (cache[alb_id]['tracks'] != ""):
 				#print "Using genre, track, and label from cached album data"
 				pass
 			else:
 				#print "Getting genre, tracks and label from Rhapsody"
 				results = self.api.get_album_details(alb_id)
 				if results:
-					album["label"] = results["label"]
-					album["tracks"] = results["trackMetadatas"]
-					album["style"] = results["primaryStyle"]
+					#album["label"] = results["label"]
+					album["label"] = "Unknown Label"
+					album["tracks"] = results["tracks"]
+					album["genre_id"] = results["tracks"][0]["genre"]["id"]
+					#album["style"] = results["primaryStyle"]
+					album["style"] = self.app.cache.genre['genredict'][album['genre_id']]
 				else:
 					print "Album Detail api not returning response"
 		else:

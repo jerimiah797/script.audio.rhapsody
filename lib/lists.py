@@ -150,7 +150,8 @@ class ContentList():
 				         'review': "",
 				         'bigthumb': "",
 				         'tracks': "",
-				         'style': '',
+				         'style': "",
+				         'genre_id': "",
 				         'artist': item["artist"]["name"],
 				         'list_id': count,
 				         'artist_id': item["artist"]["id"]}
@@ -250,9 +251,9 @@ class WindowTrackList():
 		i = None
 		for i, item in enumerate(src["tracks"]):
 			newlistitem = xbmcgui.ListItem(path="http://dummyurl.org")
-			newlistitem.setInfo('music', { 'tracknumber':   int(src["tracks"][i]["trackIndex"]),
+			newlistitem.setInfo('music', { 'tracknumber':   int(i)+1,
 			                               'title':         src["tracks"][i]["name"],
-			                               'duration':      int(src["tracks"][i]["playbackSeconds"])
+			                               'duration':      int(src["tracks"][i]["duration"])
 			                               })
 			mylist.append(newlistitem)
 		if i:

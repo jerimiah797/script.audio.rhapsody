@@ -234,11 +234,12 @@ class Api():
 
 	def get_album_details(self, album_id):
 		print "Rhapapi: getting album details"
-		#url = '%salbums/new?apikey=%s&limit=100' % (self.BASEURL, self.APIKEY)
-		url = "http://direct.rhapsody.com/metadata/data/methods/getAlbum.js?developerKey=9H9H9E6G1E4I5E0I&albumId=%s&cobrandId=40134&filterRightsKey=0" % (album_id)
+		url = '%salbums/%s?apikey=%s' % (self.BASEURL, album_id, self.APIKEY)
+		#url = "http://direct.rhapsody.com/metadata/data/methods/getAlbum.js?developerKey=9H9H9E6G1E4I5E0I&albumId=%s&cobrandId=40134&filterRightsKey=0" % (album_id)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 3)
 		if results:
+			utils.prettyprint(results)
 			return results
 		else:
 			return False
