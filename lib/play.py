@@ -108,12 +108,14 @@ class Player(xbmc.Player):
 		liz = self.now_playing['item']
 		for i, track in enumerate(liz):
 			#print "track "+str(i+1)+": "+track['name']
-			alb_id = track['albumId']
+			#alb_id = track['albumId']
+			alb_id = track['album']['id']
 			try:
 				thumb = self.img.base_path+self.img.handler(self.cache.album[alb_id]['thumb_url'], 'small', 'album')
 			except:
 				thumb = "none.png"
-			tid = track['trackId']
+			tid = track['id']
+			#tid = i+1
 			#print tid
 			#print self.app.mem.access_token
 			playurl = "plugin://script.audio.rhapsody/?track=%s&token=%s" % (tid, self.app.mem.access_token)
@@ -127,10 +129,10 @@ class Player(xbmc.Player):
 				)
 			info = {
 	            "title": track["name"],
-	            "album": track["displayAlbumName"],
-	            "artist": track["displayArtistName"],
-	            "duration": track["playbackSeconds"],
-	            "tracknumber": int(track["trackIndex"]),
+	            "album": track["album"]["name"],
+	            "artist": track["artist"]["name"],
+	            "duration": track["duration"],
+	            "tracknumber": i+1,
 				}
 			li.setInfo("music", info)
 			li.setProperty('mimetype','audio/mp4')
@@ -167,7 +169,7 @@ class Notifier():
 	def report_playback(self, player, api):
 		pos = player.playlist.getposition()
 		#print player.now_playing['item'][pos]
-		track_id = player.now_playing['item'][pos]['trackId']
+		track_id = player.now_playing['item'][pos]['id']
 		#print "report playback: "+track_id
 		if self.current_track:
 			#print "reporting stop event for current track"

@@ -68,7 +68,7 @@ class Api():
 		encuser = base64.b64encode(username)
 		encpass = base64.b64encode(password)
 		url = "http://rhap-xbmc-auth.herokuapp.com/auth?user=%s&pass=%s" % (encuser, encpass)
-		print url
+		#print url
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 20)
 		if results:

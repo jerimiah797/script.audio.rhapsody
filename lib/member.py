@@ -33,7 +33,7 @@ class Member():
 		try:
 			self.user_info = pickle.load(open(self.filename, 'rb'))
 			print "Using saved user credentials for "+self.user_info['username']
-			utils.prettyprint(self.user_info)
+			#utils.prettyprint(self.user_info)
 			self.username = self.user_info['username']
 			self.password = base64.b64decode(self.user_info['password'])
 			self.guid = self.user_info['guid']
@@ -74,7 +74,7 @@ class Member():
 		self.user_info['last_name'] = self.last_name
 		self.user_info['catalog'] = self.catalog
 		self.user_info['timestamp'] = time.time()
-		utils.prettyprint(self.user_info)
+		#utils.prettyprint(self.user_info)
 		print "Saving login info to disk..."
 		pickle.dump(self.user_info, open(self.filename, 'wb'))
 		print "Userdata saved!"
@@ -122,7 +122,7 @@ class Member():
 		result = self.app.api.get_account_info()
 		#try:
 		if result:
-			utils.prettyprint(result)
+			#utils.prettyprint(result)
 			t = int(result["createDate"])/1000
 			self.account_type =     result["productName"]
 			self.date_created =     datetime.datetime.fromtimestamp(t).strftime('%B %d, %Y')

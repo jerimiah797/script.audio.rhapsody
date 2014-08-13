@@ -4,6 +4,8 @@ import xbmc
 import os
 import subprocess
 import thread
+import threading
+from threading import Thread
 from lib import utils
 
 def draw_mainwin(win, app):
@@ -448,6 +450,11 @@ class AlbumDialog(DialogBase):
 		self.img = self.app.img
 		self.img_dir = self.app.__addon_path__+'/resources/skins/Default/media/'
 		self.listcontrol_id = 3150
+		self.list_ready = False
+		self.tracks_ready = False
+		self.thr1 = {}
+		self.thr2 = {}
+		self.thr3 = {}
 
 
 
@@ -456,7 +463,7 @@ class AlbumDialog(DialogBase):
 		self.list_instance = self.app.get_var('view_matrix')[self.view]
 		self.clist = self.getControl(self.listcontrol_id)
 		self.app.set_var('alb_dialog_id', self.id)
-		print self.app.get_var('alb_dialog_id')
+		#print self.app.get_var('alb_dialog_id')
 		self.show_info(self.id, self.cache)
 
 
@@ -467,8 +474,9 @@ class AlbumDialog(DialogBase):
 			#print "Get art for "+static_id
 			self.manage_artwork(cache, album)
 			if static_id == self.id:
+				#self.manage_windowtracklist(cache, album)
 				self.getControl(7).setImage(album["bigthumb"])
-				self.manage_windowtracklist(cache, album)
+				#self.manage_windowtracklist(cache, album)
 			else:
 				pass
 				#print "********* got image but not showing it right now ******"
@@ -488,15 +496,19 @@ class AlbumDialog(DialogBase):
 			static_id = self.id[:]
 			#print "Get details for "+self.id
 			self.manage_details(cache, album)
+			
 			if static_id == self.id:
-				self.getControl(10).setLabel(album["label"])
-				self.getControl(6).setLabel(album["style"])
+				self.manage_windowtracklist(cache, album)
+				self.getControl(10).setLabel(album["style"])
+				#self.getControl(10).setLabel(album["label"])
+				#self.getControl(6).setLabel(album["style"])
 			else:
 				pass
 				#print "********* got details but not showing it right now ******"
 
 
 		#print "AlbumDialog: album id = "+self.id
+		self.list_ready = False
 		album = cache[alb_id]
 		self.reset_fields()
 		#self.clearList()
@@ -507,6 +519,16 @@ class AlbumDialog(DialogBase):
 		thread.start_new_thread(get_art, (self, cache, album))
 		thread.start_new_thread(get_review, (self, cache, album))
 		thread.start_new_thread(get_details, (self, cache, album))
+		# thread.start_new_thread(self.manage_windowtracklist, (cache, album))
+		# self.thr1 = threading.Thread(target=get_art(self, cache, album))
+		# self.thr2 = threading.Thread(target=get_review(self, cache, album))
+		# self.thr3 = threading.Thread(target=get_details(self, cache, album))
+		# self.thr1.start()
+		# self.thr2.start()
+		# self.thr3.start()
+		
+
+
 		
 
 
@@ -520,10 +542,17 @@ class AlbumDialog(DialogBase):
 
 	def manage_windowtracklist(self, cache, album):
 		#print "AlbumDialog: Manage tracklist for gui list"
+
+		self.list_ready = False
+		while self.tracks_ready == False:
+			xbmc.sleep(100)
+			print "waiting for tracks..."
 		liz = self.app.windowtracklist.get_album_litems(cache, album["album_id"])
 		for item in liz:
 			self.clist.addItem(item)
 		self.win.sync_playlist_pos()
+		self.list_ready = True
+		print "self.clist.size: "+str(self.clist.size())
 
 	def onAction(self, action):
 		#print action
@@ -559,34 +588,32 @@ class AlbumDialog(DialogBase):
 
 	def start_playback(self, id, album):
 		print "Album dialog: start playback"
-		#utils.prettyprint(album['tracks'])
 		if not self.now_playing_matches_album_dialog():
-			#print "hit the first if: now_playing does not match album dialog. building playlist"
 			self.app.player.now_playing = {'pos': 0, 'type':'album', 'item':album['tracks'], 'id':album['album_id']}
 			self.app.player.build()
 		if self.app.player.now_playing['type'] != 'album':
-			#print "hit the second if: now playing _type_ is not _album_. building playlist"
 			self.app.player.now_playing = {'pos': 0, 'type':'album', 'item':album['tracks'], 'id':album['album_id']}
 			self.app.player.build()
-		#print "Now playing item list follows!"
-		#utils.prettyprint(self.app.player.now_playing['item'])
 		if id == self.listcontrol_id:
 			self.app.player.now_playing['pos'] = self.clist.getSelectedPosition()
 		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
-		#track = self.app.player.add_playable_track(0)
-		#if not track:
-		#	xbmc.executebuiltin("XBMC.Notification(Rhapsody, Problem with this song. Aborting..., 2000, %s)" %(self.app.__addon_icon__))
-		#	print "Unplayable track. Can't play this track"
-		#	#player.stop()
-		#	return False
 		thread.start_new_thread(self.app.player.get_session, () )
-		#print "Gonna try to play the selected track at self.app.player.pos = "+str(self.app.player.now_playing['pos'])
-		self.app.player.playselected(self.app.player.now_playing['pos'])
-		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
 		if id == 21:
-			#print "id is 21, so doing that stuff"
+			print "id is 21, let's select the playing track and focus the tracklist"
+			while not self.tracks_ready :
+				if self.list_ready:
+					return
+				xbmc.sleep(100)
+				print str(self.list_ready)+": waiting for list"
+			self.app.player.now_playing = {'pos': 0, 'type':'album', 'item':album['tracks'], 'id':album['album_id']}
+			self.app.player.build()
+			self.app.player.playselected(self.app.player.now_playing['pos'])
+			xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
 			self.clist.selectItem(self.app.playlist.getposition())
 			self.setFocusId(self.listcontrol_id)
+		else:
+			self.app.player.playselected(self.app.player.now_playing['pos'])
+			xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
 
 
 	def now_playing_matches_album_dialog(self):
@@ -633,12 +660,13 @@ class AlbumDialog(DialogBase):
 			pass
 
 	def manage_details(self, cache, album):
+		self.tracks_ready = False
 		alb_id = album["album_id"]
 		if album["tracks"] == "":
 			# try to get info from cached album data
 			if cache.has_key(alb_id) and (cache[alb_id]['tracks'] != ""):
 				#print "Using genre, track, and label from cached album data"
-				pass
+				self.tracks_ready = True
 			else:
 				#print "Getting genre, tracks and label from Rhapsody"
 				results = self.api.get_album_details(alb_id)
@@ -649,10 +677,14 @@ class AlbumDialog(DialogBase):
 					album["genre_id"] = results["tracks"][0]["genre"]["id"]
 					#album["style"] = results["primaryStyle"]
 					album["style"] = self.app.cache.genre['genredict'][album['genre_id']]
+					self.tracks_ready = True
 				else:
 					print "Album Detail api not returning response"
+					self.tracks_ready = True
+
 		else:
 			#print "Using genre, track, and label from cached album data"
+			self.tracks_ready = True
 			pass
 
 	def manage_artwork(self, cache, album):
