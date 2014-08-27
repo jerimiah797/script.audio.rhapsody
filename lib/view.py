@@ -50,18 +50,18 @@ def draw_mainwin(win, app):
 			
 #threadsafe wrapper for fetching and loading album thumbs 
 def load_album_thumb(li, app, url):
-	li.setThumbnailImage(app.img.handler(url, 'small', 'album'))
+	li.setThumbnailImage(app.__addon_data__+app.img.handler(url, 'small', 'album'))
 
 #threadsafe wrapper for image loading
 def get_artist_image_from_cache(li, artist_id, app):
 	if len(app.cache.artist[artist_id]['thumb_url']) > 5:
 		url = app.cache.artist[artist_id]['thumb_url']
-		li.setThumbnailImage(app.img.handler(url, 'small', 'artist'))
+		li.setThumbnailImage(app.__addon_data__+app.img.handler(url, 'small', 'artist'))
 	else:
 		url = app.img.identify_artist_thumb(artist_id)
 		if url:
 			app.cache.artist[artist_id]['thumb_url'] = url
-			li.setThumbnailImage(app.img.handler(url, 'small', 'artist'))
+			li.setThumbnailImage(app.__addon_data__+app.img.handler(url, 'small', 'artist'))
 
 def get_artist_genre_from_cache(li, artist_id, app):
 	if app.cache.artist[artist_id]['style']:
@@ -76,7 +76,7 @@ def load_artist_thumb(li, artist_id, app):
 	url = app.img.identify_artist_thumb(artist_id)
 	if url:
 		app.cache.artist[artist_id]['thumb_url'] = url
-		li.setThumbnailImage(app.img.handler(url, 'small', 'artist'))
+		li.setThumbnailImage(app.__addon_data__+app.img.handler(url, 'small', 'artist'))
 
 def load_artist_genre(li, artist_id, app):
 	g_id = app.api.get_artist_genre(artist_id)

@@ -4,14 +4,15 @@ import rhapapi
 
 class Image():
 
-	def __init__(self, path):
-		self.base_path = path+"/resources/skins/Default/media/"
+	def __init__(self, media_path, data_path):
+		self.base_path = data_path
+		self.media_path = media_path+"/resources/skins/Default/media/"
 		self.album_small_path = "album/"
 		self.album_large_path = "album/large/"
 		self.artist_small_path = "artist/"
 		self.artist_large_path = "artist/large/"
-		self.default_album_img = self.base_path+"AlbumPlaceholder.png"
-		self.default_artist_img = self.base_path+"ArtistPlaceholder.png"
+		self.default_album_img = self.media_path+"AlbumPlaceholder.png"
+		self.default_artist_img = self.media_path+"ArtistPlaceholder.png"
 		self.verify_image_dirs()
 		pass
 

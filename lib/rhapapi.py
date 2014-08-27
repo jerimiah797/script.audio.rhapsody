@@ -239,7 +239,7 @@ class Api():
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 3)
 		if results:
-			utils.prettyprint(results)
+			#utils.prettyprint(results)
 			return results
 		else:
 			return False
@@ -317,7 +317,7 @@ class Api():
 			#d = {'id': 'playlist', 'tracks': results2}
 			#container.append(d)
 			#return container
-			utils.prettyprint(results)
+			#utils.prettyprint(results)
 			return results
 		else:
 			return False

@@ -6,23 +6,23 @@ class Cache():
 
 	def __init__(self, *args):
 		self.app = args[0]
-		self.__addon_path__ = self.app.__addon_path__
+		self.__addon_path__ = self.app.__addon_data__
 		self.user_data = {} #object to store cached data
 
 		self.genre_tree__ = []  #json data from rhapsody
 		self.genre_dict__ = {}  #object to store cached data
 
 		self.artist = {}  #object to store cached data                                convert to self-managing data class instance
-		self.artist_file = self.__addon_path__+'/resources/.artistdb.obj'  #picklefile
+		self.artist_file = self.__addon_path__+'.artistdb.obj'  #picklefile
 
 		self.album = {}  #object to store cached data
-		self.album_file = self.__addon_path__+'/resources/.albumdb.obj'  #picklefile
+		self.album_file = self.__addon_path__+'.albumdb.obj'  #picklefile
 
 		self.playlist = {}  #object to store cached data
-		self.playlist_file = self.__addon_path__+'/resources/.playlistdb.obj'  #picklefile
+		self.playlist_file = self.__addon_path__+'.playlistdb.obj'  #picklefile
 
 		self.genre = {}  #object to store cached data
-		self.genre_file = self.__addon_path__+'/resources/.genres.obj'  #picklefile
+		self.genre_file = self.__addon_path__+'.genres.obj'  #picklefile
 
 		self.api = self.app.api
 

@@ -1,6 +1,7 @@
 import xbmcaddon
 import xbmc
 import xbmcgui
+import xbmcvfs
 from lib import rhapapi
 from lib import image
 from lib import member
@@ -27,6 +28,7 @@ class Application():
 		self.__addon_path__ = self.__addon_cfg__.getAddonInfo('path')
 		self.__addon_version__ = self.__addon_cfg__.getAddonInfo('version')
 		self.__addon_icon__ = self.__addon_cfg__.getAddonInfo('icon')
+		self.__addon_data__ = xbmc.translatePath('special://userdata/addon_data/'+self.__addon_id__+'/')
 
 		self.newreleases =   None
 		self.topalbums =     None
@@ -43,9 +45,10 @@ class Application():
 		self.mem = member.Member(self)
 		self.api = rhapapi.Api()
 		self.cache = caching.Cache(self)
-		self.img = image.Image(self.__addon_path__)
+		self.img = image.Image(self.__addon_path__, self.__addon_data__)
 		self.win = view.MainWin("main.xml", self.__addon_path__, 'Default', '720p', app=self)
 
+		self.init_dirs()
 		self.init_lists()
 		self.init_vars()
 
@@ -58,18 +61,26 @@ class Application():
 		self.loadwin = xbmcgui.WindowXML("loading.xml", self.__addon_path__, 'Default', '720p')
 		self.loadwin.show()
 
+	def init_dirs(self):
+		if not xbmcvfs.exists(self.__addon_data__):
+			xbmcvfs.mkdir(self.__addon_data__)
+			print "Created addon data folder"
+		else:
+			print "Found existing addon data folder"
+
+
 	def init_lists(self):
-		self.newreleases =   lists.ContentList('album',   'newreleases',   self.__addon_path__+'/resources/.newreleases.obj', self)
-		self.topalbums =     lists.ContentList('album',   'topalbums',     self.__addon_path__+'/resources/.topalbums.obj', self)
-		self.topartists =    lists.ContentList('artist',  'topartists',    self.__addon_path__+'/resources/.topartists.obj', self)
-		self.toptracks =     lists.ContentList('track',   'toptracks',     self.__addon_path__+'/resources/.toptracks.obj', self)
-		self.lib_albums =    lists.ContentList('album',   'lib_albums',    self.__addon_path__+'/resources/.lib_albums.obj', self)
-		self.lib_artists =   lists.ContentList('artist',  'lib_artists',   self.__addon_path__+'/resources/.lib_artists.obj', self)
-		self.hist_tracks =   lists.ContentList('track',   'hist_tracks',   self.__addon_path__+'/resources/.hist_tracks.obj', self)
-		self.lib_playlists = lists.ContentList('playlist','lib_playlists', self.__addon_path__+'/resources/.lib_playlists.obj', self)
-		#lib_tracks =    ContentList('track',   'lib_tracks',    __addon_path__+'/resources/.lib_tracks.obj')
-		#lib_stations =  ContentList('station', 'lib_stations',  __addon_path__+'/resources/.lib_stations.obj')
-		#lib_favorites = ContentList('tracks',  'lib_favorites', __addon_path__+'/resources/.lib_favorites.obj')
+		self.newreleases =   lists.ContentList('album',   'newreleases',   self.__addon_data__+'.newreleases.obj', self)
+		self.topalbums =     lists.ContentList('album',   'topalbums',     self.__addon_data__+'.topalbums.obj', self)
+		self.topartists =    lists.ContentList('artist',  'topartists',    self.__addon_data__+'.topartists.obj', self)
+		self.toptracks =     lists.ContentList('track',   'toptracks',     self.__addon_data__+'.toptracks.obj', self)
+		self.lib_albums =    lists.ContentList('album',   'lib_albums',    self.__addon_data__+'.lib_albums.obj', self)
+		self.lib_artists =   lists.ContentList('artist',  'lib_artists',   self.__addon_data__+'.lib_artists.obj', self)
+		self.hist_tracks =   lists.ContentList('track',   'hist_tracks',   self.__addon_data__+'.hist_tracks.obj', self)
+		self.lib_playlists = lists.ContentList('playlist','lib_playlists', self.__addon_data__+'.lib_playlists.obj', self)
+		#lib_tracks =    ContentList('track',   'lib_tracks',    __addon_data__+'.lib_tracks.obj')
+		#lib_stations =  ContentList('station', 'lib_stations',  __addon_data__+'.lib_stations.obj')
+		#lib_favorites = ContentList('tracks',  'lib_favorites', __addon_data__+'.lib_favorites.obj')
 		self.windowtracklist = lists.WindowTrackList()
 
 	def reinit_lists(self):
