@@ -495,13 +495,12 @@ class AlbumDialog(DialogBase):
 		def get_details(self, cache, album):
 			static_id = self.id[:]
 			#print "Get details for "+self.id
-			self.manage_details(cache, album)
-			
+			self.manage_details(cache, album)			
 			if static_id == self.id:
 				self.manage_windowtracklist(cache, album)
 				self.getControl(10).setLabel(album["style"])
 				#self.getControl(10).setLabel(album["label"])
-				#self.getControl(6).setLabel(album["style"])
+				self.getControl(6).setLabel(album["type"])
 			else:
 				pass
 				#print "********* got details but not showing it right now ******"

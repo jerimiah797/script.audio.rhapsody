@@ -147,6 +147,7 @@ class ContentList():
 				         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
 				         'orig_date': "",
 				         'label': "",
+				         'type': item['type']['name'],
 				         'review': "",
 				         'bigthumb': "",
 				         'tracks': "",

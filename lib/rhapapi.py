@@ -317,6 +317,7 @@ class Api():
 			#d = {'id': 'playlist', 'tracks': results2}
 			#container.append(d)
 			#return container
+			utils.prettyprint(results)
 			return results
 		else:
 			return False
