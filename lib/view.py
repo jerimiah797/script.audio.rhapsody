@@ -69,8 +69,14 @@ def get_artist_genre_from_cache(li, artist_id, app):
 	else:
 		g_id = app.api.get_artist_genre(artist_id)
 		if g_id:
+			if not (g_id in app.cache.genre_dict__):
+				results = app.api.get_genre_detail(g_id)
+				app.cache.genre_dict__[g_id] = results["name"]
+				app.cache.genre_modified = True
+				print "** Added missing genre "+g_id+" to genre cache ** "+results["name"]
 			li.setLabel2(app.cache.genre_dict__[g_id])
 			app.cache.artist[artist_id]['style'] = app.cache.genre_dict__[g_id]
+
 
 def load_artist_thumb(li, artist_id, app):
 	url = app.img.identify_artist_thumb(artist_id)
@@ -675,6 +681,11 @@ class AlbumDialog(DialogBase):
 					album["tracks"] = results["tracks"]
 					album["genre_id"] = results["tracks"][0]["genre"]["id"]
 					#album["style"] = results["primaryStyle"]
+					if not (album["genre_id"] in self.app.cache.genre_dict__):
+						results = self.api.get_genre_detail(album["genre_id"])
+						self.app.cache.genre_dict__[album["genre_id"]] = results["name"]
+						self.app.cache.genre_modified = True
+						print "** Added missing genre "+album["genre_id"]+" to genre cache ** "+results["name"]
 					album["style"] = self.app.cache.genre['genredict'][album['genre_id']]
 					self.tracks_ready = True
 				else:

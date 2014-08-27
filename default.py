@@ -74,6 +74,9 @@ if len(sys.argv) < 2:
 				app.loadwin.getControl(10).setLabel('Finishing up...')
 				app.cache.save_album_data()
 				app.cache.save_artist_data()
+				if app.cache.genre_modified == True:
+					print "Saving updated genre data"
+					app.cache.save_genre_data()
 	if not app.get_var('exiting'):
 		del app.win
 	time.sleep(1)

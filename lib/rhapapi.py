@@ -275,7 +275,6 @@ class Api():
 			except:
 				print "Exception thrown getting genre id for "+artist_id
 
-
 	def get_new_releases(self):
 		print "Rhapapi: getting new releases"
 		url = '%salbums/new?apikey=%s&limit=100' % (self.BASEURL, self.APIKEY)
@@ -285,7 +284,6 @@ class Api():
 			return results
 		else:
 			return False
-
 
 	def get_top_albums(self):
 		print "Rhapapi: getting top albums"
@@ -323,8 +321,18 @@ class Api():
 			return False
 
 	def get_genres(self):
-		print "Rhapapi: getting genres"
+		print "Rhapapi: getting genre tree"
 		url = "%sgenres?apikey=%s" % (self.BASEURL, self.APIKEY)
+		req = self.__build_req(url)
+		results = self.__get_data_from_rhapsody(req, 3)
+		if results:
+			return results
+		else:
+			return False
+
+	def get_genre_detail(self, g_id):
+		print "Rhapapi: getting genre detail"
+		url = "%sgenres/%s?apikey=%s" % (self.BASEURL, g_id, self.APIKEY)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 3)
 		if results:

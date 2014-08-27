@@ -23,6 +23,7 @@ class Cache():
 
 		self.genre = {}  #object to store cached data
 		self.genre_file = self.__addon_path__+'.genres.obj'  #picklefile
+		self.genre_modified = False
 
 		self.api = self.app.api
 
