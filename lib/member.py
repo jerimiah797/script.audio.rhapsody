@@ -4,11 +4,13 @@ import time
 import datetime
 import rhapapi
 import utils
+import xbmc
 
 class Member():
 	def __init__(self, app):
 		self.info = []
-		self.filename = app.__addon_path__+'/resources/.rhapuser.obj'
+		#self.filename = app.__addon_path__+'/resources/.rhapuser.obj'
+		self.filename = app.__addon_data__+'.rhapuser.obj'
 		self.picklefile = ''
 		self.cobrandId = "40134"
 		self.user_info = {}
@@ -76,8 +78,12 @@ class Member():
 		self.user_info['timestamp'] = time.time()
 		#utils.prettyprint(self.user_info)
 		print "Saving login info to disk..."
-		pickle.dump(self.user_info, open(self.filename, 'wb'))
-		print "Userdata saved!"
+		try:
+			pickle.dump(self.user_info, open(self.filename, 'wb'))
+			print "Userdata saved!"
+		except:
+			print "failed to save login info to disk"
+		
 
 
 	def login_member(self, name, pswd):
