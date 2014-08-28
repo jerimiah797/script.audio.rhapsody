@@ -1,12 +1,14 @@
 import urllib
 import os
 import rhapapi
+import xbmc
 
 class Image():
 
 	def __init__(self, media_path, data_path):
 		self.base_path = data_path
-		self.media_path = media_path+"/resources/skins/Default/media/"
+		self.media_path = os.path.join(media_path, "resources", "skins", "Default", "media")
+		print "media path: "+self.media_path
 		self.album_small_path = "album/"
 		self.album_large_path = "album/large/"
 		self.artist_small_path = "artist/"
@@ -26,10 +28,10 @@ class Image():
 
 
 	def verify_image_dirs(self):
-		dirs = [self.base_path+self.album_small_path,
-		        self.base_path+self.album_large_path,
-		        self.base_path+self.artist_small_path,
-		        self.base_path+self.artist_large_path]
+		dirs = [xbmc.translatePath(self.base_path+self.album_small_path),
+		        xbmc.translatePath(self.base_path+self.album_large_path),
+		        xbmc.translatePath(self.base_path+self.artist_small_path),
+		        xbmc.translatePath(self.base_path+self.artist_large_path)]
 		for path in dirs:
 			if not os.path.isdir(path):
 				os.mkdir(path)
