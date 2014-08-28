@@ -9,10 +9,10 @@ class Image():
 		self.base_path = data_path
 		self.media_path = os.path.join(media_path, "resources", "skins", "Default", "media")
 		print "media path: "+self.media_path
-		self.album_small_path = "album/"
-		self.album_large_path = "album/large/"
-		self.artist_small_path = "artist/"
-		self.artist_large_path = "artist/large/"
+		self.album_small_path = "album"
+		self.album_large_path = os.join.path(self.album_small_path, "large")
+		self.artist_small_path = "artist"
+		self.artist_large_path = os.join.path(self.artist_small_path, "large")
 		self.default_album_img = self.media_path+"AlbumPlaceholder.png"
 		self.default_artist_img = self.media_path+"ArtistPlaceholder.png"
 		self.verify_image_dirs()
