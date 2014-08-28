@@ -111,12 +111,13 @@ class Player(xbmc.Player):
 		for i, track in enumerate(liz):
 			#utils.prettyprint(track)
 			#print "track "+str(i+1)+": "+track['name']
-			alb_id = track['albumId']
+			#alb_id = track['albumId']
+			alb_id = track['album']['id']
 			try:
 				thumb = os.path.join(self.img.base_path, self.img.handler(self.cache.album[alb_id]['thumb_url'], 'small', 'album'))
 			except:
 				thumb = "none.png"
-			tid = track['trackId']
+			tid = track['id']
 			#tid = i+1
 			#print tid
 			#print self.app.mem.access_token
@@ -131,8 +132,8 @@ class Player(xbmc.Player):
 				)
 			info = {
 	            "title": track["name"],
-	            "album": track["album"],
-	            "artist": track["artist"],
+	            "album": track["album"]["name"],
+	            "artist": track["artist"]["name"],
 	            "duration": track["duration"],
 	            "tracknumber": i+1,
 				}
@@ -171,7 +172,7 @@ class Notifier():
 	def report_playback(self, player, api):
 		pos = player.playlist.getposition()
 		#print player.now_playing['item'][pos]
-		track_id = player.now_playing['item'][pos]['trackId']
+		track_id = player.now_playing['item'][pos]['id']
 		#print "report playback: "+track_id
 		if self.current_track:
 			#print "reporting stop event for current track"
