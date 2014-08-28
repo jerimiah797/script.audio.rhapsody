@@ -569,7 +569,7 @@
                         <control type="label">
                             <posx>40</posx>
                             <posy>0</posy>
-                            <width>440</width>
+                            <width>400</width>
                             <info>ListItem.Title</info>
                             <font>rhapsody_font12</font>
                             <textcolor>black</textcolor>
@@ -577,7 +577,7 @@
                             <aligny>top</aligny>
                         </control>
                         <control type="label">
-                            <posx>430</posx>
+                            <posx>450</posx>
                             <posy>0</posy>
                             <width>440</width>
                             <info>ListItem.Artist</info>
@@ -628,7 +628,7 @@
                             <visible>Control.HasFocus(3353)</visible>
                             <posx>40</posx>
                             <posy>0</posy>
-                            <width>440</width>
+                            <width>400</width>
                             <info>ListItem.Title</info>
                             <font>rhapsody_font12</font>
                             <textcolor>F3FFFFFF</textcolor>
@@ -640,7 +640,7 @@
                             <visible>!Control.HasFocus(3353)</visible>
                             <posx>40</posx>
                             <posy>0</posy>
-                            <width>450</width>
+                            <width>400</width>
                             <info>ListItem.Title</info>
                             <font>rhapsody_font12</font>
                             <textcolor>F3FFFFFF</textcolor>
@@ -651,7 +651,7 @@
 
                         <control type="label">
                             <visible>Control.HasFocus(3353)</visible>
-                            <posx>430</posx>
+                            <posx>450</posx>
                             <posy>0</posy>
                             <width>440</width>
                             <info>ListItem.Artist</info>
@@ -663,7 +663,7 @@
                         </control>
                         <control type="label">
                             <visible>!Control.HasFocus(3353)</visible>
-                            <posx>430</posx>
+                            <posx>450</posx>
                             <posy>0</posy>
                             <width>450</width>
                             <info>ListItem.Artist</info>
