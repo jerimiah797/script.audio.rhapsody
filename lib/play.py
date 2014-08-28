@@ -2,6 +2,7 @@ import xbmc
 import xbmcgui
 import time
 import thread
+import os
 from lib import view
 from lib import utils
 
@@ -108,12 +109,12 @@ class Player(xbmc.Player):
 		self.playlist.clear()
 		liz = self.now_playing['item']
 		for i, track in enumerate(liz):
-			utils.prettyprint(track)
+			#utils.prettyprint(track)
 			#print "track "+str(i+1)+": "+track['name']
 			#alb_id = track['albumId']
 			alb_id = track['album']['id']
 			try:
-				thumb = self.img.base_path+self.img.handler(self.cache.album[alb_id]['thumb_url'], 'small', 'album')
+				thumb = os.path.join(self.img.base_path, self.img.handler(self.cache.album[alb_id]['thumb_url'], 'small', 'album'))
 			except:
 				thumb = "none.png"
 			tid = track['id']
