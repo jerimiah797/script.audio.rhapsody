@@ -11,6 +11,7 @@ from lib import lists
 from lib import caching
 from lib import MyFont
 import sys
+import os
 
 
 
@@ -28,7 +29,9 @@ class Application():
 		self.__addon_path__ = self.__addon_cfg__.getAddonInfo('path')
 		self.__addon_version__ = self.__addon_cfg__.getAddonInfo('version')
 		self.__addon_icon__ = self.__addon_cfg__.getAddonInfo('icon')
-		self.__addon_data__ = xbmc.translatePath('special://userdata/addon_data/'+self.__addon_id__+'/')
+		self.__addon_data__ = os.path.join(xbmc.translatePath('special://userdata/addon_data/'), self.__addon_id__)
+
+		self.init_dirs()
 
 		self.newreleases =   None
 		self.topalbums =     None
@@ -48,7 +51,7 @@ class Application():
 		self.img = image.Image(self.__addon_path__, self.__addon_data__)
 		self.win = view.MainWin("main.xml", self.__addon_path__, 'Default', '720p', app=self)
 
-		self.init_dirs()
+		
 		self.init_lists()
 		self.init_vars()
 

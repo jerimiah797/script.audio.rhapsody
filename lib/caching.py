@@ -1,5 +1,6 @@
 import pickle
 import time
+import os
 from rhapapi import Api
 
 class Cache():
@@ -13,16 +14,16 @@ class Cache():
 		self.genre_dict__ = {}  #object to store cached data
 
 		self.artist = {}  #object to store cached data                                convert to self-managing data class instance
-		self.artist_file = self.__addon_path__+'.artistdb.obj'  #picklefile
+		self.artist_file = os.path.join(self.__addon_path__, '.artistdb.obj')  #picklefile
 
 		self.album = {}  #object to store cached data
-		self.album_file = self.__addon_path__+'.albumdb.obj'  #picklefile
+		self.album_file = os.path.join(self.__addon_path__, '.albumdb.obj')  #picklefile
 
 		self.playlist = {}  #object to store cached data
-		self.playlist_file = self.__addon_path__+'.playlistdb.obj'  #picklefile
+		self.playlist_file = os.path.join(self.__addon_path__, '.playlistdb.obj') #picklefile
 
 		self.genre = {}  #object to store cached data
-		self.genre_file = self.__addon_path__+'.genres.obj'  #picklefile
+		self.genre_file = os.path.join(self.__addon_path__, '.genres.obj')  #picklefile
 		self.genre_modified = False
 
 		self.api = self.app.api
