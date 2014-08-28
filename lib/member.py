@@ -4,13 +4,14 @@ import time
 import datetime
 import rhapapi
 import utils
+import os
 import xbmc
 
 class Member():
 	def __init__(self, app):
 		self.info = []
 		#self.filename = app.__addon_path__+'/resources/.rhapuser.obj'
-		self.filename = app.__addon_data__+'.rhapuser.obj'
+		self.filename = os.path.join(app.__addon_data__, '.rhapuser.obj')
 		self.picklefile = ''
 		self.cobrandId = "40134"
 		self.user_info = {}
