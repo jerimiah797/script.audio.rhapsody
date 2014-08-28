@@ -182,23 +182,24 @@ class ContentList():
 		#data = {}
 		#thumb = img.handler(item["images"][0]["url"], 'small', 'album')
 		thumb = 'none.png'
-		data['track'] = {'trackId': item["id"],
-		         'name': item["name"],
-		         'thumb': thumb,
-		         #'thumb_url': item["images"][0]["url"],
-		         'album': item['album']['name'],
-		         'displayAlbumName': item['album']['name'],
-		         'albumId': item['album']['id'],
-		         'genre_id': item['genre']['id'],
-		         'duration': item['duration'],
-		         'playbackSeconds': item['duration'],
-		         'style': '',
-		         'artist': item["artist"]["name"],
-		         'displayArtistName': item["artist"]["name"],
-		         'artistId': item["artist"]["id"],
-		         'previewURL': item['sample'],
-		         'list_id': count,
-		         'trackIndex': count+1}
+		data['track'] = {'id': 				item["id"],
+		         		 'name': 			item["name"],
+		         		 'thumb': 			thumb,
+		         		 'genre_id': 		item['genre']['id'],
+		         		 'duration': 		item['duration'],
+		         		 'playbackSeconds': item['duration'],
+		         		 'style': 			'',
+		         		 'previewURL': 		item['sample'],
+		         		 'list_id': 		count,
+		         		 'trackIndex': 		count+1}
+		data['track']['album'] = {'id':     			item['album']['id'],
+								  'name':   			item['album']['name'],
+								  'displayAlbumName':  	item['album']['name']
+								  }
+		data['track']['artist'] = {'id':     				item['artist']['id'],
+								   'name':   				item['artist']['name'],
+								   'displayArtistName':  	item['artist']['name']
+								  }
 		data['listitem'] = xbmcgui.ListItem(item["name"], item["artist"]["name"])
 		info = {
 	            "title": item["name"],

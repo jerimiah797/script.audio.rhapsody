@@ -96,7 +96,7 @@ class Api():
 		if 'id' in session:
 			url = "%ssessions/%s" %(self.S_BASEURL, session[u'id'])
 			req = self.__build_member_req(url)
-			results = self.__get_data_from_rhapsody(req, 5)
+			results = self.__get_data_from_rhapsody(req, 10)
 			if results:
 				return results
 			else:
