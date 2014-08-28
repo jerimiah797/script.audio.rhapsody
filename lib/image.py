@@ -9,12 +9,12 @@ class Image():
 		self.base_path = data_path
 		self.media_path = os.path.join(media_path, "resources", "skins", "Default", "media")
 		print "media path: "+self.media_path
-		self.album_small_path = "album"
-		self.album_large_path = os.join.path(self.album_small_path, "large")
+		self.album_small_path =  "album"
+		self.album_large_path = "large"
 		self.artist_small_path = "artist"
-		self.artist_large_path = os.join.path(self.artist_small_path, "large")
-		self.default_album_img = self.media_path+"AlbumPlaceholder.png"
-		self.default_artist_img = self.media_path+"ArtistPlaceholder.png"
+		self.artist_large_path = "large"
+		self.default_album_img = os.path.join(self.media_path, "AlbumPlaceholder.png")
+		self.default_artist_img = os.path.join(self.media_path, "ArtistPlaceholder.png")
 		self.verify_image_dirs()
 		pass
 
@@ -28,14 +28,16 @@ class Image():
 
 
 	def verify_image_dirs(self):
-		dirs = [xbmc.translatePath(self.base_path+self.album_small_path),
-		        xbmc.translatePath(self.base_path+self.album_large_path),
-		        xbmc.translatePath(self.base_path+self.artist_small_path),
-		        xbmc.translatePath(self.base_path+self.artist_large_path)]
+		dirs = [os.path.join(self.base_path, self.album_small_path),
+		        os.path.join(self.base_path, self.album_small_path, self.album_large_path),
+		        os.path.join(self.base_path, self.artist_small_path),
+		        os.path.join(self.base_path, self.artist_small_path, self.artist_large_path)]
 		for path in dirs:
 			if not os.path.isdir(path):
 				os.mkdir(path)
 				print "created image directory at "+path
+			else:
+				print "verified image directory at "+path
 
 
 	def handler(self, url, size, kind):
@@ -47,11 +49,11 @@ class Image():
 			#print "Prefix path: "+prefix_path
 			img_filename = url.split('/')[(len(url.split('/'))) - 1]
 			#print "Handling "+prefix_path+img_filename
-			full_path = self.base_path+prefix_path+img_filename
+			full_path = os.path.join(self.base_path, prefix_path, img_filename)
 			if not os.path.isfile(full_path):
 				self.download_image(url, full_path)
 				#print "image handler: downloaded "+prefix_path+img_filename
-			return prefix_path+img_filename
+			return os.path.join(prefix_path, img_filename)
 
 
 	def identify_largest_image(self, id, kind):
@@ -87,9 +89,9 @@ class Image():
 	def get_prefix_path(self, size, kind):
 
 		d = {"album": {"small": self.album_small_path,
-		               "large": self.album_large_path},
+		               "large": os.path.join(self.album_small_path, self.album_large_path)},
 			"artist": {"small": self.artist_small_path,
-			           "large": self.artist_large_path}
+			           "large": os.path.join(self.artist_small_path, self.artist_large_path)}
 			}
 
 		return d[kind][size]
