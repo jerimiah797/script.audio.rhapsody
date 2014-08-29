@@ -129,7 +129,7 @@ class Member():
 		result = self.app.api.get_account_info()
 		#try:
 		if result:
-			#utils.prettyprint(result)
+			utils.prettyprint(result)
 			t = int(result["createDate"])/1000
 			self.account_type =     result["productName"]
 			self.date_created =     datetime.datetime.fromtimestamp(t).strftime('%B %d, %Y')

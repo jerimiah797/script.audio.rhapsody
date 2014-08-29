@@ -148,6 +148,7 @@ class ContentList():
 				         'orig_date': "",
 				         'label': "",
 				         'type': item['type']['name'],
+				         'explicit': self.determine_explicit(item),
 				         'review': "",
 				         'bigthumb': "",
 				         'tracks': "",
@@ -159,7 +160,19 @@ class ContentList():
 		#print data["album"]["thumb_url"]
 		data['listitem'] = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', thumb )
 		data['listitem'].setProperty('thumb_url', data["album"]["thumb_url"])
+		if data['album']['explicit']:
+			data['listitem'].setProperty('explicit', "True")
+		else:
+			data['listitem'].setProperty('explicit', "False")
 		return data
+
+	def determine_explicit(self, item):
+		if 'Explicit' in item['tags']:
+			print "item has Explicit tag!"
+			return True
+		else:
+			return False
+
 
 	def process_artist(self, count, item, data):
 

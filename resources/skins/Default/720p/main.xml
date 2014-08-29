@@ -270,6 +270,17 @@
                             <aspectratio scalediffuse="true">scale</aspectratio>
                             <scrolltime>200</scrolltime>
                         </control>
+                        <control type="image">
+                            <visible>SubString(ListItem.Property(explicit),True)</visible>
+                            <posx>14</posx>
+                            <posy>170</posy>
+                            <width>90</width>
+                            <height>90</height>
+                            <align>left</align>
+                            <texture blend="false">AlbumExplicit.png</texture>
+                            <aspectratio scalediffuse="true">scale</aspectratio>
+                            <scrolltime>200</scrolltime>
+                        </control>
                     </itemlayout>
                     <focusedlayout width="235" height="260">
                         <!--control type="button">
@@ -330,6 +341,17 @@
                             <info blend="false">ListItem.Thumb</info>
                             <aspectratio scalediffuse="true">scale</aspectratio>
                         </control>
+                        <control type="image">
+                            <visible>SubString(ListItem.Property(explicit),True)</visible>
+                            <posx>14</posx>
+                            <posy>170</posy>
+                            <width>90</width>
+                            <height>90</height>
+                            <align>left</align>
+                            <texture blend="false">AlbumExplicit.png</texture>
+                            <aspectratio scalediffuse="true">scale</aspectratio>
+                            <scrolltime>200</scrolltime>
+                        </control>
                     </focusedlayout>
                 </control>
                 <!-- Albums Panel View , Top Albums-->
@@ -379,6 +401,17 @@
                             <info blend="false">ListItem.Thumb</info>
                             <aspectratio scalediffuse="false">scale</aspectratio>
                             <fadetime>200</fadetime>
+                            <scrolltime>200</scrolltime>
+                        </control>
+                        <control type="image">
+                            <visible>SubString(ListItem.Property(explicit),True)</visible>
+                            <posx>14</posx>
+                            <posy>170</posy>
+                            <width>90</width>
+                            <height>90</height>
+                            <align>left</align>
+                            <texture blend="false">AlbumExplicit.png</texture>
+                            <aspectratio scalediffuse="true">scale</aspectratio>
                             <scrolltime>200</scrolltime>
                         </control>
                     </itemlayout>
@@ -441,6 +474,17 @@
                             <info blend="false">ListItem.Thumb</info>
                             <aspectratio scalediffuse="false">scale</aspectratio>
                             <fadetime>200</fadetime>
+                        </control>
+                        <control type="image">
+                            <visible>SubString(ListItem.Property(explicit),True)</visible>
+                            <posx>14</posx>
+                            <posy>170</posy>
+                            <width>90</width>
+                            <height>90</height>
+                            <align>left</align>
+                            <texture blend="false">AlbumExplicit.png</texture>
+                            <aspectratio scalediffuse="true">scale</aspectratio>
+                            <scrolltime>200</scrolltime>
                         </control>
                     </focusedlayout>
                 </control>
@@ -1040,6 +1084,17 @@
                             <aspectratio scalediffuse="true">scale</aspectratio>
                             <scrolltime>200</scrolltime>
                         </control>
+                        <control type="image">
+                            <visible>SubString(ListItem.Property(explicit),True)</visible>
+                            <posx>14</posx>
+                            <posy>170</posy>
+                            <width>90</width>
+                            <height>90</height>
+                            <align>left</align>
+                            <texture blend="false">AlbumExplicit.png</texture>
+                            <aspectratio scalediffuse="true">scale</aspectratio>
+                            <scrolltime>200</scrolltime>
+                        </control>
                     </itemlayout>
                     <focusedlayout width="235" height="260">
                         <!--control type="button">
@@ -1099,6 +1154,17 @@
                             <height>180</height>
                             <info blend="false">ListItem.Thumb</info>
                             <aspectratio scalediffuse="true">scale</aspectratio>
+                        </control>
+                        <control type="image">
+                            <visible>SubString(ListItem.Property(explicit),True)</visible>
+                            <posx>14</posx>
+                            <posy>170</posy>
+                            <width>90</width>
+                            <height>90</height>
+                            <align>left</align>
+                            <texture blend="false">AlbumExplicit.png</texture>
+                            <aspectratio scalediffuse="true">scale</aspectratio>
+                            <scrolltime>200</scrolltime>
                         </control>
                     </focusedlayout>
                 </control>
