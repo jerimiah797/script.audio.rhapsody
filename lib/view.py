@@ -577,6 +577,18 @@ class AlbumDialog(DialogBase):
 				self.show_next_album(-1)
 			elif self.getFocusId() == self.listcontrol_id:           # --- Tracklist ---
 				self.start_playback(self.getFocusId(), self.cache[self.id])
+			elif self.getFocusId() == 23:			# --- ADD TO QUEUE ---
+				pass
+			elif self.getFocusId() == 24:			# --- ADD TO PLAYLIST ---
+				pass
+			elif self.getFocusId() == 25:			# --- ADD TO LIBRARY ---
+				r = self.api.add_album_to_library(self.id)
+				if r:
+					xbmc.executebuiltin("XBMC.Notification(Rhapsody, Added to Library..., 2000, %s)" %(self.app.__addon_icon__))
+					#self.app.lib_albums.fresh = False
+					self.app.reinit_lists()
+				else:
+					xbmc.executebuiltin("XBMC.Notification(Rhapsody, Add to Library failed..., 2000, %s)" %(self.app.__addon_icon__))					
 			else: pass
 		elif action.getId() == 10:
 			self.list_instance.pos = self.pos        # --- Esc ---

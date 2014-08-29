@@ -182,6 +182,22 @@ class Api():
 		else:
 			return False
 
+	def add_album_to_library(self, alb_id):
+		print "Rhapapi: Add album %s to library" % (alb_id)
+		data = {"id": alb_id}
+		data = json.dumps(data)
+		url = "%sme/library/albums" % (self.S_BASEURL)
+		req = self.__build_member_req(url)
+		req.add_header('Content-Type', 'application/json')
+		req.add_data(data)
+		results = self.__get_data_from_rhapsody(req, 5)
+		if results:
+			print "results:"
+			utils.prettyprint(results)
+			return True
+		else:
+			return False
+
 
 #------Listening History -----------
 
