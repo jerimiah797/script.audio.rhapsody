@@ -34,6 +34,7 @@ if len(sys.argv) < 2:
 	#loadwin = xbmcgui.WindowXML("loading.xml", app.__addon_path__, 'Default', '720p')
 	#loadwin.show()
 	# network check
+	app.loadwin.getControl(10).setLabel('Checking Rhapsody servers...')
 	if app.api.get_artist_genre("Art.954"):
 		app.loadwin.getControl(10).setLabel('Installing fonts...')
 		app.init_fonts()
