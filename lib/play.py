@@ -140,7 +140,7 @@ class Player(xbmc.Player):
 			li.setInfo("music", info)
 			li.setProperty('mimetype','audio/mp4')
 			self.playlist.add(playurl, listitem=li)
-		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Preparing to play..., 2000, %s)" %(self.app.__addon_icon__))
+		#xbmc.executebuiltin("XBMC.Notification(Rhapsody, Preparing to play..., 2000, %s)" %(self.app.__addon_icon__))
 
 
 	def validate_session(self, s, session):

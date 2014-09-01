@@ -362,7 +362,7 @@ class MainWin(WinBase):
 		self.player.build()
 		if id == 3353 or id == 3950:
 			self.player.now_playing['pos'] = self.clist.getSelectedPosition()
-		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
+		#xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
 		#track = self.player.add_playable_track(0)
 		#if not track:
 		#	xbmc.executebuiltin("XBMC.Notification(Rhapsody, Problem with this song. Aborting..., 2000, %s)" %(self.app.__addon_icon__))
@@ -371,7 +371,7 @@ class MainWin(WinBase):
 		#	return False
 		self.player.get_session()
 		self.player.playselected(self.player.now_playing['pos'])
-		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
+		#xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
 		if id == 21:
 			self.clist.selectItem(self.playlist.getposition())
 			self.setFocusId(3353)
@@ -613,7 +613,7 @@ class AlbumDialog(DialogBase):
 			self.app.player.build()
 		if id == self.listcontrol_id:
 			self.app.player.now_playing['pos'] = self.clist.getSelectedPosition()
-		xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
+		#xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
 		thread.start_new_thread(self.app.player.get_session, () )
 		if id == 21:
 			print "id is 21, let's select the playing track and focus the tracklist"
@@ -625,12 +625,12 @@ class AlbumDialog(DialogBase):
 			self.app.player.now_playing = {'pos': 0, 'type':'album', 'item':album['tracks'], 'id':album['album_id']}
 			self.app.player.build()
 			self.app.player.playselected(self.app.player.now_playing['pos'])
-			xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
+			#xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
 			self.clist.selectItem(self.app.playlist.getposition())
 			self.setFocusId(self.listcontrol_id)
 		else:
 			self.app.player.playselected(self.app.player.now_playing['pos'])
-			xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
+			#xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
 
 
 	def now_playing_matches_album_dialog(self):
