@@ -16,7 +16,7 @@
             <texture>background/background.png</texture>
         </control>
 
-
+<!-- Left Navbar -->
         <control type="group" id="100">
             <animation effect="slide" start="0,0" end="-200,0" time="400" condition="ControlGroup(200).HasFocus | Control(200).HasFocus(201) | !ControlGroup(100).HasFocus" tween="cubic" easing="inout">Conditional</animation>
             <!--visible>!IsEmpty(Window.Property(view))</visible-->
@@ -124,13 +124,15 @@
                 </content>
             </control>
         </control>
-
+<!-- Group for all views -->
         <control type="group" id="200">
             <animation effect="slide" start="0,0" end="200,0" time="400" condition="ControlGroup(100).HasFocus | Control(100).HasFocus(101) | !Control.IsVisible(101)" tween="cubic" easing="inout">Conditional</animation>
             <onleft>101</onleft>
+            <onfocus>SetFocus(201)</onfocus>
             <onup>-</onup>
             <ondown>-</ondown>
             <posx>70</posx>
+<!-- Browse Pane -->
             <control type="group" id="300">
                 <description>Browse, new releases - default view</description>
                 <!--visible>SubString(Window.Property(view),Browse)</visible-->
@@ -928,30 +930,36 @@
                     </control>
                 </control>
             </control>
-
+<!-- Search Pane -->
             <control type="group" id="400">
                 <visible>StringCompare(Window.Property(frame),Search)</visible>
-                <control type="button" id="202">
+                <control type="button" id="201">
                     <description>dummy button to set initial view</description>
                     <posx>0</posx>
                     <posy>0</posy>
                     <texturenofocus>-</texturenofocus>
                     <texturefocus>-</texturefocus>
-                    <!--onfocus>SetFocus(402)</onfocus>
+                    <onfocus>SetFocus(402)</onfocus>
                     <ondown>402</ondown>
                     <onup>402</onup>
-                    <onright>402</onright-->
+                    <onright>402</onright>
                     <onleft>100</onleft>
                     <onclick>-</onclick>
                 </control>
-                <control type="label" id="402">
+                <control type="edit" id="402">
+                    <description>Search Text Entry</description>
                     <label>Search</label>
+                    <hinttext>Enter search string</hinttext>
                     <align>left</align>
                     <aligny>top</aligny>
                     <font>rhapsody_font35_title</font>
+                    <texturefocus>button-focus.png</texturefocus>
+                    <texturenofocus>button-nofocus.png</texturenofocus>
+                    <onleft>100</onleft>
                     <textcolor>black</textcolor>
                 </control>
             </control>
+<!-- Library Pane -->
             <control type="group" id="500">
                 <description>Library, albums - default view</description>
                 <visible>StringCompare(Window.Property(frame),Library)</visible>
@@ -1625,7 +1633,7 @@
                 </control>
                 </control>
             </control>
-
+<!-- Playlist Pane -->
             <control type="group" id="600">
                 <visible>StringCompare(Window.Property(frame),Playlists)</visible>
                 <control type="button" id="202">
@@ -1901,8 +1909,8 @@
                         </focusedlayout>
                     </control>
                 </control>
-
             </control>
+<!-- Radio Pane -->
             <control type="group" id="700">
                 <visible>StringCompare(Window.Property(frame),Radio)</visible>
                 <control type="button" id="202">
@@ -1926,6 +1934,7 @@
                     <textcolor>black</textcolor>
                 </control>
             </control>
+<!-- Queue Pane  -->
             <control type="group" id="800">
                 <visible>StringCompare(Window.Property(frame),Queue)</visible>
                 <control type="button" id="202">
@@ -1949,6 +1958,7 @@
                     <textcolor>black</textcolor>
                 </control>
             </control>
+<!-- Listening History Pane -->
             <control type="group" id="900">
                 <visible>StringCompare(Window.Property(frame),Listening History)</visible>
                 <control type="button" id="202">
@@ -2099,6 +2109,7 @@
                     </control>
                 </control>
             </control>
+<!-- Settings Pane -->
             <control type="group" id="1000">
                 <visible>StringCompare(Window.Property(frame),Settings)</visible>
                 <control type="label">
@@ -2330,6 +2341,13 @@
             <textcolor>black</textcolor>
             <align>right</align>
             <aligny>top</aligny>
+        </control>
+        <control type="image">
+            <posx>0</posx>
+            <posy>0</posy>
+            <width>1280</width>
+            <height>720</height>
+            <texture>haze2.png</texture>
         </control>
 
     </controls>

@@ -9,6 +9,7 @@ from lib import utils
 from lib import plugin
 
 REMOTE_DBG = False
+TEST = True
 
 # append pydev remote debugger
 if REMOTE_DBG:
@@ -35,16 +36,20 @@ if len(sys.argv) < 2:
 	#loadwin.show()
 	# network check
 	app.loadwin.getControl(10).setLabel('Checking Rhapsody servers...')
-	if app.api.get_artist_genre("Art.954"):
-		app.loadwin.getControl(10).setLabel('Installing fonts...')
-		app.init_fonts()
-		app.loadwin.getControl(10).setLabel('Getting things ready...')
-		app.cache.load_cached_data()
-		time.sleep(1)
-	else:
-		app.loadwin.getControl(10).setLabel('Can\'t reach Rhapsody servers. \nMust be online to use Rhapsody.\nExiting...')
-		time.sleep(2)
-		app.set_var('running', False)
+	try:
+		if app.api.get_artist_genre("Art.954"):
+			app.loadwin.getControl(10).setLabel('Installing fonts...')
+			app.init_fonts()
+			app.loadwin.getControl(10).setLabel('Getting things ready...')
+			app.cache.load_cached_data()
+			time.sleep(1)
+	except:
+		if TEST == True:
+			pass
+		else:
+			app.loadwin.getControl(10).setLabel('Can\'t reach Rhapsody servers. \nMust be online to use Rhapsody.\nExiting...')
+			time.sleep(2)
+			app.set_var('running', False)
 
 
 	while app.get_var('running'):
