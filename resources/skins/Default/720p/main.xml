@@ -29,11 +29,11 @@
                 <texture>background/navbar.png</texture>
             </control>
             <control type="image">
-                <posx>22</posx>
+                <posx>52</posx>
                 <posy>15</posy>
-                <width>153</width>
+                <width>100</width>
                 <height>40</height>
-                <texture>logo.png</texture>
+                <texture>combinedlogowhitesm.png</texture>
             </control>
             <control type="list" id="101">
                 <posx>0</posx>
