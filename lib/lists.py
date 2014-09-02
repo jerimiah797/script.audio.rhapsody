@@ -153,6 +153,7 @@ class ContentList():
 					         'label': "",
 					         'type': item['type']['name'],
 					         'explicit': self.determine_explicit(item),
+					         'tags': self.concat_tags(item),
 					         'review': "",
 					         'bigthumb': "",
 					         'tracks': "",
@@ -179,6 +180,15 @@ class ContentList():
 			return True
 		else:
 			return False
+
+	def concat_tags(self, item):
+		s = ""
+		for tag in item['tags']:
+			#print "item has Explicit tag!"
+			s += tag
+			s+= ", "
+		return s
+		
 
 
 	def process_artist(self, count, item, data):

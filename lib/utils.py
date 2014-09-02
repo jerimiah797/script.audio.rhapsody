@@ -34,9 +34,22 @@ def git_pull():
 	#print "Error : " + str(error) 
 	print "Checking for Rhapsody updates: " + str(out)
 
+def open_url():
+	url = "http://www.rhapsody.com/freetrial"
+	print "opening web browser at "+url
+	if sys.platform=='win32':
+	    os.startfile(url)
+	elif sys.platform=='darwin':
+	    subprocess.Popen(['open', url])
+	else:
+	    try:
+	        subprocess.Popen(['xdg-open', url])
+	    except OSError:
+	        print 'Please open a browser on: '+url
+
 def goodbye(app):
 	dialog = xbmcgui.Dialog()
-	if dialog.yesno("Quit Rhapsody?", "Playback will stop and you will return to XBMC "):
+	if dialog.yesno("Quit Rhapsody?", "Pressing 'Yes' will quit the Rhapsody plugin"):
 		app.set_var('logged_in', True)
 		app.set_var('running',False)
 		app.player.stop()
@@ -47,13 +60,14 @@ def goodbye(app):
 			app.logwin.close()
 			print "closed logwin"
 		except:
-			print "didn't close logwin"
+			pass
 		git_pull()
+		open_url()
 		app.win.close()
 
 def goodbye_while_logged_out(app):
 	dialog = xbmcgui.Dialog()
-	if dialog.yesno("Quit Rhapsody?", "Pressing 'Yes' will exit the Rhapsody plugin and return you to XBMC."):
+	if dialog.yesno("Quit Rhapsody?", "Pressing 'Yes' will quit the Rhapsody plugin"):
 		app.set_var('logged_in', False)
 		app.set_var('running',False)
 		app.player.stop()
@@ -65,7 +79,7 @@ def goodbye_while_logged_out(app):
 		#	print "closed logwin"
 		#except:
 		#	print "didn't close logwin"
-		#git_pull()
+		git_pull()
 		app.win.close()
 
 

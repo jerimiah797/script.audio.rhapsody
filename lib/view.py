@@ -506,7 +506,7 @@ class AlbumDialog(DialogBase):
 				self.manage_windowtracklist(cache, album)
 				self.getControl(10).setLabel(album["style"])
 				#self.getControl(10).setLabel(album["label"])
-				self.getControl(6).setLabel(album["type"])
+				self.getControl(6).setLabel(album["tags"]+album['type'])
 			else:
 				pass
 				#print "********* got details but not showing it right now ******"
