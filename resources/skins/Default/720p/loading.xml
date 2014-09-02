@@ -17,11 +17,11 @@
             <texture>background/background.png</texture>
         </control>
         <control type="image">
-            <posx>370</posx>
+            <posx>240</posx>
             <posy>160</posy>
-            <texture>napster-logo-520x270.png</texture>
-            <width>520</width>
-            <height>270</height>
+            <texture>combinedlogo.png</texture>
+            <width>800</width>
+            <height>325</height>
         </control>
         <control type="image">
             <posx>0</posx>
@@ -32,7 +32,7 @@
         </control>
         <control type="label" id="10">
             <posx>350</posx>
-            <posy>460</posy>
+            <posy>520</posy>
             <width>600</width>
             <align>center</align>
             <visible>true</visible>

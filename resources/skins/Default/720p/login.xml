@@ -21,11 +21,11 @@
         <control type="group">
             <posx>0</posx>
             <control type="image">
-                <posx>70</posx>
-                <posy>160</posy>
-                <height>400</height>
+                <posx>80</posx>
+                <posy>260</posy>
+                <height>175</height>
                 <width>400</width>
-                <texture>rhapsody_icon.png</texture>
+                <texture>combinedlogo.png</texture>
             </control>
             <control type="group">
                 <posx>590</posx>
