@@ -23,7 +23,7 @@
             <control type="image">
                 <posx>80</posx>
                 <posy>260</posy>
-                <height>175</height>
+                <height>163</height>
                 <width>400</width>
                 <texture>combinedlogo.png</texture>
             </control>

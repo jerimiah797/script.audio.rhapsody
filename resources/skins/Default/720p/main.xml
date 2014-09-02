@@ -2315,10 +2315,10 @@
                     </control>
                 </control>
                 <control type="image">
-                     <posx>580</posx>
+                     <posx>520</posx>
                      <posy>230</posy>
-                     <height>175</height>
-                     <width>400</width>
+                     <height>244</height>
+                     <width>600</width>
                      <texture>combinedlogo.png</texture>
                 </control>
             </control>
