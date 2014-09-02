@@ -48,7 +48,7 @@
             <posy>0</posy>
             <width>1280</width>
             <height>720</height>
-            <texture>haze2.png</texture>
+            <texture>haze2-50.png</texture>
         </control>
     </controls>
 </window>
