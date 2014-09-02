@@ -23,7 +23,7 @@ Installation:
 Working: 
 
 - Playback for Popular albums, New Releases, Popular Tracks, Library Albums, Listening History
-- Sign in / out (restart rhapsody to update library, though)
+- Sign in / out with different accounts
 - auto-update with git-pull at every quit
 - Automatically install fonts
 - Invoke visualizer manually
@@ -33,3 +33,8 @@ Working:
 Still to do: Playlists, Search, Queue, Radio, Artist Pages for Browse and Library, Genre browsing and filtering, library/playlist/queue management, 1080i skin support
 
 Special features: Quick browse all albums in a category while in the album detail view. Press 'down' to enable quicknav, then left / right for previous/next album in current list. 
+
+Unique features for XBMC - To Do:
+- Integrate rhapsody music library into regular xbmc music library for easy playback
+- Create genre filter for Browse section that lets you whitelist or blacklist individual genres
+- View multiple rhapsody accounts/libraries at once (a must for multi-account households!)
