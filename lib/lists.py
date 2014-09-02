@@ -114,7 +114,8 @@ class ContentList():
 			id = item['id']
 			if self.type == 'album':
 				infos = self.process_album(i, item, recycle)
-				self.data.append(infos[self.type]['album_id'])
+				if infos:
+					self.data.append(infos[self.type]['album_id'])
 			elif self.type == 'artist':
 				infos = self.process_artist(i, item, recycle)
 				self.data.append(infos[self.type]['artist_id'])
@@ -124,10 +125,11 @@ class ContentList():
 			elif self.type == 'playlist':
 				infos = self.process_playlist(i, item, recycle)
 				self.data.append(infos[self.type])
-			self.liz.append(infos['listitem'])
-			self.add_lizitem_to_winlist(infos['listitem'])
-			if not id in store:
-				store[id] = infos[self.type]
+			if infos:
+				self.liz.append(infos['listitem'])
+				self.add_lizitem_to_winlist(infos['listitem'])
+				if not id in store:
+					store[id] = infos[self.type]
 			del infos
 
 
@@ -140,31 +142,36 @@ class ContentList():
 		#data = {}
 		#thumb = self.img.handler(item["images"][0]["url"], 'small', 'album')
 		thumb = self.img.default_album_img
-		data['album'] = {'album_id': item["id"],
-				         'album': item["name"],
-				         'thumb': thumb,
-				         'thumb_url': item["images"][0]["url"],
-				         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
-				         'orig_date': "",
-				         'label': "",
-				         'type': item['type']['name'],
-				         'explicit': self.determine_explicit(item),
-				         'review': "",
-				         'bigthumb': "",
-				         'tracks': "",
-				         'style': "",
-				         'genre_id': "",
-				         'artist': item["artist"]["name"],
-				         'list_id': count,
-				         'artist_id': item["artist"]["id"]}
-		#print data["album"]["thumb_url"]
-		data['listitem'] = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', thumb )
-		data['listitem'].setProperty('thumb_url', data["album"]["thumb_url"])
-		if data['album']['explicit']:
-			data['listitem'].setProperty('explicit', "True")
-		else:
-			data['listitem'].setProperty('explicit', "False")
-		return data
+		data = {}
+		try:
+			data['album'] = {'album_id': item["id"],
+					         'album': item["name"],
+					         'thumb': thumb,
+					         'thumb_url': item["images"][0]["url"],
+					         'album_date': time.strftime('%B %Y', time.localtime(int(item["released"]) / 1000)),
+					         'orig_date': "",
+					         'label': "",
+					         'type': item['type']['name'],
+					         'explicit': self.determine_explicit(item),
+					         'review': "",
+					         'bigthumb': "",
+					         'tracks': "",
+					         'style': "",
+					         'genre_id': "",
+					         'artist': item["artist"]["name"],
+					         'list_id': count,
+					         'artist_id': item["artist"]["id"]}	
+			#print data["album"]["thumb_url"]
+			data['listitem'] = xbmcgui.ListItem(item["name"], item["artist"]["name"], '', thumb )
+			data['listitem'].setProperty('thumb_url', data["album"]["thumb_url"])
+			if data['album']['explicit']:
+				data['listitem'].setProperty('explicit', "True")
+			else:
+				data['listitem'].setProperty('explicit', "False")
+			return data
+		except:
+			print "Problem processing %s, %s" % (item['id'], item['name'])
+			return False
 
 	def determine_explicit(self, item):
 		if 'Explicit' in item['tags']:

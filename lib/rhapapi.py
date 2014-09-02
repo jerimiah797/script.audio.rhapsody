@@ -82,7 +82,7 @@ class Api():
 		print "Rhapapi: getting playable url"
 		url = "%splay/%s" %(self.S_BASEURL, track_id)
 		req = self.__build_member_req(url)
-		results = self.__get_data_from_rhapsody(req, 5)
+		results = self.__get_data_from_rhapsody(req, 10)
 		if not results:
 			return False
 		if results['url'][:5] == u'undef':
@@ -112,7 +112,7 @@ class Api():
 		url = "%ssessions" %(self.S_BASEURL)
 		req = self.__build_member_req(url)
 		req.add_data(data)
-		results = self.__get_data_from_rhapsody(req, 5)
+		results = self.__get_data_from_rhapsody(req, 10)
 		return results
 
 	def get_account_info(self):
@@ -121,7 +121,7 @@ class Api():
 		url = "%sme/account" %(self.S_BASEURL)
 		req = self.__build_member_req(url)
 		#req.add_data(data)
-		results = self.__get_data_from_rhapsody(req, 5)
+		results = self.__get_data_from_rhapsody(req, 10)
 		return results
 
 	def log_playstart(self, track_id):
@@ -133,7 +133,7 @@ class Api():
 		req = self.__build_member_req(url)
 		req.add_header('Content-Type', 'application/json')
 		req.add_data(data)
-		results = self.__get_data_from_rhapsody(req, 5)
+		results = self.__get_data_from_rhapsody(req, 10)
 		print "Logging a Play Start event. "+str(results)
 		return ztime
 
@@ -146,7 +146,7 @@ class Api():
 		req = self.__build_member_req(url)
 		req.add_header('Content-Type', 'application/json')
 		req.add_data(data)
-		results = self.__get_data_from_rhapsody(req, 5)
+		results = self.__get_data_from_rhapsody(req, 10)
 		return results
 
 
@@ -242,7 +242,7 @@ class Api():
 		print "Rhapapi: getting album review"
 		url = "%salbums/%s/reviews?apikey=%s" % (self.BASEURL, album_id, self.APIKEY)
 		req = self.__build_req(url)
-		results = self.__get_data_from_rhapsody(req, 3)
+		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
 			return utils.remove_html_markup(results[0]["body"])
 		else:
@@ -253,7 +253,7 @@ class Api():
 		url = '%salbums/%s?apikey=%s' % (self.BASEURL, album_id, self.APIKEY)
 		#url = "http://direct.rhapsody.com/metadata/data/methods/getAlbum.js?developerKey=9H9H9E6G1E4I5E0I&albumId=%s&cobrandId=40134&filterRightsKey=0" % (album_id)
 		req = self.__build_req(url)
-		results = self.__get_data_from_rhapsody(req, 3)
+		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
 			#utils.prettyprint(results)
 			return results
@@ -264,7 +264,7 @@ class Api():
 		print "Rhapapi: getting album image"
 		url = "%salbums/%s/images?apikey=%s" %(self.BASEURL, album_id, self.APIKEY)
 		req = self.__build_req(url)
-		results = self.__get_data_from_rhapsody(req, 3)
+		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
 			return results
 		else:
@@ -274,7 +274,7 @@ class Api():
 		print "Rhapapi: getting artist image"
 		url = "%sartists/%s/images?apikey=%s" %(self.BASEURL, artist_id, self.APIKEY)
 		req = self.__build_req(url)
-		results = self.__get_data_from_rhapsody(req, 3)
+		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
 			return results
 		else:
@@ -284,7 +284,7 @@ class Api():
 		print "Rhapapi: getting artist genre"
 		url = "%sartists/%s?apikey=%s" %(self.BASEURL, artist_id, self.APIKEY)
 		req = self.__build_req(url)
-		results = self.__get_data_from_rhapsody(req, 3)
+		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
 			try:
 				return results["genre"]["id"]
@@ -295,7 +295,7 @@ class Api():
 		print "Rhapapi: getting new releases"
 		url = '%salbums/new?apikey=%s&limit=100' % (self.BASEURL, self.APIKEY)
 		req = self.__build_req(url)
-		results = self.__get_data_from_rhapsody(req, 3)
+		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
 			return results
 		else:
@@ -305,7 +305,7 @@ class Api():
 		print "Rhapapi: getting top albums"
 		url = '%salbums/top?apikey=%s&limit=100' % (self.BASEURL, self.APIKEY)
 		req = self.__build_req(url)
-		results = self.__get_data_from_rhapsody(req, 3)
+		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
 			return results
 		else:
@@ -315,7 +315,7 @@ class Api():
 		print "Rhapapi: getting top artists"
 		url = '%sartists/top?apikey=%s&limit=100' % (self.BASEURL, self.APIKEY)
 		req = self.__build_req(url)
-		results = self.__get_data_from_rhapsody(req, 3)
+		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
 			return results
 		else:
@@ -325,7 +325,7 @@ class Api():
 		print "Rhapapi: getting top tracks"
 		url = '%stracks/top?apikey=%s&limit=100' % (self.BASEURL, self.APIKEY)
 		req = self.__build_req(url)
-		results = self.__get_data_from_rhapsody(req, 3)
+		results = self.__get_data_from_rhapsody(req, 10)
 		#container = []
 		if results:
 			#d = {'id': 'playlist', 'tracks': results2}
@@ -340,7 +340,7 @@ class Api():
 		print "Rhapapi: getting genre tree"
 		url = "%sgenres?apikey=%s" % (self.BASEURL, self.APIKEY)
 		req = self.__build_req(url)
-		results = self.__get_data_from_rhapsody(req, 3)
+		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
 			return results
 		else:
@@ -350,7 +350,7 @@ class Api():
 		print "Rhapapi: getting genre detail"
 		url = "%sgenres/%s?apikey=%s" % (self.BASEURL, g_id, self.APIKEY)
 		req = self.__build_req(url)
-		results = self.__get_data_from_rhapsody(req, 3)
+		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
 			return results
 		else:
@@ -361,7 +361,7 @@ class Api():
 		print "Rhapapi: getting artist bio"
 		url = "%sartists/%s/bio?apikey=%s" % (self.BASEURL, art_id, self.APIKEY)
 		req = self.__build_req(url)
-		results = self.__get_data_from_rhapsody(req, 3)
+		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
 			return utils.remove_html_markup(results['bio'])
 		else:
