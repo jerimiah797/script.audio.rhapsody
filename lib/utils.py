@@ -62,7 +62,7 @@ def goodbye(app):
 		except:
 			pass
 		git_pull()
-		open_url()
+		#open_url()
 		app.win.close()
 
 def goodbye_while_logged_out(app):
