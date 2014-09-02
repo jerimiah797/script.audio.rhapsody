@@ -224,7 +224,7 @@
                 </control>
 
                 <control type="group" id="3300">
-                <!-- Albums Panel View, New Releases -->
+<!-- Albums Panel View, New Releases -->
                 <control type="panel" id="3350">
                     <visible>StringCompare(Window.Property(browseview),Browse_newreleases)</visible>
                     <onup>301</onup>
@@ -356,7 +356,7 @@
                         </control>
                     </focusedlayout>
                 </control>
-                <!-- Albums Panel View , Top Albums-->
+<!-- Albums Panel View , Top Albums-->
                 <control type="panel" id="3351">
                     <visible>StringCompare(Window.Property(browseview),Browse_topalbums)</visible>
                     <onup>301</onup>
@@ -490,7 +490,7 @@
                         </control>
                     </focusedlayout>
                 </control>
-                <!-- Top Artists View -->
+<!-- Top Artists View -->
                 <control type="panel" id="3352">
                     <visible>StringCompare(Window.Property(browseview),Browse_topartists)</visible>
                     <onup>301</onup>
@@ -501,7 +501,7 @@
                     <height>680</height>
                     <onleft>100</onleft>
                     <orientation>vertical</orientation>
-                    <itemlayout width="235" height="260">
+                    <itemlayout width="295" height="260">
                         <control type="label">
                             <posx>14</posx>
                             <posy>197</posy>
@@ -531,7 +531,7 @@
                         <control type="image">
                             <posx>14</posx>
                             <posy>14</posy>
-                            <width>180</width>
+                            <width>270</width>
                             <height>180</height>
                             <align>left</align>
                             <info blend="false">ListItem.Thumb</info>
@@ -539,7 +539,7 @@
                             <scrolltime>200</scrolltime>
                         </control>
                     </itemlayout>
-                    <focusedlayout width="235" height="260">
+                    <focusedlayout width="295" height="260">
                         <!--control type="button">
                             <posx>0</posx>
                             <posy>0</posy>
@@ -551,7 +551,7 @@
                         </control-->
                         <control type="image">
                             <visible>Control.HasFocus(3352)</visible>
-                            <width>209</width>
+                            <width>299</width>
                             <height>209</height>
                             <posx>0</posx>
                             <posy>0</posy>
@@ -559,7 +559,7 @@
                         </control>
                         <control type="image">
                             <visible>Control.HasFocus(3352)</visible>
-                            <width>209</width>
+                            <width>299</width>
                             <height>30</height>
                             <posx>0</posx>
                             <posy>209</posy>
@@ -593,14 +593,14 @@
                         <control type="image">
                             <posx>14</posx>
                             <posy>14</posy>
-                            <width>180</width>
+                            <width>270</width>
                             <height>180</height>
                             <info blend="false">ListItem.Thumb</info>
                             <aspectratio scalediffuse="true">scale</aspectratio>
                         </control>
                     </focusedlayout>
                 </control>
-                <!-- Top Tracks View -->
+<!-- Top Tracks View -->
                 <control type="list" id="3353">
                     <visible>StringCompare(Window.Property(browseview),Browse_toptracks)</visible>
                     <onup>301</onup>
@@ -1187,7 +1187,7 @@
                     <height>680</height>
                     <onleft>100</onleft>
                     <orientation>vertical</orientation>
-                    <itemlayout width="235" height="260">
+                    <itemlayout width="295" height="260">
                         <control type="label">
                             <posx>14</posx>
                             <posy>197</posy>
@@ -1217,7 +1217,7 @@
                         <control type="image">
                             <posx>14</posx>
                             <posy>14</posy>
-                            <width>180</width>
+                            <width>270</width>
                             <height>180</height>
                             <align>left</align>
                             <info blend="false">ListItem.Thumb</info>
@@ -1226,7 +1226,7 @@
                             <scrolltime>200</scrolltime>
                         </control>
                     </itemlayout>
-                    <focusedlayout width="235" height="260">
+                    <focusedlayout width="295" height="260">
                         <!--control type="button">
                             <posx>0</posx>
                             <posy>0</posy>
@@ -1238,7 +1238,7 @@
                         </control-->
                         <control type="image">
                             <visible>Control.HasFocus(3551)</visible>
-                            <width>209</width>
+                            <width>299</width>
                             <height>209</height>
                             <posx>0</posx>
                             <posy>0</posy>
@@ -1246,7 +1246,7 @@
                         </control>
                         <control type="image">
                             <visible>Control.HasFocus(3551)</visible>
-                            <width>209</width>
+                            <width>299</width>
                             <height>30</height>
                             <posx>0</posx>
                             <posy>209</posy>
@@ -1280,7 +1280,7 @@
                         <control type="image">
                             <posx>14</posx>
                             <posy>14</posy>
-                            <width>180</width>
+                            <width>270</width>
                             <height>180</height>
                             <info blend="false">ListItem.Thumb</info>
                             <aspectratio scalediffuse="false">scale</aspectratio>
@@ -1649,13 +1649,13 @@
                     <onleft>100</onleft>
                     <onclick>-</onclick>
                 </control>
-                <control type="label" id="601">
+                <!--control type="label" id="601">
                     <label>Playlists</label>
                     <align>left</align>
                     <aligny>top</aligny>
                     <font>rhapsody_font35_title</font>
                     <textcolor>black</textcolor>
-                </control>
+                </control-->
                 <control type="group" id="3600">
                     <!-- Member list of Playlists View -->
                     <control type="list" id="3650">
