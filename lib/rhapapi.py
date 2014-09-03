@@ -25,7 +25,7 @@ class Api():
 
 	def __get_data_from_rhapsody(self, req, timeout):
 		succeed = 0
-		while succeed < 3:
+		while succeed < 2:
 			try:
 				response = urllib2.urlopen(req, timeout=timeout)
 				try:
@@ -95,7 +95,7 @@ class Api():
 		keep_trying = 1
 		print "Rhapapi: Validating Playback Session"
 		if 'id' in session:
-			while keep_trying < 5:
+			while keep_trying < 2:
 				url = "%ssessions/%s" %(self.S_BASEURL, session[u'id'])
 				req = self.__build_member_req(url)
 				results = self.__get_data_from_rhapsody(req, 20)
@@ -104,9 +104,9 @@ class Api():
 					return results['valid']
 				else:
 					keep_trying += 1
-					print "Validate Session call timed out. Starting attempt "+str(keep_trying)
-			print "All attempts to verify session timed out."
-			return True
+					print "Validate Session call didn't work"
+			#print "All attempts to verify session timed out."
+			return False
 		else:
 			print "No existing session to check. "
 			pass

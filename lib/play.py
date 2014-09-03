@@ -18,6 +18,7 @@ class Player(xbmc.Player):
 		self.playlist = xbmc.PlayList(xbmc.PLAYLIST_MUSIC) #player=self, app=self.app, api=self.api, img=self.img)
 		self.now_playing = {'pos': 0, 'type': None, 'item':[], 'id': None}
 		self.session = []
+		self.session_lock = False
 		self.notify = Notifier()
 		#self.now_playing['item']['album_id'] = 'blank'
 		self.onplay_lock = False
@@ -26,10 +27,6 @@ class Player(xbmc.Player):
 		if not self.onplay_lock:
 			self.onplay_lock = True
 			#print "Locking playback routine to block multiple calls +++++++++++++++++++"
-			#thread.start_new_thread(self.validate_session, (self.session))
-			#print str(self.session)
-			thread.start_new_thread(self.validate_session, (self, self.session) )
-			#print str(self.session)
 			self.win.sync_playlist_pos()
 			pos = self.playlist.getposition()
 			self.now_playing['pos'] = pos
@@ -41,8 +38,8 @@ class Player(xbmc.Player):
 				print "Playing track "+str(pos2+1)
 				print "There, fixed it for ya. "
 				self.now_playing['pos'] = pos2
-
 			thread.start_new_thread(self.notify.report_playback, (self, self.api))
+			thread.start_new_thread(self.validate_session, (self, self.session) )
 			# update listening history if current view
 			if self.win.getProperty('browseview') == "history_tracks":
 				self.app.hist_tracks.build()
@@ -76,6 +73,7 @@ class Player(xbmc.Player):
 				#self.add_playable_track(1)
 				#self.add_playable_track(-1)
 			thread.start_new_thread(self.notify.report_playback, (self, self.api))
+			thread.start_new_thread(self.validate_session, (self, self.session))
 			xbmc.sleep(2)
 			self.onplay_lock = False
 		else:
@@ -145,6 +143,9 @@ class Player(xbmc.Player):
 
 	def validate_session(self, s, session):
 		#print "player.validate_session"
+		#while self.session_lock == True:
+		#	time.sleep(1)
+		#	print "waiting for get_session to finish"
 		valid = self.api.validate_session(session)
 		if valid:
 			print "Playback session validated."
@@ -157,8 +158,13 @@ class Player(xbmc.Player):
 
 
 	def get_session(self):
-		print "Created playback session."
+		#self.session_lock = True
+		#time.sleep(5)
+		print "Creating playback session."
 		self.session = self.api.get_session()
+		#time.sleep(2)
+		#self.session_lock = False
+		print "Created playback session."
 
 
 class Notifier():

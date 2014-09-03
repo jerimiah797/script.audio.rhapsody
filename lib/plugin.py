@@ -20,16 +20,16 @@
 # call plugin like this: plugin://script.audio.rhapsody/?track=ABC&token=XYZ
         
 
-import xbmc
+#import xbmc
 import xbmcgui
 import xbmcplugin
 import cgi
-import urllib
+#import urllib
 import urllib2
 import json
-import base64
-import datetime
-import time
+#import base64
+#import datetime
+#import time
 
 def get_it(args):
   #BASEURL = "http://api.rhapsody.com/v1/"

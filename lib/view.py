@@ -14,7 +14,7 @@ def draw_mainwin(win, app):
 	if frame == "Settings":
 		#print "Drawmain: No lists to draw on settings Page"
 		win.handle.setFocusId(1001)
-	if frame == "Search":
+	elif frame == "Search":
 		win.handle.setFocusId(201)
 	else:
 		view = win.handle.getProperty('browseview')
@@ -373,7 +373,8 @@ class MainWin(WinBase):
 		#	print "Unplayable track. Can't play this track"
 		#	#player.stop()
 		#	return False
-		self.player.get_session()
+		#self.player.get_session()
+		thread.start_new_thread(self.app.player.get_session, () )
 		self.player.playselected(self.player.now_playing['pos'])
 		#xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
 		if id == 21:
@@ -618,10 +619,11 @@ class AlbumDialog(DialogBase):
 		if id == self.listcontrol_id:
 			self.app.player.now_playing['pos'] = self.clist.getSelectedPosition()
 		#xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
+		#self.app.player.get_session()
 		thread.start_new_thread(self.app.player.get_session, () )
 		if id == 21:
 			print "id is 21, let's select the playing track and focus the tracklist"
-			while not self.tracks_ready :
+			while not self.tracks_ready:
 				if self.list_ready:
 					return
 				xbmc.sleep(100)
