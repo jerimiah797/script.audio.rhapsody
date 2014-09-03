@@ -92,7 +92,7 @@ def get_it(args):
     print "Rhapsody Plugin: getting playable url"
     url = "%splay/%s" %(S_BASEURL, track_id)
     req = __build_member_req(url)
-    results = __get_data_from_rhapsody(req, 5)
+    results = __get_data_from_rhapsody(req, 10)
     if not results:
       return False
     if results['url'][:5] == u'undef':
