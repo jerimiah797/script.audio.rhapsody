@@ -83,7 +83,7 @@
                     <item id="102">
                         <label>Search</label>
                         <onclick>SetProperty(frame,Search)</onclick>
-                        <onclick>Window.SetFocus(202)</onclick>
+                        <!--onclick>Window.SetFocus(201)</onclick-->
                     </item>
                     <item id="103">
                         <label>Browse</label>
@@ -939,24 +939,29 @@
                     <posy>0</posy>
                     <texturenofocus>-</texturenofocus>
                     <texturefocus>-</texturefocus>
-                    <onfocus>SetFocus(402)</onfocus>
-                    <ondown>402</ondown>
-                    <onup>402</onup>
-                    <onright>402</onright>
+                    <onfocus>SetFocus(401)</onfocus>
+                    <ondown>401</ondown>
+                    <onup>401</onup>
+                    <onright>401</onright>
                     <onleft>100</onleft>
                     <onclick>-</onclick>
                 </control>
-                <control type="edit" id="402">
-                    <description>Search Text Entry</description>
-                    <label>Search</label>
-                    <hinttext>Enter search string</hinttext>
-                    <align>left</align>
-                    <aligny>top</aligny>
-                    <font>rhapsody_font35_title</font>
-                    <texturefocus>button-focus.png</texturefocus>
-                    <texturenofocus>button-nofocus.png</texturenofocus>
+                <control type="button" id="401">
+                    <posx>50</posx>
+                    <posy>50</posy>
+                    <width>420</width>
+                    <height>50</height>
+                    <align>center</align>
+                    <textoffsety>8</textoffsety>
+                    <label>Start New Search</label>
+                    <texturenofocus>white.png</texturenofocus>
+                    <texturefocus border="8">selectoutline_solid.png</texturefocus>
+                    <font>rhapsody_font24_title</font>
+                    <textcolor>DD171717</textcolor>
+                    <focusedcolor>DD171717</focusedcolor>
+                    <!--onclick>-</onclick-->
+                    <onup>1001</onup>
                     <onleft>100</onleft>
-                    <textcolor>black</textcolor>
                 </control>
             </control>
 <!-- Library Pane -->
@@ -2248,13 +2253,9 @@
                             <font>rhapsody_font24_title</font>
                             <textcolor>DD171717</textcolor>
                             <focusedcolor>DD171717</focusedcolor>
-
                             <!--onclick>-</onclick-->
-
-
                             <onup>1001</onup>
                             <onleft>100</onleft>
-
                         </control>
                     </control>
                     <control type="group">

@@ -14,6 +14,8 @@ def draw_mainwin(win, app):
 	if frame == "Settings":
 		#print "Drawmain: No lists to draw on settings Page"
 		win.handle.setFocusId(1001)
+	if frame == "Search":
+		win.handle.setFocusId(201)
 	else:
 		view = win.handle.getProperty('browseview')
 		list_instance = app.get_var('view_matrix')[view]
