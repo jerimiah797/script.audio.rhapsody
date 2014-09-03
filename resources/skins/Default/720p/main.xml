@@ -2213,6 +2213,19 @@
                             <textcolor>DD171717</textcolor>
                             <!-- darkgrey -->
                         </control>
+                        <control type="button" id="201">
+                            <description>dummy button to set initial view</description>
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <texturenofocus>-</texturenofocus>
+                            <texturefocus>-</texturefocus>
+                            <onfocus>SetFocus(401)</onfocus>
+                            <ondown>1001</ondown>
+                            <onup>1001</onup>
+                            <onright>1001</onright>
+                            <onleft>100</onleft>
+                            <onclick>-</onclick>
+                        </control>
                         <control type="button" id="1001">
                             <posx>0</posx>
                             <posy>200</posy>
