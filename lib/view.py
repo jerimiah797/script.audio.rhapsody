@@ -1,5 +1,6 @@
 import xbmcgui
 import xbmc
+import xbmcvfs
 
 import os
 import subprocess
@@ -321,14 +322,15 @@ class MainWin(WinBase):
 				self.playlist.clear()
 				self.close()
 
-			# elif self.getFocusId() == 1002:
-			# 	try:
-			# 		temp = subprocess.Popen(['git', 'pull'], shell=False, stdout=subprocess.PIPE)
-			# 		#print temp.communicate()
-			# 	except:
-			# 		print "subprocess.call exception"
-			# 	#print temp.communicate()
-			# 	print "git pull completed. relaunch plugin for newest version"
+			elif self.getFocusId() == 1002:
+				path = "special://home/userdata/addon_data/script.audio.rhapsody/.clean_me"
+				f = xbmcvfs.File(path, 'w')
+				f.close()
+				if xbmcvfs.exists("special://home/userdata/addon_data/script.audio.rhapsody/.clean_me"):
+					xbmcgui.Dialog().ok("Success!!", "Relaunch Rhapsody to finish deleting cache files")
+					print "Housekeeping trigger file created"
+				else:
+					print "Something went wrong creating housekeeping trigger file"
 
 
 	def onClick(self, control):

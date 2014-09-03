@@ -1,5 +1,6 @@
 import xbmcgui
 import xbmc
+import xbmcvfs
 import json
 import commands
 import subprocess
@@ -82,5 +83,13 @@ def goodbye_while_logged_out(app):
 		git_pull()
 		app.win.close()
 
-
+def housekeeper():
+	success = xbmcvfs.exists("special://home/userdata/addon_data/script.audio.rhapsody/.clean_me")
+	if success:
+		xbmcvfs.delete("special://home/userdata/addon_data/script.audio.rhapsody/.clean_me")
+		xbmcvfs.delete("special://home/userdata/addon_data/script.audio.rhapsody/.albumdb.obj")
+		xbmcvfs.delete("special://home/userdata/addon_data/script.audio.rhapsody/.artistdb.obj")
+		print "Performed housekeeping"
+	else:
+		print "No housekeeping necessary"
 

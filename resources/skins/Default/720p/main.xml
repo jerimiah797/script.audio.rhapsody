@@ -2230,33 +2230,32 @@
                             <onclick>ClearProperty(full_name)</onclick>
                             <onclick>ClearProperty(country)</onclick>
                             <onclick>ClearProperty(logged_in)</onclick>
-                            <!--onclick>RunScript(special://skin/scripts/login.py)</onclick-->
-                            <ondown></ondown>
-
+                            <ondown>1002</ondown>
+                            <onright>-</onright>
                             <onleft>100</onleft>
 
                         </control>
-                        <!--control type="button" id="1002">
+                        <control type="button" id="1002">
                             <posx>0</posx>
                             <posy>270</posy>
                             <width>420</width>
                             <height>50</height>
                             <align>center</align>
                             <textoffsety>8</textoffsety>
-                            <label>Pull latest from github (broken, sorry)</label>
+                            <label>Reset cache files</label>
                             <texturenofocus>white.png</texturenofocus>
                             <texturefocus border="8">selectoutline_solid.png</texturefocus>
                             <font>rhapsody_font24_title</font>
                             <textcolor>DD171717</textcolor>
                             <focusedcolor>DD171717</focusedcolor>
 
-                            <onclick>-</onclick>
+                            <!--onclick>-</onclick-->
 
 
                             <onup>1001</onup>
                             <onleft>100</onleft>
 
-                        </control-->
+                        </control>
                     </control>
                     <control type="group">
                         <posx>200</posx>

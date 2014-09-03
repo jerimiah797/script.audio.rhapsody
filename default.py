@@ -30,6 +30,9 @@ if len(sys.argv) < 2:
 	# verify fonts are installed
 	skincheck.skinfix()
 
+	#clean cached metadata files if necessary
+	utils.housekeeper()
+
 	app = main.Application()
 
 	#loadwin = xbmcgui.WindowXML("loading.xml", app.__addon_path__, 'Default', '720p')
