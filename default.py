@@ -38,20 +38,23 @@ if len(sys.argv) < 2:
 	#loadwin = xbmcgui.WindowXML("loading.xml", app.__addon_path__, 'Default', '720p')
 	#loadwin.show()
 	# network check
+	app.loadwin.getControl(10).setLabel('Welcome to Rhapsody')
+	xbmc.sleep(2000)
 	app.loadwin.getControl(10).setLabel('Checking Rhapsody servers...')
 	try:
 		if app.api.get_artist_genre("Art.954"):
-			app.loadwin.getControl(10).setLabel('Installing fonts...')
+			app.loadwin.getControl(10).setLabel('Loading fonts...')
 			app.init_fonts()
+			xbmc.sleep(1000)
 			app.loadwin.getControl(10).setLabel('Getting things ready...')
 			app.cache.load_cached_data()
-			time.sleep(1)
+			xbmc.sleep(1000)
 	except:
 		if TEST == True:
 			pass
 		else:
 			app.loadwin.getControl(10).setLabel('Can\'t reach Rhapsody servers. \nMust be online to use Rhapsody.\nExiting...')
-			time.sleep(2)
+			xbmc.sleep(2000)
 			app.set_var('running', False)
 
 
@@ -62,14 +65,15 @@ if len(sys.argv) < 2:
 				logwin.doModal()
 				if not app.get_var('exiting'):
 					app.loadwin.getControl(10).setLabel('Logging you in...')
+					xbmc.sleep(1000)
 				else:
 					app.loadwin.getControl(10).setLabel('Finishing up...')
 				del logwin
-				time.sleep(1)
+				xbmc.sleep(1000)
 			else:
 				app.loadwin.getControl(10).setLabel('Logging you in ...')
 				app.set_var('logged_in', True)
-				time.sleep(1)
+				xbmc.sleep(1000)
 			app.api.token = app.mem.access_token
 			#utils.prettyprint(app.api.get_account_info())
 			if app.get_var("logged_in"):
@@ -88,7 +92,7 @@ if len(sys.argv) < 2:
 					app.cache.save_genre_data()
 	if not app.get_var('exiting'):
 		del app.win
-	time.sleep(1)
+	xbmc.sleep(1000)
 	app.loadwin.close()
 	del app.loadwin
 	del app
