@@ -33,20 +33,21 @@ class Api():
 				print "Call to %s succeeded in %s seconds" % (str(req.get_full_url()), '%.3f'%(t2-t1))
 				try:
 					results = json.load(response)
+					utils.prettyprint(results)
 					return results
 				except:
-					#return True
-					print "Inner 'try' failed. What now?"
+					return True
+					#Some calls such as playstart and playstop succeed but return no data
 			except urllib2.HTTPError, e:
 				#print "url: "+ str(req.get_full_url())
 				#print "------------------  Bad server response ----------------"
 				#print e.headers
-				#print e
+				print e
 				succeed += 1
 			except urllib2.URLError, e:
 				#print "url: "+ str(req.get_full_url())
-				#print 'We failed to reach a server.'
-				#print 'Reason: ', e.reason
+				print 'We failed to reach a server.'
+				print 'Reason: ', e.reason
 				succeed += 1
 		return False
 
@@ -101,7 +102,7 @@ class Api():
 			req = self.__build_member_req(url)
 			results = self.__get_data_from_rhapsody(req, 30)
 			if results:
-				utils.prettyprint(results)
+				#utils.prettyprint(results)
 				return results['valid']
 			else:
 				print "Validate Session call didn't work. Let's ignore it for now."
@@ -139,7 +140,7 @@ class Api():
 		req.add_header('Content-Type', 'application/json')
 		req.add_data(data)
 		results = self.__get_data_from_rhapsody(req, 10)
-		print "Logging a Play Start event. "+str(results)
+		#print "Logging a Play Start event. "+str(results)
 		return ztime
 
 

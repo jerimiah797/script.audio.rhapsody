@@ -148,13 +148,14 @@ class Player(xbmc.Player):
 		#	print "waiting for get_session to finish"
 		valid = self.api.validate_session(session)
 		if valid:
-			print "Playback session validated."
+			#print "Playback session validated."
 			return True
 		else:
 			print "Playback session invalid. Stopping Playback"
 			#self.get_session()
 			#return True
 			self.stop()
+			return False
 
 
 	def get_session(self):
