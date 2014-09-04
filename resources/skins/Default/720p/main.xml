@@ -2351,7 +2351,7 @@
             <width>280</width>
             <label>$INFO[Window.Property(frame)]</label>
             <font>rhapsody_font35_title</font>
-            <textcolor>black</textcolor>
+            <textcolor>DD171717</textcolor>
             <align>right</align>
             <aligny>top</aligny>
         </control>
