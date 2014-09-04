@@ -176,7 +176,7 @@ class ContentList():
 
 	def determine_explicit(self, item):
 		if 'Explicit' in item['tags']:
-			print "item has Explicit tag!"
+			#print "item has Explicit tag!"
 			return True
 		else:
 			return False

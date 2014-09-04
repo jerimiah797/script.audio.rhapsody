@@ -25,25 +25,28 @@ class Api():
 
 	def __get_data_from_rhapsody(self, req, timeout):
 		succeed = 0
+		t1 = time.time()
 		while succeed < 2:
 			try:
 				response = urllib2.urlopen(req, timeout=timeout)
+				t2 = time.time()
+				print "Call to %s succeeded in %s seconds" % (str(req.get_full_url()), '%.3f'%(t2-t1))
 				try:
 					results = json.load(response)
 					return results
 				except:
-					return True
-					"print Inner 'try' failed. What now?"
+					#return True
+					print "Inner 'try' failed. What now?"
 			except urllib2.HTTPError, e:
-				print "url: "+ str(req.get_full_url())
-				print "------------------  Bad server response ----------------"
-				print e.headers
-				print e
+				#print "url: "+ str(req.get_full_url())
+				#print "------------------  Bad server response ----------------"
+				#print e.headers
+				#print e
 				succeed += 1
 			except urllib2.URLError, e:
-				print "url: "+ str(req.get_full_url())
-				print 'We failed to reach a server.'
-				print 'Reason: ', e.reason
+				#print "url: "+ str(req.get_full_url())
+				#print 'We failed to reach a server.'
+				#print 'Reason: ', e.reason
 				succeed += 1
 		return False
 
@@ -92,21 +95,18 @@ class Api():
 
 
 	def validate_session(self, session):
-		keep_trying = 1
 		print "Rhapapi: Validating Playback Session"
 		if 'id' in session:
-			while keep_trying < 2:
-				url = "%ssessions/%s" %(self.S_BASEURL, session[u'id'])
-				req = self.__build_member_req(url)
-				results = self.__get_data_from_rhapsody(req, 20)
-				if results:
-					utils.prettyprint(results)
-					return results['valid']
-				else:
-					keep_trying += 1
-					print "Validate Session call didn't work"
+			url = "%ssessions/%s" %(self.S_BASEURL, session[u'id'])
+			req = self.__build_member_req(url)
+			results = self.__get_data_from_rhapsody(req, 30)
+			if results:
+				utils.prettyprint(results)
+				return results['valid']
+			else:
+				print "Validate Session call didn't work. Let's ignore it for now."
 			#print "All attempts to verify session timed out."
-			return False
+			return True
 		else:
 			print "No existing session to check. "
 			pass
