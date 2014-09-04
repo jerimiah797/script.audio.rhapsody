@@ -621,6 +621,7 @@ class AlbumDialog(DialogBase):
 		#xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
 		#self.app.player.get_session()
 		thread.start_new_thread(self.app.player.get_session, () )
+		self.app.player.check_session = False
 		if id == 21:
 			print "id is 21, let's select the playing track and focus the tracklist"
 			while not self.tracks_ready:
@@ -637,7 +638,8 @@ class AlbumDialog(DialogBase):
 		else:
 			self.app.player.playselected(self.app.player.now_playing['pos'])
 			#xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
-
+		#thread.start_new_thread(self.app.player.session_test, () )
+		#remove this when session handling is complete
 
 	def now_playing_matches_album_dialog(self):
 		try:

@@ -105,9 +105,9 @@ class Api():
 				#utils.prettyprint(results)
 				return results['valid']
 			else:
-				print "Validate Session call didn't work. Let's ignore it for now."
-			#print "All attempts to verify session timed out."
-			return True
+				print "Validate Session call didn't work. This means it is expired, rather than invalid"
+				results = None
+				return results
 		else:
 			print "No existing session to check. "
 			pass

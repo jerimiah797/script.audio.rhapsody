@@ -19,6 +19,7 @@ class Player(xbmc.Player):
 		self.now_playing = {'pos': 0, 'type': None, 'item':[], 'id': None}
 		self.session = []
 		self.session_lock = False
+		self.check_session = True
 		self.notify = Notifier()
 		#self.now_playing['item']['album_id'] = 'blank'
 		self.onplay_lock = False
@@ -39,13 +40,15 @@ class Player(xbmc.Player):
 				print "There, fixed it for ya. "
 				self.now_playing['pos'] = pos2
 			thread.start_new_thread(self.notify.report_playback, (self, self.api))
-			thread.start_new_thread(self.validate_session, (self, self.session) )
 			# update listening history if current view
 			if self.win.getProperty('browseview') == "history_tracks":
 				self.app.hist_tracks.build()
 				print "OnPlaybackStarted: rebuilt history tracklist"
 				view.draw_mainwin(self.win, self.app)
-			xbmc.sleep(2)
+			xbmc.sleep(20)
+			if self.check_session == True:
+				thread.start_new_thread(self.validate_session, (self, self.session) )
+			self.check_session = True
 			self.onplay_lock = False
 		else:
 			#print "--------- blocked an extra play action from XBMC --------"
@@ -55,13 +58,10 @@ class Player(xbmc.Player):
 	def onPlayBackResumed(self):
 		if not self.onplay_lock:
 			self.onplay_lock = True
-			thread.start_new_thread(self.validate_session, (self, self.session))
 			self.win.sync_playlist_pos()
 			pos = self.playlist.getposition()
 			self.now_playing['pos'] = pos
 			print "OnPlaybackResumed: Playing track "+str(pos+1)
-			#self.add_playable_track(1)
-			#self.add_playable_track(-1)
 			self.win.sync_playlist_pos()
 			pos2 = self.playlist.getposition()
 			#print "pos: "+str(pos)+" pos2: "+str(pos2)
@@ -73,15 +73,17 @@ class Player(xbmc.Player):
 				#self.add_playable_track(1)
 				#self.add_playable_track(-1)
 			thread.start_new_thread(self.notify.report_playback, (self, self.api))
-			thread.start_new_thread(self.validate_session, (self, self.session))
-			xbmc.sleep(2)
+			xbmc.sleep(20)
+			if self.check_session == True:
+				thread.start_new_thread(self.validate_session, (self, self.session) )
+			self.check_session = True
 			self.onplay_lock = False
 		else:
 			#print "--------- blocked an extra play action from XBMC --------"
 			pass
 
 	def onPlayBackEnded(self):
-		#print "onPlaybackEnded was detected!"
+		print "onPlaybackEnded was detected!"
 		thread.start_new_thread(self.notify.report_playback, (self, self.api))
 		# update listening history if current view
 		if self.win.getProperty('browseview') == "history_tracks":
@@ -90,7 +92,7 @@ class Player(xbmc.Player):
 			view.draw_mainwin(self.win, self.app)
 
 	def onPlayBackStopped(self):
-		#print "onPlaybackStopped was detected!"
+		print "onPlaybackStopped was detected!"
 		thread.start_new_thread(self.notify.report_playback, (self, self.api))
 		#update listening history if current view
 		if self.win.getProperty('browseview') == "history_tracks":
@@ -142,20 +144,25 @@ class Player(xbmc.Player):
 
 
 	def validate_session(self, s, session):
-		#print "player.validate_session"
-		#while self.session_lock == True:
-		#	time.sleep(1)
-		#	print "waiting for get_session to finish"
 		valid = self.api.validate_session(session)
-		if valid:
-			#print "Playback session validated."
-			return True
-		else:
-			print "Playback session invalid. Stopping Playback"
-			#self.get_session()
-			#return True
+		if valid == None:
+			#pop the "Are you still listening?" Yes/No dialog
+			print "Session timed out. Are you still listening?"
+			xbmc.sleep(5000)  #wait a few seconds so we don't stomp on playstop notification values
 			self.stop()
-			return False
+		elif valid:
+			#print "Playback session validated."
+			pass
+		elif not valid:
+			#pop "Playback stopped because you're streaming from somewhere else"
+			print "Playback stopped because you're streaming from somewhere else"
+			xbmc.sleep(5000) #wait a few seconds so we don't stomp on playstop notification values
+			self.stop()
+		else:
+			print "Unexpected result validating session. Stopping playback"
+			xbmc.sleep(5000) #wait a few seconds so we don't stomp on playstop notification values
+			self.stop()
+		return
 
 
 	def get_session(self):
@@ -166,6 +173,15 @@ class Player(xbmc.Player):
 		#time.sleep(2)
 		#self.session_lock = False
 		print "Created playback session."
+
+	def session_test(self):
+		count = 1
+		while count <20:
+			xbmc.sleep(5000)
+			self.api.validate_session(self.session)
+			count += 1
+			
+
 
 
 class Notifier():
