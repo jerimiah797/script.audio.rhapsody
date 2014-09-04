@@ -69,7 +69,7 @@ if len(sys.argv) < 2:
 				else:
 					app.loadwin.getControl(10).setLabel('Finishing up...')
 				del logwin
-				xbmc.sleep(1000)
+				xbmc.sleep(2000)
 			else:
 				app.loadwin.getControl(10).setLabel('Logging you in ...')
 				app.set_var('logged_in', True)
@@ -90,6 +90,7 @@ if len(sys.argv) < 2:
 				if app.cache.genre_modified == True:
 					print "Saving updated genre data"
 					app.cache.save_genre_data()
+				xbmc.sleep(2000)
 	if not app.get_var('exiting'):
 		del app.win
 	xbmc.sleep(1000)
