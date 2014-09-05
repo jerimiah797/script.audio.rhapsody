@@ -373,3 +373,17 @@ class Api():
 		else:
 			return False
 
+	def get_search_results(self, text):
+		print "Rhapapi: getting search results"
+		url = "%ssearch?apikey=%s&limit=10&q=%s" % (self.BASEURL, self.APIKEY, urllib.quote_plus(text))
+		req = self.__build_req(url)
+		results = self.__get_data_from_rhapsody(req, 10)
+		if results:
+			return results
+		else:
+			return False
+
+
+
+
+

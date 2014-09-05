@@ -305,15 +305,15 @@ class MainWin(WinBase):
 
 		if id == 7:
 
-			if self.getFocusId() == 301 or self.getFocusId() == 501:
+			if self.getFocusId() == 301 or self.getFocusId() == 501: # sliding panel on browse and library
 				draw_mainwin(self, self.app)
 				self.app.view_keeper = {'browseview': self.getProperty('browseview'), 'frame': self.getProperty('frame')}
 
-			elif self.getFocusId() == 101:
+			elif self.getFocusId() == 101: # left nav panel
 				draw_mainwin(self, self.app)
 				self.app.view_keeper = {'browseview': self.getProperty('browseview'), 'frame': self.getProperty('frame')}
 
-			elif self.getFocusId() == 1001:
+			elif self.getFocusId() == 1001: # sign in with different account on settings page
 				# Logout happens here
 				self.app.set_var('logged_in', False)
 				try:
@@ -324,15 +324,26 @@ class MainWin(WinBase):
 				self.playlist.clear()
 				self.close()
 
-			elif self.getFocusId() == 1002:
+			elif self.getFocusId() == 1002: # clear app data button on settings page
 				path = "special://home/userdata/addon_data/script.audio.rhapsody/.clean_me"
 				f = xbmcvfs.File(path, 'w')
 				f.close()
 				if xbmcvfs.exists("special://home/userdata/addon_data/script.audio.rhapsody/.clean_me"):
 					xbmcgui.Dialog().ok("Success!!", "Relaunch Rhapsody to finish deleting cache files")
+					# should pop a yes no dialog that deletes then quits instead of a notice
 					print "Housekeeping trigger file created"
 				else:
 					print "Something went wrong creating housekeeping trigger file"
+
+			elif self.getFocusId() == 401:  # new search button - opens keyboard dialog for text entry
+				kb = xbmc.Keyboard()
+				kb.setHeading('Enter Artist, Album, or Track') # optional
+				kb.doModal()
+				if (kb.isConfirmed()):
+					text = kb.getText()
+					print text
+					self.app.api.get_search_results(text)
+
 
 
 	def onClick(self, control):
