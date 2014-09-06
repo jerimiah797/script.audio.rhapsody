@@ -6,6 +6,7 @@ import datetime
 import time
 import utils
 import sys
+
 if sys.version_info >=  (2, 7):
     import json as json
 else:
@@ -25,31 +26,39 @@ class Api():
 
 	def __get_data_from_rhapsody(self, req, timeout):
 		succeed = 0
-		t1 = time.time()
-		while succeed < 2:
+		while succeed < 1:
 			try:
-				response = urllib2.urlopen(req, timeout=timeout)
-				t2 = time.time()
-				print "Call to %s succeeded in %s seconds" % (str(req.get_full_url()), '%.3f'%(t2-t1))
+				t1 = time.time()
+				
 				try:
-					results = json.load(response)
-					utils.prettyprint(results)
-					return results
-				except:
-					return True
-					#Some calls such as playstart and playstop succeed but return no data
-			except urllib2.HTTPError, e:
-				#print "url: "+ str(req.get_full_url())
-				#print "------------------  Bad server response ----------------"
-				#print e.headers
-				print e
-				succeed += 1
-			except urllib2.URLError, e:
-				#print "url: "+ str(req.get_full_url())
-				print 'We failed to reach a server.'
-				print 'Reason: ', e.reason
-				succeed += 1
-		return False
+					response = urllib2.urlopen(req, timeout=timeout)
+					t2 = time.time()
+					print "Call to %s succeeded in %s seconds" % (str(req.get_full_url()), '%.3f'%(t2-t1))
+					try:
+						results = json.load(response)
+						utils.prettyprint(results)
+						return results
+					except:
+						return True
+						#Some calls such as playstart and playstop succeed but return no data
+				except urllib2.HTTPError, e:
+					#print "url: "+ str(req.get_full_url())
+					print "------------------  Bad server response ----------------"
+					#print e.headers
+					print e
+					succeed += 1
+					xbmc.sleep(500)
+				except urllib2.URLError, e:
+					#print "url: "+ str(req.get_full_url())
+					print 'We failed to reach a server.'
+					print 'Reason: ', e.reason
+					succeed += 1
+					xbmc.sleep(500)
+
+				return False
+			except:
+				print "something went very wrong with that request. Let's try again. "
+				xbmc.sleep(1000)
 
 
 #----------- Secure API calls requiring auth headers ---------
