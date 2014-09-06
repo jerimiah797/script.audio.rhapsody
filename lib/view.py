@@ -252,6 +252,10 @@ class MainWin(WinBase):
 		self.clist = None #main list for active view
 		self.dlist = None #list for playlist tracks view
 		self.mem_playlist_selection = None
+		self.search_types = ["Artists", "Albums", "Tracks", "Live Radio Stations"]
+		self.search_types_index = 1
+		self.selected_search_type = self.search_types[self.search_types_index]
+		print "Default search type: "+self.selected_search_type
 
 
 	def onInit(self):
@@ -269,6 +273,7 @@ class MainWin(WinBase):
 		self.handle.setProperty("username", self.mem.username)
 		self.handle.setProperty("date_created", self.mem.date_created)
 		self.handle.setProperty("account_type", self.mem.account_type)
+		self.handle.setProperty("search_type", self.selected_search_type)
 		self.frame_label = self.getControl(121)
 		draw_mainwin(self, self.app)
 
@@ -343,6 +348,15 @@ class MainWin(WinBase):
 					text = kb.getText()
 					print text
 					self.app.api.get_search_results(text)
+
+			elif self.getFocusId() == 402:
+				self.search_types_index = (self.search_types_index + 1) % 4
+				self.selected_search_type = self.search_types[self.search_types_index]
+				print "Search type changed to "+self.selected_search_type
+				self.handle.setProperty("search_type", self.selected_search_type)
+
+
+
 
 
 
