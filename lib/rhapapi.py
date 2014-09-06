@@ -28,8 +28,7 @@ class Api():
 		succeed = 0
 		while succeed < 1:
 			try:
-				t1 = time.time()
-				
+				t1 = time.time()				
 				try:
 					response = urllib2.urlopen(req, timeout=timeout)
 					t2 = time.time()
@@ -54,7 +53,6 @@ class Api():
 					print 'Reason: ', e.reason
 					succeed += 1
 					xbmc.sleep(500)
-
 				return False
 			except:
 				print "something went very wrong with that request. Let's try again. "

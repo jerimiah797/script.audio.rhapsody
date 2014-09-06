@@ -147,9 +147,9 @@ class Player(xbmc.Player):
 		valid = self.api.validate_session(session)
 		if valid == None:
 			#pop the "Are you still listening?" Yes/No dialog
-			print "Session timed out. Are you still listening?"
+			print "Playback session expired, but still playing tracks. Let's get a fresh one."
+			self.get_session()
 			xbmc.sleep(5000)  #wait a few seconds so we don't stomp on playstop notification values
-			self.stop()
 		elif valid:
 			#print "Playback session validated."
 			pass
