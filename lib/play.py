@@ -190,39 +190,25 @@ class Notifier():
 		self.ztime = None
 		self.duration = None
 		self.time = None
-		self.last_reported_track = None
 
 	def report_playback(self, player, api):
 		pos = player.playlist.getposition()
 		#print player.now_playing['item'][pos]
 		track_id = player.now_playing['item'][pos]['id']
-		now = time.time()
-		xbmc.sleep(5000)
 		#print "report playback: "+track_id
 		if self.current_track:
 			#print "reporting stop event for current track"
-			#now = time.time()
-			if self.time != None:
-				self.duration = int(now - self.time)
-				if self.duration > 2:
-					#print "duration: "+str(self.duration)
-					api.log_playstop(self.current_track, self.ztime, self.duration)
-					#print "clearing current track info"
-					self.current_track = None
-					self.duration = None
-					self.ztime = None
-					self.time = None
-			else:
-				print "skipped a playstop for play less than 2 seconds"
+			now = time.time()
+			self.duration = int(now - self.time)
+			#print "duration: "+str(self.duration)
+			api.log_playstop(self.current_track, self.ztime, self.duration)
+			#print "clearing current track info"
+			self.current_track = None
+			self.duration = None
+			self.ztime = None
+			self.time = None
 		if player.isPlaying():
 			#print "setting current track info and reporting play start event"
 			self.current_track = track_id
-			if self.current_track == self.last_reported_track:
-				print "skipped a playstart because it was already reported"
-				pass
-			else:
-				self.ztime = api.log_playstart(self.current_track)
-				self.time = now
-				self.last_reported_track = self.current_track
-
-
+			self.ztime = api.log_playstart(self.current_track)
+			self.time = time.time()

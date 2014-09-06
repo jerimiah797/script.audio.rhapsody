@@ -57,12 +57,12 @@ class Member():
 		elapsed = now-self.timestamp
 		print "time elapsed: "+str(elapsed)
 		print "self.expires_in: "+str(self.expires_in)
-		if elapsed < self.expires_in:
-			print "Saved creds look good. Automatic login successful!"
+		#if diff < self.expires_in:
+		#	print "Saved creds look good. Automatic login successful!"
 		#	return True
-		else:
-			print "Saved creds have expired. Generating new ones."
-			self.login_member(self.username, self.password)
+		#else:
+		#	print "Saved creds have expired. Generating new ones."
+		#	self.login_member(self.username, self.password)
 		#	return True
 
 
