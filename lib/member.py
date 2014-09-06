@@ -10,7 +10,6 @@ import xbmc
 class Member():
 	def __init__(self, app):
 		self.info = []
-		#self.filename = app.__addon_path__+'/resources/.rhapuser.obj'
 		self.filename = os.path.join(app.__addon_data__, '.rhapuser.obj')
 		self.picklefile = ''
 		self.cobrandId = "40134"
@@ -51,7 +50,13 @@ class Member():
 		except:
 			print "Couldn't find saved login info. Login please"
 			return False
-		#diff = time.time()-self.timestamp
+
+		now = time.time()
+		print "Now: "+str(now)
+		print "Token timestamp: "+str(self.timestamp)
+		elapsed = now-self.timestamp
+		print "time elapsed: "+str(elapsed)
+		print "self.expires_in: "+str(self.expires_in)
 		#if diff < self.expires_in:
 		#	print "Saved creds look good. Automatic login successful!"
 		#	return True
@@ -59,12 +64,14 @@ class Member():
 		#	print "Saved creds have expired. Generating new ones."
 		#	self.login_member(self.username, self.password)
 		#	return True
-		try:
-			data = self.login_member(self.username, self.password)
-			if data['bad_creds'] == True:
-				print "Unable to login at this time. Proceeding in anonymous mode"
-		except:
-			pass
+
+
+		# try:
+		# 	data = self.login_member(self.username, self.password)
+		# 	if data['bad_creds'] == True:
+		# 		print "Unable to login at this time. Proceeding in anonymous mode"
+		# except:
+		# 	pass
 		return True
 
 	def save_user_info(self):
@@ -97,11 +104,12 @@ class Member():
 		self.password = pswd
 		api = rhapapi.Api()
 		result = api.login_member(name, pswd)
-		#result2 = api.get_account_info()
+
 		try:
-			if result: #and result2:
+			if result: 
 				if "access_token" in result:
-					print "Successful!"
+					print "Successful! Grabbing account details now, too."
+					self.get_member_details()
 					self.access_token =     result["access_token"]
 					self.catalog =          result["catalog"]
 					self.expires_in =       result["expires_in"]
@@ -110,8 +118,6 @@ class Member():
 					self.issued_at =        result["issued_at"]
 					self.last_name =        result["last_name"]
 					self.refresh_token =    result["refresh_token"]
-					#self.account_type =     result2[""]
-					#self.date_created =     result2[""]
 					data['logged_in'] = True
 					data['bad_creds'] = False
 					self.save_user_info()
@@ -128,7 +134,6 @@ class Member():
 			return data
 
 	def get_member_details(self):
-		#api = rhapapi.Api()
 		result = self.app.api.get_account_info()
 		#try:
 		if result:

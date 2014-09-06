@@ -35,7 +35,7 @@ class Api():
 					print "Call to %s succeeded in %s seconds" % (str(req.get_full_url()), '%.3f'%(t2-t1))
 					try:
 						results = json.load(response)
-						utils.prettyprint(results)
+						#utils.prettyprint(results)
 						return results
 					except:
 						return True
