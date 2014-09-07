@@ -382,7 +382,8 @@ class Api():
 
 	def get_search_results(self, text, stype):
 		print "Rhapapi: getting search results"
-		url = "%ssearch?apikey=%s&limit=10&q=%s&type=%s" % (self.BASEURL, self.APIKEY, urllib.quote_plus(text), stype)
+		url = "%ssearch?apikey=%s&limit=50&q=%s&type=%s" % (self.BASEURL, self.APIKEY, urllib.quote_plus(text), stype)
+		#url = "%ssearch?apikey=%s&q=%s&type=%s" % (self.BASEURL, self.APIKEY, urllib.quote_plus(text), stype)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 10)
 		if results:

@@ -7,6 +7,10 @@ import subprocess
 import os
 import sys
 import unicodedata
+import time
+from datetime import datetime
+
+AGE_STAMP = 1410117986.51
 
 def remove_html_markup(s):
 	tag = False
@@ -85,11 +89,33 @@ def goodbye_while_logged_out(app):
 		app.win.close()
 
 def housekeeper():
-	success = xbmcvfs.exists("special://home/userdata/addon_data/script.audio.rhapsody/.clean_me")
-	if success:
+	file_flag = xbmcvfs.exists("special://home/userdata/addon_data/script.audio.rhapsody/.clean_me")
+	files = [".albumdb.obj", ".artistdb.obj", ".genres.obj", ".rhapuser.obj"]
+	#now = time.time()
+	#print "current timestamp, type: %s  %s" % (str(now), type(now))
+	if file_flag:
+		print "Found the clean_me file! Now let's delete it"
 		xbmcvfs.delete("special://home/userdata/addon_data/script.audio.rhapsody/.clean_me")
-		xbmcvfs.delete("special://home/userdata/addon_data/script.audio.rhapsody/.albumdb.obj")
-		xbmcvfs.delete("special://home/userdata/addon_data/script.audio.rhapsody/.artistdb.obj")
+	else:
+		print "No clean-me file. Let's check file dates"
+		for item in files:
+			f = "special://home/userdata/addon_data/script.audio.rhapsody/"+item
+			f_os = xbmc.translatePath(f)
+			print "Checking "+f_os
+			if xbmcvfs.exists(f):
+				modifiedTime = os.path.getmtime(f_os)
+				if modifiedTime < AGE_STAMP:
+					file_flag = True
+					print "%s is too old. Let's do some housekeeping." % (item)
+					break
+	if file_flag:
+		print "Deleting files..."
+		for item in files:
+			f = "special://home/userdata/addon_data/script.audio.rhapsody/"+item
+			f_os = xbmc.translatePath(f)
+			print "Deleting "+f_os
+			if xbmcvfs.exists(f):
+				xbmcvfs.delete(f)
 		print "Performed housekeeping"
 	else:
 		print "No housekeeping necessary"
