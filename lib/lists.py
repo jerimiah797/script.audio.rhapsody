@@ -28,7 +28,14 @@ class ContentList():
 	#def fresh(self):
 	#	return True
 
-	def make_active(self):
+	def make_active(self, **kwargs):
+
+		if kwargs.get("results"):
+			results = kwargs.get("results")
+			print "make_active, using results from kwargs"
+		else:
+			results = None
+			print "make_active, results set to None"
 
 		if (self.app.get_var('last_rendered_list') == self.name) and self.win.getListSize()>2:
 			#print "Window already has that list in memory. Skipping list building"
@@ -45,17 +52,21 @@ class ContentList():
 			self.build_winlist()
 		else:
 			#print "Doing full data fetch and list building for mainwin"
-			self.build()
+			self.build(results=results)
 		self.app.set_var('last_rendered_list', self.name)
 		self.app.set_var('list', self.data)
 		
 
-	def build(self):
+	def build(self, **kwargs):
+		if kwargs.get('results'):
+			results = kwargs.get('results')
+		else:
 		#print "ContentList: build (full)"
-		results = self.download_list()
+			results = self.download_list()
 		if results:
 			self.ingest_list(results)
 			self.fresh = True
+			self.win.search_submitted = False
 		else:
 			print "Couldn't get info from servers about "+self.name
 

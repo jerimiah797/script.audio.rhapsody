@@ -105,33 +105,35 @@ class Member():
 		api = rhapapi.Api()
 		result = api.login_member(name, pswd)
 
-		try:
-			if result: 
-				if "access_token" in result:
-					print "Successful! Grabbing account details now, too."
-					self.get_member_details()
-					self.access_token =     result["access_token"]
-					self.catalog =          result["catalog"]
-					self.expires_in =       result["expires_in"]
-					self.first_name =       result["first_name"]
-					self.guid =             result["guid"]
-					self.issued_at =        result["issued_at"]
-					self.last_name =        result["last_name"]
-					self.refresh_token =    result["refresh_token"]
-					data['logged_in'] = True
-					data['bad_creds'] = False
-					self.save_user_info()
-					return data
-				else:
-					print "Login failed. Try again."
-					data['logged_in'] = False
-					data['bad_creds'] = True
-					return data
-		except:
-			print "Login failed. Try again."
-			data['logged_in'] = False
-			data['bad_creds'] = True
-			return data
+		#try:
+		if result: 
+			if "access_token" in result:
+				
+				self.access_token =     result["access_token"]
+				self.catalog =          result["catalog"]
+				self.expires_in =       result["expires_in"]
+				self.first_name =       result["first_name"]
+				self.guid =             result["guid"]
+				self.issued_at =        result["issued_at"]
+				self.last_name =        result["last_name"]
+				self.refresh_token =    result["refresh_token"]
+				print "Successful! Grabbing account details now, too."
+				self.app.api.token = self.access_token
+				self.get_member_details()
+				data['logged_in'] = True
+				data['bad_creds'] = False
+				self.save_user_info()
+				return data
+			else:
+				print "Login failed. Try again."
+				data['logged_in'] = False
+				data['bad_creds'] = True
+				return data
+		#except:
+		#	print "Login failed. Try again."
+		#	data['logged_in'] = False
+		#	data['bad_creds'] = True
+		#	return data
 
 	def get_member_details(self):
 		result = self.app.api.get_account_info()

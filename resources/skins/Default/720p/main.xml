@@ -83,6 +83,7 @@
                     <item id="102">
                         <label>Search</label>
                         <onclick>SetProperty(frame,Search)</onclick>
+                        <onclick>SetProperty(browseview,search_albums)</onclick>
                         <!--onclick>Window.SetFocus(201)</onclick-->
                     </item>
                     <item id="103">
@@ -963,6 +964,7 @@
                     <onup>1001</onup>
                     <onleft>100</onleft>
                     <onright>402</onright>
+                    <ondown>3400</ondown>
                 </control>
                 <control type="button" id="402">
                     <posx>520</posx>
@@ -980,14 +982,15 @@
                     <!--onclick>-</onclick-->
                     <onup>1001</onup>
                     <onleft>401</onleft>
+                    <ondown>3400</ondown>
                 </control>
 
                 <control type="group" id="3400">
 <!-- Albums View -->
                     <control type="panel" id="3451">
                         <visible>StringCompare(Window.Property(browseview),search_albums)</visible>
-                        <onup>301</onup>
-                        <ondown>3351</ondown>
+                        <onup>401</onup>
+                        <ondown>3451</ondown>
                         <onright>-</onright>
                         <posy>90</posy>
                         <width>1200</width>
@@ -1055,7 +1058,7 @@
                                 <focusedcolor>-</focusedcolor>
                             </control-->
                             <control type="image">
-                                <visible>Control.HasFocus(3351)</visible>
+                                <visible>Control.HasFocus(3451)</visible>
                                 <width>209</width>
                                 <height>209</height>
                                 <posx>0</posx>
@@ -1063,7 +1066,7 @@
                                 <texture border="0">outline.png</texture>
                             </control>
                             <control type="image">
-                                <visible>Control.HasFocus(3351)</visible>
+                                <visible>Control.HasFocus(3451)</visible>
                                 <width>209</width>
                                 <height>30</height>
                                 <posx>0</posx>
@@ -1071,7 +1074,7 @@
                                 <texture border="0">box.png</texture>
                             </control>
                             <control type="label">
-                                <visible>Control.HasFocus(3351)</visible>
+                                <visible>Control.HasFocus(3451)</visible>
                                 <posx>14</posx>
                                 <posy>197</posy>
                                 <width>170</width>
@@ -1084,7 +1087,7 @@
                                 <scroll>false</scroll>
                             </control>
                             <control type="label">
-                                <visible>Control.HasFocus(3351)</visible>
+                                <visible>Control.HasFocus(3451)</visible>
                                 <posx>14</posx>
                                 <posy>215</posy>
                                 <width>170</width>
@@ -1120,8 +1123,8 @@
 <!-- Artists View -->
                     <control type="panel" id="3452">
                         <visible>StringCompare(Window.Property(browseview),search_artists)</visible>
-                        <onup>301</onup>
-                        <ondown>3352</ondown>
+                        <onup>401</onup>
+                        <ondown>3452</ondown>
                         <onright>-</onright>
                         <posy>90</posy>
                         <width>1200</width>
@@ -1177,7 +1180,7 @@
                                 <focusedcolor>-</focusedcolor>
                             </control-->
                             <control type="image">
-                                <visible>Control.HasFocus(3352)</visible>
+                                <visible>Control.HasFocus(3452)</visible>
                                 <width>299</width>
                                 <height>209</height>
                                 <posx>0</posx>
@@ -1185,7 +1188,7 @@
                                 <texture border="0">outline.png</texture>
                             </control>
                             <control type="image">
-                                <visible>Control.HasFocus(3352)</visible>
+                                <visible>Control.HasFocus(3452)</visible>
                                 <width>299</width>
                                 <height>30</height>
                                 <posx>0</posx>
@@ -1193,7 +1196,7 @@
                                 <texture border="0">box.png</texture>
                             </control>
                             <control type="label">
-                                <visible>Control.HasFocus(3352)</visible>
+                                <visible>Control.HasFocus(3452)</visible>
                                 <posx>14</posx>
                                 <posy>197</posy>
                                 <width>170</width>
@@ -1206,7 +1209,7 @@
                                 <scroll>false</scroll>
                             </control>
                             <control type="label">
-                                <visible>Control.HasFocus(3352)</visible>
+                                <visible>Control.HasFocus(3452)</visible>
                                 <posx>14</posx>
                                 <posy>215</posy>
                                 <width>170</width>
