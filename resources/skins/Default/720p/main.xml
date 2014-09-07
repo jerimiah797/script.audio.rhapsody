@@ -971,7 +971,7 @@
                     <height>50</height>
                     <align>center</align>
                     <textoffsety>8</textoffsety>
-                    <label>Search For: $INFO[Window.Property(search_type)]</label>
+                    <label>Search For: $INFO[Window.Property(search_string)]</label>
                     <texturenofocus>white.png</texturenofocus>
                     <texturefocus border="8">selectoutline_solid.png</texturefocus>
                     <font>rhapsody_font24_title</font>

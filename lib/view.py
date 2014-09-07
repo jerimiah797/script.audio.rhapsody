@@ -252,7 +252,8 @@ class MainWin(WinBase):
 		self.clist = None #main list for active view
 		self.dlist = None #list for playlist tracks view
 		self.mem_playlist_selection = None
-		self.search_types = ["Artists", "Albums", "Tracks", "Live Radio Stations"]
+		self.search_strings = ["Artists", "Albums", "Tracks", "Broadcast Radio"]
+		self.search_types = ["artist", "album", "track", "radio"]
 		self.search_types_index = 1
 		self.selected_search_type = self.search_types[self.search_types_index]
 		print "Default search type: "+self.selected_search_type
@@ -273,7 +274,7 @@ class MainWin(WinBase):
 		self.handle.setProperty("username", self.mem.username)
 		self.handle.setProperty("date_created", self.mem.date_created)
 		self.handle.setProperty("account_type", self.mem.account_type)
-		self.handle.setProperty("search_type", self.selected_search_type)
+		self.handle.setProperty("search_string", self.search_strings[self.search_types_index])
 		self.frame_label = self.getControl(121)
 		draw_mainwin(self, self.app)
 
@@ -342,18 +343,20 @@ class MainWin(WinBase):
 
 			elif self.getFocusId() == 401:  # new search button - opens keyboard dialog for text entry
 				kb = xbmc.Keyboard()
-				kb.setHeading('Enter Artist, Album, or Track') # optional
+				kb.setHeading('Enter Artist, Album, Track, or Station') 
 				kb.doModal()
 				if (kb.isConfirmed()):
 					text = kb.getText()
 					print text
-					self.app.api.get_search_results(text)
+					results = self.app.api.get_search_results(text, self.selected_search_type)
+					if results:
+						utils.prettyprint(results)
 
 			elif self.getFocusId() == 402:
 				self.search_types_index = (self.search_types_index + 1) % 4
 				self.selected_search_type = self.search_types[self.search_types_index]
 				print "Search type changed to "+self.selected_search_type
-				self.handle.setProperty("search_type", self.selected_search_type)
+				self.handle.setProperty("search_string", self.search_strings[self.search_types_index])
 
 
 
