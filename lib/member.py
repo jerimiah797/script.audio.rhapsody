@@ -55,8 +55,8 @@ class Member():
 		print "Now: "+str(now)
 		print "Token timestamp: "+str(self.timestamp)
 		elapsed = now-self.timestamp
-		print "time elapsed: "+str(elapsed)
-		print "self.expires_in: "+str(self.expires_in)
+		print "time elapsed: %s, type is %s" % (str(elapsed), type(elapsed))
+		print "self.expires_in: %s, type is %s" % (str(self.expires_in), type(self.expires_in))
 		if elapsed < self.expires_in:
 			print "Saved creds look good. Automatic login successful!"
 		#	return True
@@ -111,7 +111,7 @@ class Member():
 				
 				self.access_token =     result["access_token"]
 				self.catalog =          result["catalog"]
-				self.expires_in =       result["expires_in"]
+				self.expires_in =       utils.eval_unicode(result["expires_in"])
 				self.first_name =       result["first_name"]
 				self.guid =             result["guid"]
 				self.issued_at =        result["issued_at"]

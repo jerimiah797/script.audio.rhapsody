@@ -6,6 +6,7 @@ import commands
 import subprocess
 import os
 import sys
+import unicodedata
 
 def remove_html_markup(s):
 	tag = False
@@ -92,4 +93,12 @@ def housekeeper():
 		print "Performed housekeeping"
 	else:
 		print "No housekeeping necessary"
+
+
+def eval_unicode(s):
+    #sum all the unicode fractions
+    u = sum(unicodedata.numeric(i) for i in s if unicodedata.category(i)=="No")
+    #eval the regular digits (with optional dot) as a float, or default to 0
+    n = float("".join(i for i in s if i.isdigit() or i==".") or 0)
+    return n+u
 
