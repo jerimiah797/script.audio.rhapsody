@@ -33,13 +33,17 @@ class Application():
 
 		self.init_dirs()
 
-		self.newreleases =   None
-		self.topalbums =     None
-		self.topartists =    None
-		self.toptracks =     None
-		self.lib_albums =    None
-		self.lib_artists =   None
-		self.hist_tracks =   None
+		self.newreleases =     None
+		self.topalbums =       None
+		self.topartists =      None
+		self.toptracks =       None
+		self.lib_albums =      None
+		self.lib_artists =     None
+		self.hist_tracks =     None
+		self.srch_albums =     None
+		self.srch_artists =    None
+		self.srch_tracks =     None
+		self.srch_brdcst =     None
 		self.windowtracklist = None
 
 		self.player = None
@@ -73,14 +77,18 @@ class Application():
 
 
 	def init_lists(self):
-		self.newreleases =   lists.ContentList('album',   'newreleases',   self.__addon_data__+'.newreleases.obj', self)
-		self.topalbums =     lists.ContentList('album',   'topalbums',     self.__addon_data__+'.topalbums.obj', self)
-		self.topartists =    lists.ContentList('artist',  'topartists',    self.__addon_data__+'.topartists.obj', self)
-		self.toptracks =     lists.ContentList('track',   'toptracks',     self.__addon_data__+'.toptracks.obj', self)
-		self.lib_albums =    lists.ContentList('album',   'lib_albums',    self.__addon_data__+'.lib_albums.obj', self)
-		self.lib_artists =   lists.ContentList('artist',  'lib_artists',   self.__addon_data__+'.lib_artists.obj', self)
-		self.hist_tracks =   lists.ContentList('track',   'hist_tracks',   self.__addon_data__+'.hist_tracks.obj', self)
+		self.newreleases =   lists.ContentList('album',   'newreleases',   self.__addon_data__+'.newreleases.obj',   self)
+		self.topalbums =     lists.ContentList('album',   'topalbums',     self.__addon_data__+'.topalbums.obj',     self)
+		self.topartists =    lists.ContentList('artist',  'topartists',    self.__addon_data__+'.topartists.obj',    self)
+		self.toptracks =     lists.ContentList('track',   'toptracks',     self.__addon_data__+'.toptracks.obj',     self)
+		self.lib_albums =    lists.ContentList('album',   'lib_albums',    self.__addon_data__+'.lib_albums.obj',    self)
+		self.lib_artists =   lists.ContentList('artist',  'lib_artists',   self.__addon_data__+'.lib_artists.obj',   self)
+		self.hist_tracks =   lists.ContentList('track',   'hist_tracks',   self.__addon_data__+'.hist_tracks.obj',   self)
 		self.lib_playlists = lists.ContentList('playlist','lib_playlists', self.__addon_data__+'.lib_playlists.obj', self)
+		self.srch_albums =   lists.ContentList('album',   'srch_albums',   self.__addon_data__+'.srch_albums.obj',   self)
+		self.srch_artists =  lists.ContentList('artist',  'srch_artists',  self.__addon_data__+'.srch_artists.obj',  self)
+		self.srch_tracks =   lists.ContentList('track',   'srch_tracks',   self.__addon_data__+'.srch_tracks.obj',   self)
+		self.srch_brdcst =   lists.ContentList('brdcst',  'srch_brdcst',   self.__addon_data__+'.srch_brdcst.obj',   self)
 		#lib_tracks =    ContentList('track',   'lib_tracks',    __addon_data__+'.lib_tracks.obj')
 		#lib_stations =  ContentList('station', 'lib_stations',  __addon_data__+'.lib_stations.obj')
 		#lib_favorites = ContentList('tracks',  'lib_favorites', __addon_data__+'.lib_favorites.obj')
@@ -99,26 +107,34 @@ class Application():
 
 	def init_vars(self):
 		self.set_var('view_matrix' , {"browse_newreleases":   self.newreleases,
-						                "browse_topalbums":   self.topalbums,
-						                "browse_topartists":  self.topartists,
-						                "browse_toptracks":   self.toptracks,
-						                "library_albums":     self.lib_albums,
-						                "library_artists":    self.lib_artists,
-		                                "history_tracks":     self.hist_tracks,
-		                                "library_playlists":  self.lib_playlists,
-						                #"library_tracks":     lib_tracks,
-						                #"library_stations":   lib_stations,
-						                #"library_favorites":  lib_favorites,
-						                })
+						               "browse_topalbums":   self.topalbums,
+						               "browse_topartists":  self.topartists,
+						               "browse_toptracks":   self.toptracks,
+						               "search_albums":	     self.srch_albums,
+						               "search_artists":     self.srch_artists,
+						               "search_tracks":      self.srch_tracks,
+						               "search_broadcast":   self.srch_brdcst,
+						               "library_albums":     self.lib_albums,
+						               "library_artists":    self.lib_artists,
+		                               "history_tracks":     self.hist_tracks,
+		                               "library_playlists":  self.lib_playlists,
+						               #"library_tracks":     lib_tracks,
+						               #"library_stations":   lib_stations,
+						               #"library_favorites":  lib_favorites,
+						               })
 
-		self.set_var('list_matrix' , {"browse_newreleases":    3350,
-						              "browse_topalbums":      3351,
-						              "browse_topartists":     3352,
-						              "browse_toptracks":      3353,
-						              "library_albums":        3550,
-						              "library_artists":       3551,
-		                              "history_tracks":        3950,
-		                              "library_playlists":     3650
+		self.set_var('list_matrix' , {"browse_newreleases":		3350,
+						              "browse_topalbums":     	3351,
+						              "browse_topartists":    	3352,
+						              "browse_toptracks":     	3353,
+						              "search_albums":		  	3451,
+						              "search_artists":			3452,
+						              "search_tracks":			3453,
+						              "search_broadcast":		3454,
+						              "library_albums":       	3550,
+						              "library_artists":      	3551,
+		                              "history_tracks":       	3950,
+		                              "library_playlists":    	3650
 						                })
 
 		self.set_var('running', True)
