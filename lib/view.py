@@ -18,49 +18,55 @@ def draw_mainwin(win, app, **kwargs):
 	if frame == "Settings":
 		#print "Drawmain: No lists to draw on settings Page"
 		win.handle.setFocusId(1001)
-	#elif frame == "Search":
-	#	win.handle.setFocusId(201)
+	elif (frame == "Search") and (win.search_ever_used == False):
+		print "drawmainwin - skipping all that and focusing 402"
+		win.handle.setFocusId(402)
 	else:
-		if (win.search_submitted == True) or (frame != "Search"):
-			print "Performing draw_mainwin"
-
-			view = win.handle.getProperty('browseview')
-			list_instance = app.get_var('view_matrix')[view]
-			if win.search_submitted == True:
-				list_instance.fresh = False
-			win.list_id = app.get_var('list_matrix')[win.getProperty('browseview')]
-			win.clist = win.getControl(win.list_id)
-			#print "Drawmainwin: view: %s list instance: %s list id: %s" % (view, list_instance.name, str(win.list_id))
-			win.make_visible(300, win.list_id)
-			list_instance.make_active(results=results)
+		print "Performing draw_mainwin"
+		print "Search submitted: "+str(win.search_submitted)
+		view = win.handle.getProperty('browseview')
+		list_instance = app.get_var('view_matrix')[view]
+		if win.search_submitted == True:
+			list_instance.fresh = False
+		win.list_id = app.get_var('list_matrix')[win.getProperty('browseview')]
+		win.clist = win.getControl(win.list_id)
+		print "Drawmainwin: view: %s list instance: %s list id: %s" % (view, list_instance.name, str(win.list_id))
+		win.make_visible(300, win.list_id)
+		list_instance.make_active(results=results)
+		if (win.search_submitted == False) and (frame == "Search"):
+			win.handle.setFocusId(402)
+			print "skipped setting focus on content list"
+		else:
 			win.setFocusId(win.list_id)
-			if list_instance.pos:
-				win.clist.selectItem(list_instance.pos)
-			for index in range(win.clist.size()):
-				li = win.clist.getListItem(index)
-				if list_instance.type == "album":
-					url = li.getProperty('thumb_url')
-					thread.start_new_thread(load_album_thumb, (li, app, url))
-				elif list_instance.type == "artist":
-					artist_id = li.getProperty('artist_id')
-					if not artist_id in app.cache.artist:
-						if artist_id == 'Art.0':
-							#print "detected artist 0 case!"
-							url = app.img.default_artist_img
-							genre = ""
-						else:
-							thread.start_new_thread(load_artist_thumb, (li, artist_id, app))
-							thread.start_new_thread(load_artist_genre, (li, artist_id, app))	
+		if list_instance.pos:
+			win.clist.selectItem(list_instance.pos)
+		win.search_submitted = False
+		for index in range(win.clist.size()):
+			li = win.clist.getListItem(index)
+			if list_instance.type == "album":
+				url = li.getProperty('thumb_url')
+				thread.start_new_thread(load_album_thumb, (li, app, url))
+			elif list_instance.type == "artist":
+				artist_id = li.getProperty('artist_id')
+				if not artist_id in app.cache.artist:
+					if artist_id == 'Art.0':
+						#print "detected artist 0 case!"
+						url = app.img.default_artist_img
+						genre = ""
 					else:
-						if artist_id == 'Art.0':
-							#print "detected artist 0 case!"
-							url = app.img.default_artist_img
-							genre = ""
-						else:
-							thread.start_new_thread(get_artist_image_from_cache, (li, artist_id, app))
-							thread.start_new_thread(get_artist_genre_from_cache, (li, artist_id, app))
-		elif frame == "Search":
-			win.handle.setFocusId(201)
+						thread.start_new_thread(load_artist_thumb, (li, artist_id, app))
+						thread.start_new_thread(load_artist_genre, (li, artist_id, app))	
+				else:
+					if artist_id == 'Art.0':
+						#print "detected artist 0 case!"
+						url = app.img.default_artist_img
+						genre = ""
+					else:
+						thread.start_new_thread(get_artist_image_from_cache, (li, artist_id, app))
+						thread.start_new_thread(get_artist_genre_from_cache, (li, artist_id, app))
+		#elif frame == "Search":
+		#	print "drawmainwin - skipping all that and focusing 201"
+		#	win.handle.setFocusId(201)
 			
 #threadsafe wrapper for fetching and loading album thumbs 
 def load_album_thumb(li, app, url):
@@ -269,6 +275,7 @@ class MainWin(WinBase):
 		self.search_types_index = 1
 		self.selected_search_type = self.search_types[self.search_types_index]
 		self.search_submitted = False
+		self.search_ever_used = False
 		print "Default search type: "+self.selected_search_type
 
 
@@ -366,16 +373,19 @@ class MainWin(WinBase):
 						#utils.prettyprint(results)
 						print "got search results!"
 						self.search_submitted = True
+						self.search_ever_used = True
 						print "set search_submitted to true"
 						draw_mainwin(self, self.app, results=results)
 						print "called draw_mainwin"
 
 			elif self.getFocusId() == 402:
+				print "OnAction happening for control 402"
 				self.search_types_index = (self.search_types_index + 1) % 4
 				self.selected_search_type = self.search_types[self.search_types_index]
 				print "Search type changed to "+self.selected_search_type
 				self.handle.setProperty("search_string", self.search_strings[self.search_types_index])
 				self.handle.setProperty("browseview", self.search_views[self.search_types_index])
+				draw_mainwin(self, self.app, results=None)
 
 
 
@@ -384,9 +394,14 @@ class MainWin(WinBase):
 
 
 	def onClick(self, control):
-		pos = self.clist.getSelectedPosition()
-		thing = self.app.get_var('list')[pos]#["album_id"]
-		#print "mainwin onClick: id: "+str(id)
+		print "onClick detected! Control is "+str(control)
+		try:
+			pos = self.clist.getSelectedPosition()
+			thing = self.app.get_var('list')[pos]
+		except:
+			print "onclick shouldn't be processed for empty lists"
+			return
+		print "mainwin onClick: id: "+str(id)
 		if (control == 3350) or (control == 3351) or (control == 3352) or (control == 3550) or (control == 3551) or (control == 3451):
 			self.alb_dialog = AlbumDialog("album.xml", self.app.__addon_path__, 'Default', '720p', current_list=self.app.get_var('list'),
 			                         pos=pos, cache=self.cache.album, alb_id=thing, app=self.app)
@@ -398,7 +413,7 @@ class MainWin(WinBase):
 			self.clist.selectItem(self.alb_dialog.pos)
 			#self.cache.save_album_data()
 
-		elif control == 3353 or control == 3950:
+		elif control == 3353 or control == 3453 or control == 3950:
 			self.start_playback(control)
 
 		elif control == 3650:
@@ -412,7 +427,7 @@ class MainWin(WinBase):
 		list_instance = self.app.get_var('view_matrix')[view]
 		self.player.now_playing = {'pos': 0, 'type':'playlist', 'item':list_instance.data, 'id':list_instance.name}  #['data']}
 		self.player.build()
-		if id == 3353 or id == 3950:
+		if id == 3353 or id == 3453 or id == 3950:
 			self.player.now_playing['pos'] = self.clist.getSelectedPosition()
 		#xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
 		#track = self.player.add_playable_track(0)

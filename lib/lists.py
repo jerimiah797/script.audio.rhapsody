@@ -24,6 +24,9 @@ class ContentList():
 		self.api = self.app.api
 		self.raw = None
 		print 'Instantiating '+self.name
+		if (self.name == "srch_albums") or (self.name == "srch_artists") or (self.name == "srch_tracks") or (self.name == "srch_brdcst"):
+			self.built = True
+			self.fresh = True
 
 	#def fresh(self):
 	#	return True
@@ -38,35 +41,35 @@ class ContentList():
 			print "make_active, results set to None"
 
 		if (self.app.get_var('last_rendered_list') == self.name) and self.win.getListSize()>2:
-			#print "Window already has that list in memory. Skipping list building"
+			print "Window already has that list in memory. Skipping list building"
 			return
-		#print "ContentList: make active " +self.name
-		#print "current frame: "+self.win.getProperty('frame')
-		#print "current view: "+self.win.getProperty('browseview')
-		#print "Built: "+str(self.built)
-		#print "Fresh: "+str(self.fresh)
+		print "ContentList: make active " +self.name
+		print "current frame: "+self.win.getProperty('frame')
+		print "current view: "+self.win.getProperty('browseview')
+		print "Built: "+str(self.built)
+		print "Fresh: "+str(self.fresh)
 		if (self.name == "hist_tracks"):
 			self.build()
 		elif self.built and self.fresh:
-			#print "doing simple list building for mainwin"
+			print "doing simple list building for mainwin"
 			self.build_winlist()
 		else:
-			#print "Doing full data fetch and list building for mainwin"
+			print "Doing full data fetch and list building for mainwin"
 			self.build(results=results)
 		self.app.set_var('last_rendered_list', self.name)
 		self.app.set_var('list', self.data)
 		
 
 	def build(self, **kwargs):
+		print "ContentList: build (full)"
 		if kwargs.get('results'):
 			results = kwargs.get('results')
 		else:
-		#print "ContentList: build (full)"
 			results = self.download_list()
 		if results:
 			self.ingest_list(results)
 			self.fresh = True
-			self.win.search_submitted = False
+			#self.win.search_submitted = False
 		else:
 			print "Couldn't get info from servers about "+self.name
 
@@ -271,7 +274,7 @@ class ContentList():
 		self.win.clist.addItem(li)
 
 	def build_winlist(self):
-		#print "ContentList: build_winlist"
+		print "ContentList: build_winlist"
 		self.win.clist.reset()
 		for i, item in enumerate(self.liz):
 			self.win.clist.addItem(self.liz[i])
