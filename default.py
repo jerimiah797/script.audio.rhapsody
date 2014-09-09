@@ -9,7 +9,7 @@ from lib import utils
 from lib import plugin
 
 REMOTE_DBG = False
-TEST = True
+TEST = False
 
 # append pydev remote debugger
 if REMOTE_DBG:
@@ -41,21 +41,35 @@ if len(sys.argv) < 2:
 	app.loadwin.getControl(10).setLabel('Welcome to Rhapsody')
 	xbmc.sleep(2000)
 	app.loadwin.getControl(10).setLabel('Checking Rhapsody servers...')
-	try:
-		if app.api.get_artist_genre("Art.954"):
-			app.loadwin.getControl(10).setLabel('Loading fonts...')
-			app.init_fonts()
-			xbmc.sleep(1000)
-			app.loadwin.getControl(10).setLabel('Getting things ready...')
-			app.cache.load_cached_data()
-			xbmc.sleep(1000)
-	except:
+	#try:
+	results = app.api.get_artist_genre("Art.954")
+	if results:
+		#print "Results of genre call: "+str(app.api.get_artist_genre("Art.954"))
+		app.loadwin.getControl(10).setLabel('Loading fonts...')
+		app.init_fonts()
+		xbmc.sleep(1000)
+		app.loadwin.getControl(10).setLabel('Getting things ready...')
+		app.cache.load_cached_data()
+		xbmc.sleep(1000)
+	else:
 		if TEST == True:
-			pass
+			print "*****************OFFLINE TEST MODE*****************"
+			app.loadwin.getControl(10).setLabel('Starting in OFFLINE TEST mode...')
+			xbmc.sleep(1000)
+			app.cache.load_cached_data()
 		else:
-			app.loadwin.getControl(10).setLabel('Can\'t reach Rhapsody servers. \nMust be online to use Rhapsody.\nExiting...')
-			xbmc.sleep(2000)
-			app.set_var('running', False)
+		 	app.loadwin.getControl(10).setLabel('Can\'t reach Rhapsody servers. \nExiting...')
+		 	xbmc.sleep(2000)
+		 	app.set_var('running', False)
+	# except:
+	# 	print "network test failed"
+	# 	if TEST == True:
+	# 		app.loadwin.getControl(10).setLabel('Starting in OFFLINE TEST mode...')
+	# 		app.cache.load_cached_data()
+	# 	else:
+	# 		app.loadwin.getControl(10).setLabel('Can\'t reach Rhapsody servers. \nMust be online to use Rhapsody.\nExiting...')
+	# 		xbmc.sleep(2000)
+	# 		app.set_var('running', False)
 
 
 	while app.get_var('running'):

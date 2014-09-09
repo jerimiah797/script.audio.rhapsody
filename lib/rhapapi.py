@@ -47,12 +47,14 @@ class Api():
 					print e
 					succeed += 1
 					xbmc.sleep(500)
+					return False
 				except urllib2.URLError, e:
 					#print "url: "+ str(req.get_full_url())
 					print 'We failed to reach a server.'
 					print 'Reason: ', e.reason
 					succeed += 1
 					xbmc.sleep(500)
+					return False
 				return False
 			except:
 				print "something went very wrong with that request. Let's try again. "
