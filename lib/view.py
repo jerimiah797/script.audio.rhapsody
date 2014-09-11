@@ -362,6 +362,8 @@ class MainWin(WinBase):
 					print "Something went wrong creating housekeeping trigger file"
 
 			elif self.getFocusId() == 401:  # new search button - opens keyboard dialog for text entry
+				self.app.mem.access_token = "sdlkfjlskdjf"
+				print "corrupted the access token for testing"
 				kb = xbmc.Keyboard()
 				kb.setHeading('Enter Artist, Album, Track, or Station') 
 				kb.doModal()

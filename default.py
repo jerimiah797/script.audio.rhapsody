@@ -7,9 +7,18 @@ from lib import main
 from lib import skincheck
 from lib import utils
 from lib import plugin
+#from lib import bottle
+#from lib import serve
+#from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
+from bottle import route, run, template, WSGIRefServer
+
+import thread
+import threading
+from threading import Thread
 
 REMOTE_DBG = False
 TEST = False
+PORT_NUMBER = 8090
 
 # append pydev remote debugger
 if REMOTE_DBG:
@@ -26,9 +35,76 @@ if REMOTE_DBG:
 
 print sys.argv
 
+
+
+
 if len(sys.argv) < 2:
 	# verify fonts are installed
 	skincheck.skinfix()
+
+		#Create a web server and define the handler to manage the
+		#incoming request
+	#server = HTTPServer(('', PORT_NUMBER), serve.myHandler)
+	#print 'Started httpserver on port ' , PORT_NUMBER
+
+		#Wait forever for incoming http requests
+	#thread.start_new_thread(server.serve_forever, () )
+
+	@route('/hello/:name')
+	def index(name='World'):
+		return template('<b>Hello {{name}}</b>!', name=name)
+
+	#run(host='localhost', port=8090)
+
+
+	#t = threading.Thread(target=run, kwargs=dict(host='0.0.0.0', port=8090))
+    #    t.daemon = True
+    #    t.start()
+
+
+
+	class MyServer(WSGIRefServer):
+		def run(self, app): # pragma: no cover
+			from wsgiref.simple_server import WSGIRequestHandler, WSGIServer
+			from wsgiref.simple_server import make_server
+			import socket
+
+			class FixedHandler(WSGIRequestHandler):
+				def address_string(self): # Prevent reverse DNS lookups please.
+					return self.client_address[0]
+				def log_request(*args, **kw):
+					if not self.quiet:
+						return WSGIRequestHandler.log_request(*args, **kw)
+
+			handler_cls = self.options.get('handler_class', FixedHandler)
+			server_cls  = self.options.get('server_class', WSGIServer)
+
+			if ':' in self.host: # Fix wsgiref for IPv6 addresses.
+				if getattr(server_cls, 'address_family') == socket.AF_INET:
+					class server_cls(server_cls):
+						address_family = socket.AF_INET6
+
+			srv = make_server(self.host, self.port, app, server_cls, handler_cls)
+			self.srv = srv ### THIS IS THE ONLY CHANGE TO THE ORIGINAL CLASS METHOD!
+			srv.serve_forever()
+
+		def shutdown(self): ### ADD SHUTDOWN METHOD.
+			print "Shutting down server"
+			self.srv.shutdown()
+			self.srv.server_close()
+			print "Done shutting down!"
+
+	def begin():
+		run(server=server)
+
+	server = MyServer(host="localhost", port=8090)
+	Thread(target=begin).start()
+
+
+
+
+
+
 
 	#clean cached metadata files if necessary
 	utils.housekeeper()
@@ -41,10 +117,9 @@ if len(sys.argv) < 2:
 	app.loadwin.getControl(10).setLabel('Welcome to Rhapsody')
 	xbmc.sleep(2000)
 	app.loadwin.getControl(10).setLabel('Checking Rhapsody servers...')
-	#try:
 	results = app.api.get_artist_genre("Art.954")
 	if results:
-		#print "Results of genre call: "+str(app.api.get_artist_genre("Art.954"))
+		print "Performing normal app startup"
 		app.loadwin.getControl(10).setLabel('Loading fonts...')
 		app.init_fonts()
 		xbmc.sleep(1000)
@@ -61,15 +136,7 @@ if len(sys.argv) < 2:
 		 	app.loadwin.getControl(10).setLabel('Can\'t reach Rhapsody servers. \nExiting...')
 		 	xbmc.sleep(2000)
 		 	app.set_var('running', False)
-	# except:
-	# 	print "network test failed"
-	# 	if TEST == True:
-	# 		app.loadwin.getControl(10).setLabel('Starting in OFFLINE TEST mode...')
-	# 		app.cache.load_cached_data()
-	# 	else:
-	# 		app.loadwin.getControl(10).setLabel('Can\'t reach Rhapsody servers. \nMust be online to use Rhapsody.\nExiting...')
-	# 		xbmc.sleep(2000)
-	# 		app.set_var('running', False)
+
 
 
 	while app.get_var('running'):
@@ -111,6 +178,11 @@ if len(sys.argv) < 2:
 	app.loadwin.close()
 	del app.loadwin
 	del app
+	#server.socket.close()
+	#close(host='localhost', port=8090)
+	#server.stop()
+	thread.start_new_thread(server.shutdown, () )
+	#t.join()
 	print "Rhapsody addon has exited."
 	#return
 else:

@@ -47,6 +47,9 @@ class Member():
 			self.last_name = self.user_info['last_name']
 			self.catalog = self.user_info['catalog']
 			self.timestamp = self.user_info['timestamp']
+			self.app.api.token = self.access_token
+			self.app.api.username = self.username
+			self.app.api.password = self.password
 		except:
 			print "Couldn't find saved login info. Login please"
 			return False
@@ -102,8 +105,8 @@ class Member():
 		data = {}
 		self.username = name
 		self.password = pswd
-		api = rhapapi.Api()
-		result = api.login_member(name, pswd)
+		#api = rhapapi.Api()
+		result = self.app.api.login_member(name, pswd)
 
 		#try:
 		if result: 

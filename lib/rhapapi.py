@@ -17,22 +17,27 @@ else:
 
 class Api():
 
-	def __init__(self):
+	def __init__(self, app):
 		self.BASEURL = "http://api.rhapsody.com/v1/"
 		self.S_BASEURL = "https://api.rhapsody.com/v1/"
 		self.APIKEY = "22Q1bFiwGxYA2eaG4vVAGsJqi3SQWzmd"
-		self.token = None
+		self.app = app
+
 
 
 	def __get_data_from_rhapsody(self, req, timeout):
 		succeed = 0
-		while succeed < 1:
+		localreq = req
+		while succeed < 2:
+			#print "succeed = "+str(succeed)
 			try:
+				#print "starting first try expression"
 				t1 = time.time()				
 				try:
-					response = urllib2.urlopen(req, timeout=timeout)
+					#print "starting second try expression"
+					response = urllib2.urlopen(localreq, timeout=timeout)
 					t2 = time.time()
-					print "Call to %s succeeded in %s seconds" % (str(req.get_full_url()), '%.3f'%(t2-t1))
+					print "Call to %s succeeded in %s seconds" % (str(localreq.get_full_url()), '%.3f'%(t2-t1))
 					try:
 						results = json.load(response)
 						#utils.prettyprint(results)
@@ -45,9 +50,14 @@ class Api():
 					print "------------------  Bad server response ----------------"
 					#print e.headers
 					print e
-					succeed += 1
-					xbmc.sleep(500)
-					return False
+					if succeed == 0:
+						print "(inner) something went very wrong with that request. Let's try refreshing our token"
+						self.login_member(self.app.mem.username, self.app.mem.password)
+						localreq = self.__build_member_req(req.get_full_url())
+						succeed += 1
+					elif succeed == 1:
+						print "that didn't work"
+						return False
 				except urllib2.URLError, e:
 					#print "url: "+ str(req.get_full_url())
 					print 'We failed to reach a server.'
@@ -55,17 +65,20 @@ class Api():
 					succeed += 1
 					xbmc.sleep(500)
 					return False
-				return False
+				#return False
 			except:
-				print "something went very wrong with that request. Let's try again. "
+				print "(outer) something went very wrong with that request."
+				#self.login_member(self.app.mem.username, self.app.mem.password)
+				#localreq = self.__build_member_req(req.get_full_url())
 				xbmc.sleep(1000)
 
 
 #----------- Secure API calls requiring auth headers ---------
 
 	def __build_member_req(self, url):
-		#print "access token: "+self.token
-		header = b'Bearer ' + self.token
+		#print "access token: "+self.app.mem.access_token
+		#print "url: "+url
+		header = b'Bearer ' + self.app.mem.access_token
 		req = urllib2.Request(url)
 		req.add_header('Authorization', header)
 		return req
@@ -77,7 +90,9 @@ class Api():
 
 
 	def login_member(self, username, password):
-		print "Rhapapi: getting access token"
+		print "Rhapapi: Logging in member"
+		#self.username = username
+		#self.password = password
 		encuser = base64.b64encode(username)
 		encpass = base64.b64encode(password)
 		url = "http://rhap-xbmc-auth.herokuapp.com/auth?user=%s&pass=%s" % (encuser, encpass)
@@ -85,7 +100,9 @@ class Api():
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 20)
 		if results:
-			#print results
+			self.app.mem.access_token = results["access_token"]
+			#print "got a new access token: "+self.app.mem.access_token
+			self.app.wait = False
 			return results
 		else:
 			return False

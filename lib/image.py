@@ -1,10 +1,10 @@
 import urllib
 import os
-import rhapapi
+#import rhapapi
 
 class Image():
 
-	def __init__(self, media_path, data_path):
+	def __init__(self, media_path, data_path, app):
 		self.base_path = data_path
 		self.media_path = os.path.join(media_path, "resources", "skins", "Default", "media")
 		print "media path: "+self.media_path
@@ -15,6 +15,7 @@ class Image():
 		self.default_album_img = os.path.join(self.media_path, "AlbumPlaceholder.png")
 		self.default_artist_img = os.path.join(self.media_path, "ArtistPlaceholder.png")
 		self.verify_image_dirs()
+		self.api = app.api
 		pass
 
 	def download_image(self, url, path):
@@ -57,11 +58,11 @@ class Image():
 
 	def identify_largest_image(self, id, kind):
 		results = None
-		api = rhapapi.Api()
+		#api = rhapapi.Api()
 		if kind == "album":
-			results = api.get_album_images(id)
+			results = self.api.get_album_images(id)
 		elif kind == "artist":
-			results = api.get_artist_images(id)
+			results = self.api.get_artist_images(id)
 		if results:
 			biggest = 0
 			biggest_index = 0
@@ -76,8 +77,8 @@ class Image():
 
 	def identify_artist_thumb(self, id):
 		results = None
-		api = rhapapi.Api()
-		results = api.get_artist_images(id)
+		#api = rhapapi.Api()
+		results = self.api.get_artist_images(id)
 		if results:
 			url = results[0]["url"]
 			#print "IMG.identify_artist_thumb - found artist image url: "+str(url)

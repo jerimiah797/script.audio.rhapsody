@@ -50,10 +50,12 @@ class Application():
 		self.playlist = None
 
 		self.mem = member.Member(self)
-		self.api = rhapapi.Api()
+		self.api = rhapapi.Api(self)
 		self.cache = caching.Cache(self)
-		self.img = image.Image(self.__addon_path__, self.__addon_data__)
+		self.img = image.Image(self.__addon_path__, self.__addon_data__, self)
 		self.win = view.MainWin("main.xml", self.__addon_path__, 'Default', '720p', app=self)
+
+		self.wait = False
 
 		
 		self.init_lists()
