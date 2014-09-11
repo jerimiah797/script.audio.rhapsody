@@ -2,7 +2,7 @@ import urllib
 import os
 #import rhapapi
 
-class Image():
+class Image(object):
 
 	def __init__(self, media_path, data_path, app):
 		self.base_path = data_path

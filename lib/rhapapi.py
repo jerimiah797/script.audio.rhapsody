@@ -15,7 +15,7 @@ else:
 
 
 
-class Api():
+class Api(object):
 
 	def __init__(self, app):
 		self.BASEURL = "http://api.rhapsody.com/v1/"

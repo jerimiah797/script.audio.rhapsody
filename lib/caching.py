@@ -3,7 +3,7 @@ import time
 import os
 from rhapapi import Api
 
-class Cache():
+class Cache(object):
 
 	def __init__(self, *args):
 		self.app = args[0]

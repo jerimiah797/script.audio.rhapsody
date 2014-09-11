@@ -183,7 +183,7 @@ class Player(xbmc.Player):
 
 
 
-class Notifier():
+class Notifier(object):
 
 	def __init__(self):
 		self.current_track = None

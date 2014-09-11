@@ -36,7 +36,7 @@ import thread
 import threading
 from threading import Thread
 
-class RhapServer():
+class RhapServer(object):
 	def __init__(self, app):
 		self.server = None
 		self.app = app

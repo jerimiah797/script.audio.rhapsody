@@ -1,6 +1,6 @@
 
 
-class Mock():
+class Mock(object):
 
     def __init__(self):
         self.verify = "Looks like the mock object is instantiated and working"

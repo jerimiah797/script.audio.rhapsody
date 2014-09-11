@@ -4,7 +4,7 @@ import xbmcgui
 from lib import utils
 
 
-class ContentList():
+class ContentList(object):
 	#handle new releases, top albums, artist discography, library album list, etc.
 	def __init__(self, *args):
 
@@ -285,7 +285,7 @@ class ContentList():
 		self.cache.save_artist_data()
 
 
-class WindowTrackList():
+class WindowTrackList(object):
 	def __init__(self):
 		pass
 	#handle albums, playlists

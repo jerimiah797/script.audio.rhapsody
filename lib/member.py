@@ -7,7 +7,7 @@ import utils
 import os
 import xbmc
 
-class Member():
+class Member(object):
 	def __init__(self, app):
 		self.info = []
 		self.filename = os.path.join(app.__addon_data__, '.rhapuser.obj')
