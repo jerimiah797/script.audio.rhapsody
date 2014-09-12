@@ -53,9 +53,9 @@ def open_url():
 	    except OSError:
 	        print 'Please open a browser on: '+url
 
-def goodbye(app):
-	dialog = xbmcgui.Dialog()
-	if dialog.yesno("Quit Rhapsody?", "Pressing 'Yes' will quit the Rhapsody plugin"):
+def goodbye(app, choice):
+
+	def bye(app):
 		app.set_var('logged_in', True)
 		app.set_var('running',False)
 		app.player.stop()
@@ -70,6 +70,13 @@ def goodbye(app):
 		git_pull()
 		#open_url()
 		app.win.close()
+
+	if choice == True:
+		dialog = xbmcgui.Dialog()
+		if dialog.yesno("Quit Rhapsody?", "Pressing 'Yes' will quit the Rhapsody plugin"):
+			bye(app)
+	else:
+		bye(app)
 
 def goodbye_while_logged_out(app):
 	dialog = xbmcgui.Dialog()

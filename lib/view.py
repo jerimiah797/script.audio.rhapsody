@@ -308,9 +308,11 @@ class MainWin(WinBase):
 		elif action.getId() == 4:    #down
 			self.manage_action(4)
 		if action.getId() == 10:
-			utils.goodbye(self.app)
+			choice = True
+			utils.goodbye(self.app, choice)
 		elif action.getId() == 92:
-			utils.goodbye(self.app)
+			choice = True
+			utils.goodbye(self.app, choice)
 		else:
 			pass
 
@@ -355,7 +357,10 @@ class MainWin(WinBase):
 				f = xbmcvfs.File(path, 'w')
 				f.close()
 				if xbmcvfs.exists("special://home/userdata/addon_data/script.audio.rhapsody/.clean_me"):
-					xbmcgui.Dialog().ok("Success!!", "Relaunch Rhapsody to finish deleting cache files")
+					w = xbmcgui.Dialog().ok("Success!!", "Rhapsody must restart now to finish deleting cache files")
+					choice = False
+					utils.goodbye(self.app, choice)
+
 					# should pop a yes no dialog that deletes then quits instead of a notice
 					print "Housekeeping trigger file created"
 				else:

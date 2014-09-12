@@ -2861,7 +2861,7 @@
                             <height>50</height>
                             <align>center</align>
                             <textoffsety>8</textoffsety>
-                            <label>Reset cache files</label>
+                            <label>Delete cache files and restart</label>
                             <texturenofocus>white.png</texturenofocus>
                             <texturefocus border="8">selectoutline_solid.png</texturefocus>
                             <font>rhapsody_font24_title</font>

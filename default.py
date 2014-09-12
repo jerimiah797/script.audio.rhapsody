@@ -42,8 +42,8 @@ if len(sys.argv) < 2:
 	skincheck.skinfix()   # verify fonts are installed
 	utils.housekeeper()   #clean cached metadata files if necessary
 	app = main.Application()
-	rhapserver = serve.RhapServer(app)
-	rhapserver.start("localhost", 8090)
+	#rhapserver = serve.RhapServer(app)
+	#rhapserver.start("localhost", 8090)
 
 	app.loadwin.getControl(10).setLabel('Welcome to Rhapsody')
 	xbmc.sleep(2000)
@@ -106,8 +106,8 @@ if len(sys.argv) < 2:
 	app.loadwin.close()
 	del app.loadwin
 	del app
-	rhapserver.server.shutdown()
-	del rhapserver
+	#rhapserver.server.shutdown()
+	#del rhapserver
 	print "Rhapsody addon has exited."
 else:
 	print "Rhapsody plugin call invoked."
