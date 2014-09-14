@@ -89,7 +89,7 @@ def get_it(args):
     return req
 
   def get_playable_url(track_id):
-    print "Rhapsody Plugin: getting playable url"
+    print "Rhapsody Plugin: getting playable url for track "+track_id
     url = "%splay/%s" %(S_BASEURL, track_id)
     req = __build_member_req(url)
     results = __get_data_from_rhapsody(req, 10)

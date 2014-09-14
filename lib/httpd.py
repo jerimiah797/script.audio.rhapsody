@@ -1,32 +1,12 @@
-# from wsgiref.simple_server import make_server
-
-# # Every WSGI application must have an application object - a callable
-# # object that accepts two arguments. For that purpose, we're going to
-# # use a function (note that you're not limited to a function, you can
-# # use a class for example). The first argument passed to the function
-# # is a dictionary containing CGI-style envrironment variables and the
-# # second variable is the callable object (see PEP 333).
-# def hello_world_app(environ, start_response):
-# 	status = '200 OK' # HTTP Status
-# 	headers = [('Content-type', 'text/plain')] # HTTP Headers
-# 	start_response(status, headers)
-
-# 	# The returned object is going to be printed
-# 	return ["Hello World"]
-
-# httpd = make_server('', 8000, hello_world_app)
-# print "Serving on port 8000..."
-
-# # Serve until process is killed
-# httpd.serve_forever()
-
 import threading
 import thread
+import sys
 from cgi import parse_qs
 from wsgiref.simple_server import make_server
-
-
-
+if sys.version_info >=  (2, 7):
+    import json as json
+else:
+    import simplejson as json
 
 
 class TinyWebServer(object):
@@ -34,18 +14,27 @@ class TinyWebServer(object):
 		self.app = app
 
 	def simple_app(self, environ, start_response):
-	    status = '200 OK'
-	    headers = [('Content-Type', 'text/plain')]
-	    start_response(status, headers)
-	    if environ['REQUEST_METHOD'] == 'POST':
-	        request_body_size = int(environ.get('CONTENT_LENGTH', 0))
-	        request_body = environ['wsgi.input'].read(request_body_size)
-	        d = parse_qs(request_body)  # turns the qs to a dict
-	        return 'From POST: %s' % ''.join('%s: %s' % (k, v) for k, v in d.iteritems())
-	    else:  # GET
-	        d = parse_qs(environ['QUERY_STRING'])  # turns the qs to a dict
-	        #return 'From GET: %s' % ''.join('%s: %s' % (k, v) for k, v in d.iteritems())
-	        return "Token value: "+self.app.mem.access_token
+		status = '200 OK'
+		headers = [('Content-Type', 'application/json')]
+		start_response(status, headers)
+		if environ['REQUEST_METHOD'] == 'POST':
+			request_body_size = int(environ.get('CONTENT_LENGTH', 0))
+			request_body = environ['wsgi.input'].read(request_body_size)
+			d = parse_qs(request_body)  # turns the qs to a dict
+			return 'From POST: %s' % ''.join('%s: %s' % (k, v) for k, v in d.iteritems())
+		else:  # GET
+			d = parse_qs(environ['QUERY_STRING'])  # turns the qs to a dict
+			#return 'From GET: %s' % ''.join('%s: %s' % (k, v) for k, v in d.iteritems())
+			#return "Token value: "+self.app.mem.access_token
+			try:
+				track_id = str(d['track'])
+				url = self.app.api.get_playable_url(track_id[2:-2])
+				response = json.dumps([{"track": track_id, "url": url}], indent=4, separators=(',', ': '))
+				#print url
+				return response
+			except:
+				return "Hi"
+
 
 	def create(self, ip_addr, port):
 		self.httpd = make_server(ip_addr, port, self.simple_app)
@@ -74,6 +63,12 @@ class TinyWebServer(object):
 		#if not self._webserver_died.wait(5):
 			#raise ValueError("couldn't kill webserver")
 		print "Shutting down internal webserver"
+
+	def fix_element(self, element):
+		print element[2:]
+		print element[:-2]
+		print element[2:-2]
+		return element[2:-2]
 
 
 

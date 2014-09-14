@@ -110,6 +110,7 @@ class Api(object):
 
 	def get_playable_url(self, track_id):
 		print "Rhapapi: getting playable url"
+		print track_id
 		url = "%splay/%s" %(self.S_BASEURL, track_id)
 		req = self.__build_member_req(url)
 		results = self.__get_data_from_rhapsody(req, 10)
