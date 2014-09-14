@@ -367,8 +367,8 @@ class MainWin(WinBase):
 					print "Something went wrong creating housekeeping trigger file"
 
 			elif self.getFocusId() == 401:  # new search button - opens keyboard dialog for text entry
-				self.app.mem.access_token = "sdlkfjlskdjf"
-				print "corrupted the access token for testing"
+				#self.app.mem.access_token = "sdlkfjlskdjf"
+				#print "corrupted the access token for testing"
 				kb = xbmc.Keyboard()
 				kb.setHeading('Enter Artist, Album, Track, or Station') 
 				kb.doModal()
@@ -477,17 +477,18 @@ class MainWin(WinBase):
 	def sync_playlist_pos(self):
 		try:
 			if self.player.now_playing['id'] == 'toptracks':
-				#print "syncing playlist pos because player.now_playing id is 'toptracks'"
+				print "syncing playlist pos because player.now_playing id is 'toptracks'"
 				self.clist.selectItem(self.playlist.getposition())
 				self.toptracks.pos = self.playlist.getposition()
 			elif self.player.now_playing['id'] == self.alb_dialog.id:
-				#print "syncing playlist pos because player.now_player id is current album id"
+				print "syncing playlist pos because player.now_player id is current album id"
 				self.alb_dialog.clist.selectItem(self.playlist.getposition())
 			elif self.player.now_playing['id'] == 'playlist':
-				#print "syncing playlist pos because player.now_playing id is 'playlist'"
+				print "syncing playlist pos because player.now_playing id is 'playlist'"
 				self.dlist.selectItem(self.playlist.getposition())
 				self.toptracks.pos = self.playlist.getposition()
 		except:
+			print "Didn't need to sync playlist position"
 			pass
 
 

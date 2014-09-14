@@ -82,25 +82,23 @@ def get_it(args):
 
 
   def get_playable_url(track_id):
-    print "Rhapsody Plugin: getting playable url for track "+track_id
+    #print "Rhapsody Plugin: getting playable url for track "+track_id
     url = "http://localhost:8090/?track=%s" % (track_id)
-    print "Rhapsody Plugin: fetching "+url
+    #print "Rhapsody Plugin: fetching "+url
     #url = "%splay/%s" %(S_BASEURL, track_id)
     req = urllib2.Request(url)
     results = __get_data_from_rhapsody(req, 10)
     if not results:
-      print "Rhapsody Plugin: No results returned!"
+      #print "Rhapsody Plugin: No results returned!"
       return False
     else:
-      print "Got results: "
-      print str(results)
-      print str(results[0]['url'])
+      #print "Got results: "
       return str(results[0]['url'])
 
 
   try:
     url = get_playable_url(track)
-    print url
+    #print url
     item = xbmcgui.ListItem(path=url)
     item.setProperty('mimetype','audio/mp4')
     xbmcplugin.setResolvedUrl(int(args[1]), True, item)

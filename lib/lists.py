@@ -35,33 +35,33 @@ class ContentList(object):
 
 		if kwargs.get("results"):
 			results = kwargs.get("results")
-			print "make_active, using results from kwargs"
+			#print "make_active, using results from kwargs"
 		else:
 			results = None
-			print "make_active, results set to None"
+			#print "make_active, results set to None"
 
 		if (self.app.get_var('last_rendered_list') == self.name) and self.win.getListSize()>2:
-			print "Window already has that list in memory. Skipping list building"
+			#print "Window already has that list in memory. Skipping list building"
 			return
-		print "ContentList: make active " +self.name
-		print "current frame: "+self.win.getProperty('frame')
-		print "current view: "+self.win.getProperty('browseview')
-		print "Built: "+str(self.built)
-		print "Fresh: "+str(self.fresh)
+		#print "ContentList: make active " +self.name
+		#print "current frame: "+self.win.getProperty('frame')
+		#print "current view: "+self.win.getProperty('browseview')
+		#print "Built: "+str(self.built)
+		#print "Fresh: "+str(self.fresh)
 		if (self.name == "hist_tracks"):
 			self.build()
 		elif self.built and self.fresh:
-			print "doing simple list building for mainwin"
+			#print "doing simple list building for mainwin"
 			self.build_winlist()
 		else:
-			print "Doing full data fetch and list building for mainwin"
+			#print "Doing full data fetch and list building for mainwin"
 			self.build(results=results)
 		self.app.set_var('last_rendered_list', self.name)
 		self.app.set_var('list', self.data)
 		
 
 	def build(self, **kwargs):
-		print "ContentList: build (full)"
+		#print "ContentList: build (full)"
 		if kwargs.get('results'):
 			results = kwargs.get('results')
 		else:
@@ -71,7 +71,8 @@ class ContentList(object):
 			self.fresh = True
 			#self.win.search_submitted = False
 		else:
-			print "Couldn't get info from servers about "+self.name
+			#print "Couldn't get info from servers about "+self.name
+			pass
 
 	def save_raw_data(self, data):
 		jar = open(self.filename, 'wb')

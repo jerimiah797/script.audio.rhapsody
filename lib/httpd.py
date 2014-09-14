@@ -62,11 +62,6 @@ class TinyWebServer(object):
 			#raise ValueError("couldn't kill webserver")
 		print "Shutting down internal webserver"
 
-	def fix_element(self, element):
-		print element[2:]
-		print element[:-2]
-		print element[2:-2]
-		return element[2:-2]
 
 
 

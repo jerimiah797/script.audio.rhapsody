@@ -110,7 +110,7 @@ if len(sys.argv) < 2:
 	#del rhapserver
 	print "Rhapsody addon has exited."
 else:
-	print "Rhapsody plugin call invoked."
+	#print "Rhapsody plugin call invoked."
 	plugin.get_it(sys.argv)
 	
 
