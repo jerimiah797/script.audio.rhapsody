@@ -25,12 +25,10 @@ class TinyWebServer(object):
 		else:  # GET
 			d = parse_qs(environ['QUERY_STRING'])  # turns the qs to a dict
 			#return 'From GET: %s' % ''.join('%s: %s' % (k, v) for k, v in d.iteritems())
-			#return "Token value: "+self.app.mem.access_token
 			try:
 				track_id = str(d['track'])
 				url = self.app.api.get_playable_url(track_id[2:-2])
 				response = json.dumps([{"track": track_id, "url": url}], indent=4, separators=(',', ': '))
-				#print url
 				return response
 			except:
 				return "Hi"

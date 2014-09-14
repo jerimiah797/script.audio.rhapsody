@@ -32,10 +32,6 @@ import json
 #import time
 
 def get_it(args):
-  #BASEURL = "http://api.rhapsody.com/v1/"
-  S_BASEURL = "https://api.rhapsody.com/v1/"
-  #APIKEY = "22Q1bFiwGxYA2eaG4vVAGsJqi3SQWzmd"
-  token = None
 
   #def parse_query(query, clean=True):
   def parse_query(query):
@@ -56,8 +52,11 @@ def get_it(args):
   #print('plugin queries: ' + str(plugin_queries))
   #print('plugin handle: ' + str(plugin_handle))
 
-  track = plugin_queries['track']
-  token = plugin_queries['token']
+  try:
+    track = plugin_queries['track']
+  except:
+    pass
+  #token = plugin_queries['token']
 
 
   def __get_data_from_rhapsody(req, timeout):
@@ -81,29 +80,27 @@ def get_it(args):
         succeed += 1
     return False
 
-  def __build_member_req(url):
-    #print "access token: "+self.token
-    header = b'Bearer ' + token
-    req = urllib2.Request(url)
-    req.add_header('Authorization', header)
-    return req
 
   def get_playable_url(track_id):
     print "Rhapsody Plugin: getting playable url for track "+track_id
-    url = "%splay/%s" %(S_BASEURL, track_id)
-    req = __build_member_req(url)
+    url = "http://localhost:8090/?track=%s" % (track_id)
+    print "Rhapsody Plugin: fetching "+url
+    #url = "%splay/%s" %(S_BASEURL, track_id)
+    req = urllib2.Request(url)
     results = __get_data_from_rhapsody(req, 10)
     if not results:
-      return False
-    if results['url'][:5] == u'undef':
+      print "Rhapsody Plugin: No results returned!"
       return False
     else:
-      return results['url']
+      print "Got results: "
+      print str(results)
+      print str(results[0]['url'])
+      return str(results[0]['url'])
 
 
   try:
     url = get_playable_url(track)
-    #print url
+    print url
     item = xbmcgui.ListItem(path=url)
     item.setProperty('mimetype','audio/mp4')
     xbmcplugin.setResolvedUrl(int(args[1]), True, item)
