@@ -10,6 +10,7 @@ from lib import view
 from lib import lists
 from lib import caching
 from lib import MyFont
+from lib import httpd
 import sys
 import os
 
@@ -54,6 +55,10 @@ class Application():
 		self.cache = caching.Cache(self)
 		self.img = image.Image(self.__addon_path__, self.__addon_data__, self)
 		self.win = view.MainWin("main.xml", self.__addon_path__, 'Default', '720p', app=self)
+		self.srv = httpd.TinyWebServer(self)
+
+		self.srv.create("localhost", 8090)
+		self.srv.start()
 
 		self.wait = False
 

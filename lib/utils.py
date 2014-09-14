@@ -62,6 +62,7 @@ def goodbye(app, choice):
 		app.player.playlist.clear()
 		#app.cache.save_artist_data()
 		#app.cache.save_album_data()
+		app.srv.stop()
 		try:
 			app.logwin.close()
 			print "closed logwin"
