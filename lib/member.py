@@ -50,6 +50,8 @@ class Member(object):
 			self.app.api.token = self.access_token
 			self.app.api.username = self.username
 			self.app.api.password = self.password
+			self.account_type = self.user_info['account_type']
+			self.date_created = self.user_info['date_created']
 		except:
 			print "Couldn't find saved login info. Login please"
 			return False
@@ -90,6 +92,8 @@ class Member(object):
 		self.user_info['last_name'] = self.last_name
 		self.user_info['catalog'] = self.catalog
 		self.user_info['timestamp'] = time.time()
+		self.user_info['account_type'] = self.account_type
+		self.user_info['date_created'] = self.date_created
 		#utils.prettyprint(self.user_info)
 		print "Saving login info to disk..."
 		try:
