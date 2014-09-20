@@ -284,8 +284,6 @@ class MainWin(WinBase):
 		self.handle = xbmcgui.Window(xbmcgui.getCurrentWindowId())
 		self.handle.setProperty("browseview", self.app.view_keeper['browseview'])
 		self.handle.setProperty("frame", self.app.view_keeper['frame'])
-		if OFFLINE == True:
-			self.handle.setProperty("offline", "true")
 		self.main()
 
 	def main(self):

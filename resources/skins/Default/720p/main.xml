@@ -226,31 +226,6 @@
 
                 <control type="group" id="3300">
 <!-- Albums Panel View, New Releases -->
-                    <control type="group" id="3350">
-                        <visible>StringCompare(Window.Property(offline),true)</visible>
-                        <onup>301</onup>
-                        <ondown>3350</ondown>
-                        <onright>-</onright>
-                        <posy>90</posy>
-                        <width>1200</width>
-                        <height>680</height>
-                        <onleft>100</onleft>
-                        <orientation>vertical</orientation>
-                        <control type="label" id="302">
-                            <posx>14</posx>
-                            <posy>197</posy>
-                            <width>570</width>
-                            <height>80</height>
-                            <align>left</align>
-                            <aligny>top</aligny>
-                            <font>rhapsody_font10</font>
-                            <label>Offline mode. No items in this list</label>
-                            <textcolor>DD171717</textcolor>
-                            <wrapmultiline>true</wrapmultiline>
-                            <scroll>false</scroll>
-                        </control>
-                    </control>
-
                     <control type="panel" id="3350">
                         <visible>StringCompare(Window.Property(browseview),Browse_newreleases)</visible>
                         <onup>301</onup>
