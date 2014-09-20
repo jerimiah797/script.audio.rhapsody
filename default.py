@@ -8,7 +8,7 @@ from lib import skincheck
 from lib import utils
 from lib import plugin
 #from lib import bottle
-from lib import serve
+#from lib import serve
 #from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 from lib.bottle import route, run, template, WSGIRefServer
 
@@ -19,6 +19,7 @@ from threading import Thread
 REMOTE_DBG = False
 TEST = True
 PORT_NUMBER = 8090
+global OFFLINE = True
 
 # append pydev remote debugger
 if REMOTE_DBG:
