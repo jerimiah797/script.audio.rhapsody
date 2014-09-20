@@ -8,9 +8,9 @@ from lib import skincheck
 from lib import utils
 from lib import plugin
 #from lib import bottle
-from lib import serve
+#from lib import serve
 #from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
-from lib.bottle import route, run, template, WSGIRefServer
+#from lib.bottle import route, run, template, WSGIRefServer
 
 import thread
 import threading
