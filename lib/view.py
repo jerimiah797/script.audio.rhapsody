@@ -39,6 +39,7 @@ def draw_mainwin(win, app, **kwargs):
 		else:
 			win.setFocusId(win.list_id)
 		if list_instance.pos:
+			print "List position: "+str(list_instance.pos)
 			win.clist.selectItem(list_instance.pos)
 		win.search_submitted = False
 		for index in range(win.clist.size()):
@@ -301,7 +302,7 @@ class MainWin(WinBase):
 
 	def onAction(self, action):
 
-		if action.getId() == 7:
+		if action.getId() == 7:		#enter/select
 			self.manage_action(7)
 		elif action.getId() == 3:    #up
 			self.manage_action(3)
@@ -394,6 +395,9 @@ class MainWin(WinBase):
 				self.handle.setProperty("browseview", self.search_views[self.search_types_index])
 				draw_mainwin(self, self.app, results=None)
 
+			#elif self.getFocusId() == 3651:
+			#	print "OnAction: Lets play this playlist"
+
 
 
 
@@ -408,7 +412,7 @@ class MainWin(WinBase):
 		except:
 			print "onclick shouldn't be processed for empty lists"
 			return
-		print "mainwin onClick: id: "+str(id)
+		#print "mainwin onClick: id: "+str(id)
 		if (control == 3350) or (control == 3351) or (control == 3352) or (control == 3550) or (control == 3551) or (control == 3451):
 			self.alb_dialog = AlbumDialog("album.xml", self.app.__addon_path__, 'Default', '720p', current_list=self.app.get_var('list'),
 			                         pos=pos, cache=self.cache.album, alb_id=thing, app=self.app)
@@ -427,15 +431,27 @@ class MainWin(WinBase):
 			#self.manage_playlist_detail(thing['playlist_id'])
 			pass
 
+		elif control == 3651:
+			print "Tring to play playlist"				
+			#thing = self.app.get_var('list')[pos]
+			self.start_playback(control)
+
 
 	def start_playback(self, id):
 
 		view = self.handle.getProperty('browseview')
 		list_instance = self.app.get_var('view_matrix')[view]
-		self.player.now_playing = {'pos': 0, 'type':'playlist', 'item':list_instance.data, 'id':list_instance.name}  #['data']}
+		print list_instance.name
+		#utils.prettyprint(list_instance.data[self.mem_playlist_selection])
+		if id == 3651:  #attempting to play member playlist
+			self.player.now_playing = {'pos': 0, 'type':'playlist', 'item':list_instance.data[self.mem_playlist_selection]['tracks'], 'id':list_instance.name}
+		else:
+			self.player.now_playing = {'pos': 0, 'type':'playlist', 'item':list_instance.data, 'id':list_instance.name}  #['data']}
 		self.player.build()
 		if id == 3353 or id == 3453 or id == 3950:
 			self.player.now_playing['pos'] = self.clist.getSelectedPosition()
+		elif id == 3651:
+			self.player.now_playing['pos'] = self.dlist.getSelectedPosition()
 		#xbmc.executebuiltin("XBMC.Notification(Rhapsody, Fetching song..., 5000, %s)" %(self.app.__addon_icon__))
 		#track = self.player.add_playable_track(0)
 		#if not track:

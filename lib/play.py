@@ -109,7 +109,7 @@ class Player(xbmc.Player):
 		self.playlist.clear()
 		liz = self.now_playing['item']
 		for i, track in enumerate(liz):
-			#utils.prettyprint(track)
+			utils.prettyprint(track)
 			#print "track "+str(i+1)+": "+track['name']
 			#alb_id = track['albumId']
 			alb_id = track['album']['id']

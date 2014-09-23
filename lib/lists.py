@@ -12,7 +12,7 @@ class ContentList(object):
 		self.liz = []
 		self.built = False
 		self.fresh = False
-		self.pos = None
+		self.pos = 0
 		self.timestamp = time.time()
 		self.type = args[0]
 		self.name = args[1]

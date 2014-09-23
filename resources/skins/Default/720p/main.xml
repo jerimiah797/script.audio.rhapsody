@@ -1563,7 +1563,6 @@
                         </focusedlayout>
                     </control>
                 </control>
-
             </control>
 <!-- Library Pane -->
             <control type="group" id="500">
