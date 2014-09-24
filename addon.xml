@@ -9,9 +9,9 @@
     </extension>
     <extension point="xbmc.addon.metadata">
         <platform>all</platform>
-        <summary>Rhapsody music service.</summary>
-        <description>Rhapsody lets you search for music, browse your playlists and play your favorite tunes right from XBMC.</description>
-        <disclaimer>It can be used with any Rhapsody account.</disclaimer>
+        <summary>Rhapsody / Napster subscription music service.</summary>
+        <description>Rhapsody lets you search for artist and albums, browse your library and playlists, and discover new music.[CR][CR]It can be used with any full featured Rhapsody or Napster account. Requires a broadband internet connection to play all music.</description>
+        <disclaimer>unRadio and Radio+ accounts are not supported at this time, sorry. </disclaimer>
 		<platform>all</platform>
     </extension>
 </addon>
