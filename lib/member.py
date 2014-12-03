@@ -18,7 +18,7 @@ class Member(object):
 		self.password = ""
 		self.access_token = ""
 		self.refresh_token = ""
-		self.issued_at = ""
+		#self.issued_at = ""
 		self.expires_in = ""
 		self.guid = ""
 		self.account_type = "Not available"
@@ -41,7 +41,7 @@ class Member(object):
 			self.guid = self.user_info['guid']
 			self.access_token = self.user_info['access_token']
 			self.refresh_token = self.user_info['refresh_token']
-			self.issued_at = self.user_info['issued_at']
+			#self.issued_at = self.user_info['issued_at']
 			self.expires_in = self.user_info['expires_in']
 			self.first_name = self.user_info['first_name']
 			self.last_name = self.user_info['last_name']
@@ -86,7 +86,7 @@ class Member(object):
 		self.user_info['guid'] = self.guid
 		self.user_info['access_token'] = self.access_token
 		self.user_info['refresh_token'] = self.refresh_token
-		self.user_info['issued_at'] = self.issued_at
+		#self.user_info['issued_at'] = self.issued_at
 		self.user_info['expires_in'] = self.expires_in
 		self.user_info['first_name'] = self.first_name
 		self.user_info['last_name'] = self.last_name
@@ -111,17 +111,18 @@ class Member(object):
 		self.password = pswd
 		#api = rhapapi.Api()
 		result = self.app.api.login_member(name, pswd)
-
+		utils.prettyprint(result)
 		#try:
 		if result: 
 			if "access_token" in result:
 				
 				self.access_token =     result["access_token"]
 				self.catalog =          result["catalog"]
-				self.expires_in =       utils.eval_unicode(result["expires_in"])
+				#self.expires_in =       utils.eval_unicode(result["expires_in"]) #old
+				self.expires_in =       result["expires_in"]
 				self.first_name =       result["first_name"]
 				self.guid =             result["guid"]
-				self.issued_at =        result["issued_at"]
+				#self.issued_at =        result["issued_at"]
 				self.last_name =        result["last_name"]
 				self.refresh_token =    result["refresh_token"]
 				print "Successful! Grabbing account details now, too."
