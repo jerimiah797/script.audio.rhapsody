@@ -92,7 +92,7 @@ def get_it(args):
       #print "Rhapsody Plugin: No results returned!"
       return False
     else:
-      #print "Got results: "
+      print "Plugin: Got results from localhost "
       return str(results[0]['url'])
 
 

@@ -29,9 +29,10 @@ class TinyWebServer(object):
 				track_id = str(d['track'])
 				url = self.app.api.get_playable_url(track_id[2:-2])
 				response = json.dumps([{"track": track_id, "url": url}], indent=4, separators=(',', ': '))
+				print response
 				return response
 			except:
-				return "Hi"
+				print "Hi"
 
 
 	def create(self, ip_addr, port):

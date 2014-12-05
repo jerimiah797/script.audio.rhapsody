@@ -109,7 +109,7 @@ class Player(xbmc.Player):
 		self.playlist.clear()
 		liz = self.now_playing['item']
 		for i, track in enumerate(liz):
-			utils.prettyprint(track)
+			#utils.prettyprint(track)
 			#print "track "+str(i+1)+": "+track['name']
 			#alb_id = track['albumId']
 			alb_id = track['album']['id']
@@ -121,7 +121,8 @@ class Player(xbmc.Player):
 			#tid = i+1
 			#print tid
 			#print self.app.mem.access_token
-			playurl = "plugin://script.audio.rhapsody/?track=%s&token=%s" % (tid, self.app.mem.access_token)
+			#playurl = "plugin://script.audio.rhapsody/?track=%s&token=%s" % (tid, self.app.mem.access_token)
+			playurl = "plugin://script.audio.rhapsody/?track=%s" % (tid)
 			#print playurl
 
 			li = xbmcgui.ListItem(

@@ -30,13 +30,6 @@ def getPlatform():
     return p
 
 
-def verifyConfluence():
-	return
-
-
-def copyConfluence():
-	return
-
 def skinfix():
 	
 	
