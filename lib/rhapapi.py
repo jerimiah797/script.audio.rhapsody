@@ -28,7 +28,7 @@ class Api(object):
 	def __get_data_from_rhapsody(self, req, timeout):
 		succeed = 0
 		localreq = req
-		while succeed < 2:
+		while succeed < 1:
 			#print "succeed = "+str(succeed)
 			try:
 				#print "starting first try expression"
@@ -113,7 +113,7 @@ class Api(object):
 		#print track_id
 		url = "%splay/%s" %(self.S_BASEURL, track_id)
 		req = self.__build_member_req(url)
-		results = self.__get_data_from_rhapsody(req, 10)
+		results = self.__get_data_from_rhapsody(req, 2)
 		if not results:
 			return False
 		if results['url'][:5] == u'undef':

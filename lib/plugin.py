@@ -87,7 +87,7 @@ def get_it(args):
     #print "Rhapsody Plugin: fetching "+url
     #url = "%splay/%s" %(S_BASEURL, track_id)
     req = urllib2.Request(url)
-    results = __get_data_from_rhapsody(req, 10)
+    results = __get_data_from_rhapsody(req, 5)
     if not results:
       #print "Rhapsody Plugin: No results returned!"
       return False
