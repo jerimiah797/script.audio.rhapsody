@@ -273,7 +273,7 @@ class Api(object):
 
 	def get_album_review(self, album_id):
 		print "Rhapapi: getting album review"
-		url = "%salbums/%s/reviews?apikey=%s" % (self.BASEURL, album_id, self.APIKEY)
+		url = "%salbums/%s/reviews?apikey=%s&catalog=%s" % (self.BASEURL, album_id, self.APIKEY, self.app.mem.catalog)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
@@ -283,7 +283,7 @@ class Api(object):
 
 	def get_album_details(self, album_id):
 		print "Rhapapi: getting album details"
-		url = '%salbums/%s?apikey=%s' % (self.BASEURL, album_id, self.APIKEY)
+		url = '%salbums/%s?apikey=%s&catalog=%s' % (self.BASEURL, album_id, self.APIKEY, self.app.mem.catalog)
 		#url = "http://direct.rhapsody.com/metadata/data/methods/getAlbum.js?developerKey=9H9H9E6G1E4I5E0I&albumId=%s&cobrandId=40134&filterRightsKey=0" % (album_id)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 10)
@@ -295,7 +295,7 @@ class Api(object):
 
 	def get_album_images(self, album_id):
 		print "Rhapapi: getting album image"
-		url = "%salbums/%s/images?apikey=%s" %(self.BASEURL, album_id, self.APIKEY)
+		url = "%salbums/%s/images?apikey=%s&catalog=%s" %(self.BASEURL, album_id, self.APIKEY, self.app.mem.catalog)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
@@ -305,7 +305,7 @@ class Api(object):
 
 	def get_artist_images(self, artist_id):
 		print "Rhapapi: getting artist image"
-		url = "%sartists/%s/images?apikey=%s" %(self.BASEURL, artist_id, self.APIKEY)
+		url = "%sartists/%s/images?apikey=%s&catalog=%s" %(self.BASEURL, artist_id, self.APIKEY, self.app.mem.catalog)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
@@ -315,7 +315,7 @@ class Api(object):
 
 	def get_artist_genre(self, artist_id):
 		print "Rhapapi: getting artist genre"
-		url = "%sartists/%s?apikey=%s" %(self.BASEURL, artist_id, self.APIKEY)
+		url = "%sartists/%s?apikey=%s&catalog=%s" %(self.BASEURL, artist_id, self.APIKEY, self.app.mem.catalog)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
@@ -326,7 +326,7 @@ class Api(object):
 
 	def get_new_releases(self):
 		print "Rhapapi: getting new releases"
-		url = '%salbums/new?apikey=%s&limit=100' % (self.BASEURL, self.APIKEY)
+		url = '%salbums/new?apikey=%s&limit=100&catalog=%s' % (self.BASEURL, self.APIKEY, self.app.mem.catalog)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
@@ -336,7 +336,7 @@ class Api(object):
 
 	def get_top_albums(self):
 		print "Rhapapi: getting top albums"
-		url = '%salbums/top?apikey=%s&limit=100' % (self.BASEURL, self.APIKEY)
+		url = '%salbums/top?apikey=%s&limit=100&catalog=%s' % (self.BASEURL, self.APIKEY, self.app.mem.catalog)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
@@ -346,7 +346,7 @@ class Api(object):
 
 	def get_top_artists(self):
 		print "Rhapapi: getting top artists"
-		url = '%sartists/top?apikey=%s&limit=100' % (self.BASEURL, self.APIKEY)
+		url = '%sartists/top?apikey=%s&limit=100&catalog=%s' % (self.BASEURL, self.APIKEY, self.app.mem.catalog)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
@@ -356,7 +356,7 @@ class Api(object):
 
 	def get_top_tracks(self):
 		print "Rhapapi: getting top tracks"
-		url = '%stracks/top?apikey=%s&limit=100' % (self.BASEURL, self.APIKEY)
+		url = '%stracks/top?apikey=%s&limit=100&catalog=%s' % (self.BASEURL, self.APIKEY, self.app.mem.catalog)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 10)
 		#container = []
@@ -371,7 +371,7 @@ class Api(object):
 
 	def get_genres(self):
 		print "Rhapapi: getting genre tree"
-		url = "%sgenres?apikey=%s" % (self.BASEURL, self.APIKEY)
+		url = "%sgenres?apikey=%s&catalog=%s" % (self.BASEURL, self.APIKEY, self.app.mem.catalog)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
@@ -381,7 +381,7 @@ class Api(object):
 
 	def get_genre_detail(self, g_id):
 		print "Rhapapi: getting genre detail"
-		url = "%sgenres/%s?apikey=%s" % (self.BASEURL, g_id, self.APIKEY)
+		url = "%sgenres/%s?apikey=%s&catalog=%s" % (self.BASEURL, g_id, self.APIKEY, self.app.mem.catalog)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
@@ -392,7 +392,7 @@ class Api(object):
 
 	def get_bio(self, art_id):
 		print "Rhapapi: getting artist bio"
-		url = "%sartists/%s/bio?apikey=%s" % (self.BASEURL, art_id, self.APIKEY)
+		url = "%sartists/%s/bio?apikey=%s&catalog=%s" % (self.BASEURL, art_id, self.APIKEY, self.app.mem.catalog)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 10)
 		if results:
@@ -402,7 +402,7 @@ class Api(object):
 
 	def get_search_results(self, text, stype):
 		print "Rhapapi: getting search results"
-		url = "%ssearch?apikey=%s&limit=50&q=%s&type=%s" % (self.BASEURL, self.APIKEY, urllib.quote_plus(text), stype)
+		url = "%ssearch?apikey=%s&limit=50&q=%s&type=%s&catalog=%s" % (self.BASEURL, self.APIKEY, urllib.quote_plus(text), stype, self.app.mem.catalog)
 		#url = "%ssearch?apikey=%s&q=%s&type=%s" % (self.BASEURL, self.APIKEY, urllib.quote_plus(text), stype)
 		req = self.__build_req(url)
 		results = self.__get_data_from_rhapsody(req, 10)
