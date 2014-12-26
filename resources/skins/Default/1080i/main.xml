@@ -2278,7 +2278,7 @@
                             <control type="label">
                                 <posx>60</posx>
                                 <posy>0</posy>
-                                <width>660</width>
+                                <width>560</width>
                                 <info>ListItem.Label</info>
                                 <font>rhapsody_font12</font>
                                 <textcolor>black</textcolor>
@@ -2296,7 +2296,7 @@
                                 <aligny>top></aligny>
                             </control>
                             <control type="label">
-                                <posx>765</posx>
+                                <posx>665</posx>
                                 <posy>0</posy>
                                 <width>231</width>
                                 <info>ListItem.Label2</info>
@@ -2309,7 +2309,7 @@
                         <focusedlayout height="40">
                             <control type="image">
                                 <!--visible>Control.HasFocus(51)</visible-->
-                                <width>780</width>
+                                <width>680</width>
                                 <height>40</height>
                                 <texture>button180x25.png</texture>
                             </control>
@@ -2317,7 +2317,7 @@
                                 <visible>Control.HasFocus(3650)</visible>
                                 <posx>60</posx>
                                 <posy>0</posy>
-                                <width>660</width>
+                                <width>560</width>
                                 <info>ListItem.Label</info>
                                 <font>rhapsody_font12</font>
                                 <textcolor>F3FFFFFF</textcolor>
@@ -2339,7 +2339,7 @@
                             </control>
                             <control type="label">
                                 <visible>Control.HasFocus(3650)</visible>
-                                <posx>765</posx>
+                                <posx>665</posx>
                                 <posy>0</posy>
                                 <width>231</width>
                                 <info>ListItem.Label2</info>
@@ -2353,7 +2353,7 @@
                                 <visible>!Control.HasFocus(3650)</visible>
                                 <posx>60</posx>
                                 <posy>0</posy>
-                                <width>675</width>
+                                <width>575</width>
                                 <info>ListItem.Label</info>
                                 <font>rhapsody_font12</font>
                                 <textcolor>F3FFFFFF</textcolor>
@@ -2375,7 +2375,7 @@
                             </control>
                             <control type="label">
                                 <visible>!Control.HasFocus(3650)</visible>
-                                <posx>765</posx>
+                                <posx>665</posx>
                                 <posy>0</posy>
                                 <width>225</width>
                                 <info>ListItem.Label2</info>
