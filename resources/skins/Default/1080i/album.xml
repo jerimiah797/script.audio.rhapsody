@@ -83,8 +83,8 @@
                 <posx>0</posx>
                 <posy>180</posy>
                 <description>Slide-out bottom nav for album view</description>
-                <animation effect="slide" start="0,0" end="0,-120" time="400">Focus</animation>
-                <animation effect="slide" start="0,-120" end="0,0" time="400">Unfocus</animation>
+                <animation effect="slide" start="0,0" end="0,-180" time="400">Focus</animation>
+                <animation effect="slide" start="0,-180" end="0,0" time="400">Unfocus</animation>
 
                 <control type="image" id="30">
                     <visible>false</visible>
@@ -137,9 +137,9 @@
                 <control type="group" id="101">
                     <!--animation effect="slide" start="0,0" end="-268,0" time="400" condition="Control.HasFocus(52)" tween="cubic" easing="inout">Conditional</animation>
                     <animation effect="slide" start="-268,0" end="0,0" time="400" condition="!Control.HasFocus(52)" tween="cubic" easing="inout">Conditional</animation-->
-                    <width>847</width>
+                    <width>820</width>
                     <height>840</height>
-                    <posx>817</posx>
+                    <posx>830</posx>
                     <posy>0</posy>
                     <!-- Album name, artist name, review -->
                     <control type="group">
@@ -148,7 +148,7 @@
                         <posy>22</posy>
                         <control type="textbox" id="11">
                             <description>Album Name</description>
-                            <posx>-1</posx>
+                            <posx>0</posx>
                             <posy>52</posy>
                             <width>720</width>
                             <height>147</height>
@@ -161,7 +161,7 @@
                         </control>
                         <control type="label" id="13">
                             <description>Album Artist Name</description>
-                            <posx>0</posx>
+                            <posx>1</posx>
                             <posy>9</posy>
                             <width>750</width>
                             <height>30</height>
@@ -173,7 +173,7 @@
                         </control>
                         <control type="textbox" id="14">
                             <description>Album Review</description>
-                            <posx>0</posx>
+                            <posx>1</posx>
                             <posy>208</posy>
                             <width>750</width>
                             <height>381</height>
@@ -333,7 +333,7 @@
                         <control type="label">
                             <posx>60</posx>
                             <posy>0</posy>
-                            <width>660</width>
+                            <width>630</width>
                             <info>ListItem.Title</info>
                             <font>rhapsody_font12</font>
                             <textcolor>black</textcolor>
@@ -351,7 +351,7 @@
                             <aligny>top></aligny>
                         </control>
                         <control type="label">
-                            <posx>765</posx>
+                            <posx>693</posx>
                             <posy>0</posy>
                             <width>81</width>
                             <info>ListItem.Duration</info>
@@ -446,8 +446,8 @@
 
             <!--Large Art pane -->
             <control type="group">
-                <animation effect="slide" start="0,0" end="283,0" time="600" condition="Control.HasFocus(3150)" tween="cubic" easing="inout">Conditional</animation>
-                <animation effect="slide" start="283,0" end="0,0" time="600" condition="!Control.HasFocus(3150)" tween="cubic" easing="inout">Conditional</animation>
+                <animation effect="slide" start="0,0" end="424,0" time="600" condition="Control.HasFocus(3150)" tween="cubic" easing="inout">Conditional</animation>
+                <animation effect="slide" start="424,0" end="0,0" time="600" condition="!Control.HasFocus(3150)" tween="cubic" easing="inout">Conditional</animation>
                 <posx>0</posx>
                 <visible></visible>
                 <description>Container for large art, release dates, lable, and genre</description>
@@ -456,7 +456,7 @@
                     <animation effect="slide" start="-11,0" end="0,0" time="600" condition="!Control.HasFocus(3150)" tween="cubic" easing="inout">Conditional</animation>
                     <posx>0</posx>
                     <posy>0</posy>
-                    <width>810</width>
+                    <width>825</width>
                     <height>795</height>
                     <texture>white.png</texture>
                 </control>

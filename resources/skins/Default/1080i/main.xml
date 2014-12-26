@@ -2946,7 +2946,7 @@
         </control>
         <control type="label" id="121">
             <description>'frame' string used by script to detect active view</description>
-            <posx>150</posx>
+            <posx>150r</posx>
             <posy>7</posy>
             <width>420</width>
             <label>$INFO[Window.Property(frame)]</label>
