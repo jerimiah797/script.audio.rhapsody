@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE window
+     PUBLIC "http://www.w3.org/2001/XMLSchema"
+         "http://xbmc.org/xbmc.xsd">
+
+<window>
+    <!--defaultcontrol>201</defaultcontrol-->
+    <!--onload>RunScript(special://skin/scripts/login.py)</onload-->
+    <allowoverlay>no</allowoverlay>
+
+    <controls>
+        <control type="image">
+            <posx>0</posx>
+            <posy>0</posy>
+            <width>1920</width>
+            <height>1080</height>
+            <texture>background/background.png</texture>
+        </control>
+        <control type="image">
+            <animation type="WindowOpen">
+                <effect type="fade" start="0" end="100" time="2000" delay="1000"/>
+            </animation>
+            <posx>360</posx>
+            <posy>240</posy>
+            <texture>combinedlogo.png</texture>
+            <width>1200</width>
+            <height>487</height>
+            
+        </control>
+        <control type="image">
+            <posx>0</posx>
+            <posy>0</posy>
+            <width>1920</width>
+            <height>1080</height>
+            <texture>haze2-50.png</texture>
+        </control>
+        <control type="label" id="10">
+            <animation type="WindowOpen">
+                <effect type="fade" start="0" end="100" time="500"/>
+            </animation>
+            <posx>525</posx>
+            <posy>862</posy>
+            <width>900</width>
+            <align>center</align>
+            <visible>true</visible>
+            <label>-</label>
+            <align>left</align>
+            <aligny>top</aligny>
+            <font>rhapsody_font35_title</font>
+            <textcolor>DD171717</textcolor>
+            <!-- darkgrey -->
+        </control>
+    </controls>
+</window>

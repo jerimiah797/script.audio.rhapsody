@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE window
+     PUBLIC "http://www.w3.org/2001/XMLSchema"
+         "http://xbmc.org/xbmc.xsd">
+
+
+
+<window type="dialog">
+    <controls>
+        <control type="group">
+            <posx>885</posx>
+            <posy>300</posy>
+            <control type="label">
+                <posx>-45</posx>
+                <posy>0</posy>
+                <align>left</align>
+                <aligny>top</aligny>
+                <label>Sign in to start listening</label>
+                <font>rhapsody_font45caps_title</font>
+                <textcolor>DD171717</textcolor>
+                        <!-- darkgrey -->
+            </control>
+            <control type="label">
+                <posx>0</posx>
+                <posy>120</posy>
+                <label>Username (usually your email address)</label>
+                <align>left</align>
+                <aligny>top</aligny>
+                <font>rhapsody_font16</font>
+                <textcolor>DD171717</textcolor>
+                        <!-- darkgrey -->
+            </control>
+            <control type="image">
+                <width>630</width>
+                <height>60</height>
+                <posx>0</posx>
+                <posy>180</posy>
+                <texture>white.png</texture>
+            </control>
+            <control type="label">
+                <posx>0</posx>
+                <posy>255</posy>
+                <label>Password</label>
+                <align>left</align>
+                <aligny>top</aligny>
+                <font>rhapsody_font16</font>
+                <textcolor>DD171717</textcolor>
+                        <!-- darkgrey -->
+            </control>
+            <control type="image">
+                <width>630</width>
+                <height>60</height>
+                <posx>0</posx>
+                <posy>315</posy>
+                <texture>white.png</texture>
+            </control>
+            <control type="image">
+                <posx>435</posx>
+                <posy>420</posy>
+                <width>195</width>
+                <height>75</height>
+                <texture>white.png</texture>
+            </control>
+            <control type="image" id="10">
+                <description>Highlight for username</description>
+                <width>633</width>
+                <height>63</height>
+                <posx>-1</posx>
+                <posy>178</posy>
+                <texture border="8">selectoutline.png</texture>
+            </control>
+            <control type="image" id="11">
+                <description>Highlight for password</description>
+                <width>633</width>
+                <height>63</height>
+                <posx>-1</posx>
+                <posy>313</posy>
+                <texture border="8">selectoutline.png</texture>
+            </control>
+            <control type="button" id="22">
+                <posx>465</posx>
+                <posy>420</posy>
+                <width>195</width>
+                <height>75</height>
+                <label>Sign In</label>
+                <font>rhapsody_font24_title</font>
+                <textcolor>DD171717</textcolor>
+                <focusedcolor>DD171717</focusedcolor>
+                <texturefocus>none.jpg</texturefocus>
+            </control>
+            <control type="image" id="12">
+                <description>Highlight for submit button</description>
+                <visible>Control.HasFocus(22)</visible>
+                <posx>432</posx>
+                <posy>417</posy>
+                <width>201</width>
+                <height>81</height>
+                <texture border="8">selectoutline.png</texture>
+            </control>
+        </control>
+    </controls>
+</window>

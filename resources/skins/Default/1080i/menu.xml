@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE window
+     PUBLIC "http://www.w3.org/2001/XMLSchema"
+         "http://xbmc.org/xbmc.xsd">
+
+
+<window type="dialog">
+    <!--onload>RunScript(special://skin/scripts/rhapsody.py)</onload-->
+    <defaultcontrol>9000</defaultcontrol>
+    <allowoverlay>no</allowoverlay>
+    <coordinates>
+        <posx>0</posx>
+        <posy>0</posy>
+    </coordinates>>
+    <controls>
+        <control type="image">
+            <posx>0</posx>
+            <posy>0</posy>
+            <width>1920</width>
+            <height>1080</height>
+            <texture>dim.png</texture>
+        </control>
+        <!--control type="group" id="60">
+            <posx>135</posx>
+            <posy>120</posy>
+            <width>1650</width>
+            <height>840</height>
+            <control type="image">
+                <posx>0</posx>
+                <posy>0</posy>
+                <width>1650</width>
+                <height>840</height>
+                <texture>white.png</texture>
+            </control>
+        </control-->
+
+        <control type="group" id="9001">
+				<posx>0</posx>
+				<posy>705</posy>
+				<onup>9000</onup>
+				<ondown>9002</ondown>
+				<control type="grouplist" id="9010">
+					<include>HomeSubMenuCommonValues</include>
+					<onleft>9010</onleft>
+					<onright>9010</onright>
+					<visible>Container(9000).HasFocus(2)</visible>
+					<include>HomeSubMenuVideos</include> <!-- Buttons for the grouplist -->
+				</control>
+				<control type="grouplist" id="9016">
+					<include>HomeSubMenuCommonValues</include>
+					<onleft>9016</onleft>
+					<onright>9016</onright>
+					<visible>Container(9000).HasFocus(10)</visible>
+					<include>HomeSubMenuMovies</include> <!-- Buttons for the grouplist -->
+				</control>
+				<control type="grouplist" id="9017">
+					<include>HomeSubMenuCommonValues</include>
+					<onleft>9017</onleft>
+					<onright>9017</onright>
+					<visible>Container(9000).HasFocus(11)</visible>
+					<include>HomeSubMenuTVShows</include> <!-- Buttons for the grouplist -->
+				</control>
+				<control type="grouplist" id="9011">
+					<include>HomeSubMenuCommonValues</include>
+					<onleft>9011</onleft>
+					<onright>9011</onright>
+					<visible>Container(9000).HasFocus(3)</visible>
+					<include>HomeSubMenuMusic</include> <!-- Buttons for the grouplist -->
+				</control>
+				<control type="grouplist" id="9012">
+					<include>HomeSubMenuCommonValues</include>
+					<onleft>9012</onleft>
+					<onright>9012</onright>
+					<visible>Container(9000).HasFocus(5)</visible>
+					<include>HomeSubMenuSystem</include> <!-- Buttons for the grouplist -->
+				</control>
+				<control type="grouplist" id="9013">
+					<include>HomeSubMenuCommonValues</include>
+					<onleft>9013</onleft>
+					<onright>9013</onright>
+					<visible>Container(9000).HasFocus(6)</visible>
+					<include>HomeSubMenuPlayDisc</include> <!-- Buttons for the grouplist -->
+				</control>
+				<control type="grouplist" id="9014">
+					<include>HomeSubMenuCommonValues</include>
+					<onleft>9014</onleft>
+					<onright>9014</onright>
+					<visible>Container(9000).HasFocus(12)</visible>
+					<include>HomeSubMenuLiveTV</include> <!-- Buttons for the grouplist -->
+				</control>
+				<control type="grouplist" id="9015">
+					<include>HomeSubMenuCommonValues</include>
+					<onleft>9013</onleft>
+					<onright>9013</onright>
+					<visible>Container(9000).HasFocus(4)</visible>
+					<include>HomeSubMenuPictures</include> <!-- Buttons for the grouplist -->
+				</control>
+			</control>
+			<control type="image">
+				<posx>-150</posx>
+				<posy>600</posy>
+				<width>2220</width>
+				<height>112</height>
+				<texture border="0,6,0,6">HomeBack.png</texture>
+			</control>
+			<control type="image">
+				<posx>0</posx>
+				<posy>607</posy>
+				<width>1920</width>
+				<height>9</height>
+				<texture>HomeOverlay1.png</texture>
+			</control>
+			<control type="fixedlist" id="9000">
+				<posx>-165</posx>
+				<posy>607</posy>
+				<width>2250</width>
+				<height>90</height>
+				<onleft>9000</onleft>
+				<onright>9000</onright>
+				<onup condition="System.HasAddon(script.globalsearch)">608</onup>
+				<onup condition="!System.HasAddon(script.globalsearch)">603</onup>
+				<ondown>9001</ondown>
+				<pagecontrol>-</pagecontrol>
+				<scrolltime>300</scrolltime>
+				<focusposition>2</focusposition>
+				<movement>1</movement>
+				<orientation>Horizontal</orientation>
+				<itemlayout height="90" width="450">
+					<control type="image">
+						<posx>0</posx>
+						<posy>6</posy>
+						<width>1</width>
+						<height>78</height>
+						<texture>HomeSeperator.png</texture>
+					</control>
+					<control type="image">
+						<posx>448</posx>
+						<posy>6</posy>
+						<width>1</width>
+						<height>78</height>
+						<texture>HomeSeperator.png</texture>
+					</control>
+					<control type="label">
+						<posx>225</posx>
+						<posy>0</posy>
+						<width>435</width>
+						<height>90</height>
+						<font>font_MainMenu</font>
+						<textcolor>grey3</textcolor>
+						<align>center</align>
+						<aligny>center</aligny>
+						<label>$INFO[ListItem.Label]</label>
+					</control>
+				</itemlayout>
+				<focusedlayout height="90" width="450">
+					<control type="image">
+						<posx>0</posx>
+						<posy>6</posy>
+						<width>1</width>
+						<height>78</height>
+						<texture>HomeSeperator.png</texture>
+					</control>
+					<control type="image">
+						<posx>448</posx>
+						<posy>6</posy>
+						<width>1</width>
+						<height>78</height>
+						<texture>HomeSeperator.png</texture>
+					</control>
+					<control type="label">
+						<posx>225</posx>
+						<posy>0</posy>
+						<width>435</width>
+						<height>90</height>
+						<font>font_MainMenu</font>
+						<textcolor>grey3</textcolor>
+						<align>center</align>
+						<aligny>center</aligny>
+						<label>$INFO[ListItem.Label]</label>
+					</control>
+					<control type="label">
+						<posx>225</posx>
+						<posy>0</posy>
+						<width>435</width>
+						<height>90</height>
+						<font>font_MainMenu</font>
+						<textcolor>blue</textcolor>
+						<align>center</align>
+						<aligny>center</aligny>
+						<label>$INFO[ListItem.Label]</label>
+						<visible>Control.HasFocus(9000)</visible>
+						<include>VisibleFadeEffect</include>
+					</control>
+				</focusedlayout>
+				<content>
+					<item id="7">
+						<label>Browse</label>
+						<onclick>ActivateWindow(Weather)</onclick>
+						<icon>-</icon>
+						<thumb>-</thumb>
+					</item>
+					<item id="4">
+						<label>Radio</label>
+						<onclick>ActivateWindow(Pictures)</onclick>
+						<icon>-</icon>
+						<thumb>-</thumb>
+					</item>
+					<item id="12">
+						<label>Library</label>
+						<onclick>ActivateWindow(PVR)</onclick>
+						<icon>-</icon>
+						<thumb>-</thumb>
+					</item>
+					<item id="10">
+						<label>Playlists</label>
+						<onclick>ActivateWindow(Videos,MovieTitles,return)</onclick>
+						<icon>-</icon>
+						<thumb>-</thumb>
+					</item>
+					<item id="11">
+						<label>Queue</label>
+						<onclick>ActivateWindow(Videos,TVShowTitles,return)</onclick>
+						<icon>-</icon>
+						<thumb>-</thumb>
+					</item>
+					<item id="5">
+						<label>13000</label>
+						<onclick>ActivateWindow(Settings)</onclick>
+						<icon>-</icon>
+						<thumb>-</thumb>
+					</item>
+				</content>
+			</control>
+    </controls>
+</window>

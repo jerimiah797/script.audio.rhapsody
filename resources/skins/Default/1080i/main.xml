@@ -1,0 +1,3270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE window
+     PUBLIC "http://www.w3.org/2001/XMLSchema"
+         "http://xbmc.org/xbmc.xsd">
+
+<window>
+    <defaultcontrol>202</defaultcontrol>
+    <allowoverlay>yes</allowoverlay>
+
+    <controls>
+        <control type="image">
+            <posx>0</posx>
+            <posy>0</posy>
+            <width>1920</width>
+            <height>1080</height>
+            <texture>background/background.png</texture>
+        </control>
+
+<!-- Left Navbar -->
+        <control type="group" id="100">
+            <animation effect="slide" start="0,0" end="-200,0" time="400" condition="ControlGroup(200).HasFocus | Control(200).HasFocus(201) | !ControlGroup(100).HasFocus" tween="cubic" easing="inout">Conditional</animation>
+            <!--visible>!IsEmpty(Window.Property(view))</visible-->
+            <onright>201</onright>
+            <control type="image">
+                <posx>0</posx>
+                <posy>0</posy>
+                <width>300</width>
+                <height>1080</height>
+                <texture>background/navbar.png</texture>
+            </control>
+            <control type="image">
+                <posx>78</posx>
+                <posy>22</posy>
+                <width>150</width>
+                <height>60</height>
+                <texture>combinedlogowhitesm.png</texture>
+            </control>
+            <control type="list" id="101">
+                <posx>0</posx>
+                <posy>105</posy>
+                <width>450</width>
+                <height>1080</height>
+                <onright>200</onright>
+                <ondown>101</ondown>
+                <orientation>vertical</orientation>
+                <focusposition>1</focusposition>
+                <itemlayout height="67">
+                    <control type="label">
+                        <posx>30</posx>
+                        <posy>-</posy>
+                        <width>255</width>
+                        <height>45</height>
+                        <align>left</align>
+                        <aligny>top</aligny>
+                        <font>rhapsody_font14</font>
+                        <info>ListItem.Label</info>
+                        <textcolor>F3FFFFFF</textcolor>
+                            <!-- white -->
+                    </control>
+                </itemlayout>
+                <focusedlayout height="67">
+                    <control type="image">
+                        <width>300</width>
+                        <height>67</height>
+                        <posx>0</posx>
+                        <posy>-9</posy>
+                        <texture border="0">lightbox.png</texture>
+                    </control>
+                    <control type="label">
+                        <posx>30</posx>
+                        <posy>-</posy>
+                        <width>255</width>
+                        <height>45</height>
+                        <align>left</align>
+                        <aligny>top</aligny>
+                        <font>rhapsody_font14</font>
+                        <info>ListItem.Label</info>
+                        <textcolor>F30C1D2F</textcolor>
+                            <!-- darkblue -->
+                    </control>
+                </focusedlayout>
+                <content>
+                    <item id="102">
+                        <label>Search</label>
+                        <onclick>SetProperty(frame,Search)</onclick>
+                        <onclick>SetProperty(browseview,search_albums)</onclick>
+                        <!--onclick>Window.SetFocus(201)</onclick-->
+                    </item>
+                    <item id="103">
+                        <label>Browse</label>
+                        <onclick>SetProperty(frame,Browse)</onclick>
+                        <onclick>SetProperty(browseview,browse_newreleases)</onclick>
+                    </item>
+                    <item id="104">
+                        <label>Radio</label>
+                        <onclick>SetProperty(frame,Radio)</onclick>
+                    </item>
+                    <item id="105">
+                        <label>Library</label>
+                        <onclick>SetProperty(frame,Library)</onclick>
+                        <onclick>SetProperty(browseview,library_albums)</onclick>
+                    </item>
+                    <item id="106">
+                        <label>Playlists</label>
+                        <onclick>SetProperty(frame,Playlists)</onclick>
+                        <onclick>SetProperty(browseview,library_playlists)</onclick>
+                    </item>
+                    <item id="107">
+                        <label>Listening History</label>
+                        <onclick>SetProperty(frame,Listening History)</onclick>
+                        <onclick>SetProperty(browseview,history_tracks)</onclick>
+                    </item>
+                    <item id="108">
+                        <label>Queue</label>
+                        <onclick>SetProperty(frame,Queue)</onclick>
+                    </item>
+                    <item id="109">
+                        <label>Settings</label>
+                        <onclick>SetProperty(frame,Settings)</onclick>
+                    </item>
+                    <item id="110">
+                        <label>Visualizer</label>
+                        <onclick>ActivateWindow(visualisation)</onclick>
+                    </item>
+                </content>
+            </control>
+        </control>
+<!-- Group for all views -->
+        <control type="group" id="200">
+            <animation effect="slide" start="0,0" end="200,0" time="400" condition="ControlGroup(100).HasFocus | Control(100).HasFocus(101) | !Control.IsVisible(101)" tween="cubic" easing="inout">Conditional</animation>
+            <onleft>101</onleft>
+            <onfocus>SetFocus(201)</onfocus>
+            <onup>-</onup>
+            <ondown>-</ondown>
+            <posx>105</posx>
+<!-- Browse Pane -->
+            <control type="group" id="300">
+                <description>Browse, new releases - default view</description>
+                <!--visible>SubString(Window.Property(view),Browse)</visible-->
+                <visible>StringCompare(Window.Property(frame),Browse)</visible>
+                <!--control type="button" id="202">
+                    <description>dummy button to set initial view</description>
+                    <posx>0</posx>
+                    <posy>0</posy>
+                    <texturenofocus>-</texturenofocus>
+                    <texturefocus>-</texturefocus>
+                    <ondown>50</ondown>
+                    <onup>201</onup>
+                    <onleft>50</onleft>
+                    <onright>50</onright>
+                </control-->
+                <!--Top Nav Menu -->
+                <control type="wraplist" id="301">
+                    <posx>21</posx>
+                    <posy>15</posy>
+                    <width>1380</width>
+                    <height>67</height>
+                    <onright>-</onright>
+                    <ondown>3300</ondown>
+                    <orientation>horizontal</orientation>
+                    <itemlayout width="345">
+                        <control type="label">
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <width>315</width>
+                            <height>45</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font30</font>
+                            <info>ListItem.Label</info>
+                            <textcolor>F3FFFFFF</textcolor>
+                            <!-- white -->
+                        </control>
+                    </itemlayout>
+                    <focusedlayout width="345">
+                        <control type="label">
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <width>315</width>
+                            <height>45</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font30</font>
+                            <info>ListItem.Label</info>
+                            <textcolor>F30C1D2F</textcolor>
+                            <!-- darkblue -->
+                        </control>
+                    </focusedlayout>
+                    <content>
+                        <item id="31">
+                            <label>New Releases</label>
+                            <onclick>SetProperty(browseview,browse_newreleases)</onclick>
+                        </item>
+                        <item id="32">
+                            <label>Popular Albums</label>
+                            <onclick>SetProperty(browseview,browse_topalbums)</onclick>
+                        </item>
+                        <item id="33">
+                            <label>Popular Artists</label>
+                            <onclick>SetProperty(browseview,browse_topartists)</onclick>
+                        </item>
+                        <item id="34">
+                            <label>Popular Tracks</label>
+                            <onclick>SetProperty(browseview,browse_toptracks)</onclick>
+                        </item>
+                    </content>
+                </control>
+                <control type="image">
+                    <visible>Control.HasFocus(301)</visible>
+                    <width>300</width>
+                    <height>3</height>
+                    <posx>21</posx>
+                    <posy>82</posy>
+                    <texture border="0">box.png</texture>
+                </control>
+                <control type="label">
+                    <posx>21</posx>
+                    <posy>75</posy>
+                    <align>left</align>
+                    <aligny>top</aligny>
+                    <label>All Genres</label>
+                    <font>rhapsody_font16</font>
+                    <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                </control>
+
+                <control type="group" id="3300">
+<!-- Albums Panel View, New Releases -->
+                    <control type="panel" id="3350">
+                        <visible>StringCompare(Window.Property(browseview),Browse_newreleases)</visible>
+                        <onup>301</onup>
+                        <ondown>3350</ondown>
+                        <onright>-</onright>
+                        <posy>135</posy>
+                        <width>1800</width>
+                        <height>1020</height>
+                        <onleft>100</onleft>
+                        <orientation>vertical</orientation>
+                        <itemlayout width="352" height="390">
+                            <control type="label">
+                                <posx>21</posx>
+                                <posy>295</posy>
+                                <width>255</width>
+                                <height>120</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font10</font>
+                                <info>ListItem.Label</info>
+                                <textcolor>DD171717</textcolor>
+                                <wrapmultiline>true</wrapmultiline>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="label">
+                                <posx>21</posx>
+                                <posy>322</posy>
+                                <width>255</width>
+                                <height>auto</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font9</font>
+                                <info>ListItem.Label2</info>
+                                <textcolor>DD171717</textcolor>
+                                <wrapmultiline>true</wrapmultiline>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="image">
+                                <posx>21</posx>
+                                <posy>21</posy>
+                                <width>270</width>
+                                <height>270</height>
+                                <align>left</align>
+                                <info blend="false">ListItem.Thumb</info>
+                                <aspectratio scalediffuse="true">scale</aspectratio>
+                                <scrolltime>200</scrolltime>
+                            </control>
+                            <control type="image">
+                                <visible>SubString(ListItem.Property(explicit),True)</visible>
+                                <posx>21</posx>
+                                <posy>255</posy>
+                                <width>135</width>
+                                <height>135</height>
+                                <align>left</align>
+                                <texture blend="false">AlbumExplicit.png</texture>
+                                <aspectratio scalediffuse="true">scale</aspectratio>
+                                <scrolltime>200</scrolltime>
+                            </control>
+                        </itemlayout>
+                        <focusedlayout width="352" height="390">
+                            <!--control type="button">
+                                <posx>0</posx>
+                                <posy>0</posy>
+                                <label>-</label>
+                                <align>left</align>
+                                <font>-</font>
+                                <textcolor>-</textcolor>
+                                <focusedcolor>-</focusedcolor>
+                            </control-->
+                            <control type="image">
+                                <visible>Control.HasFocus(3350)</visible>
+                                <width>313</width>
+                                <height>313</height>
+                                <posx>0</posx>
+                                <posy>0</posy>
+                                <texture border="0">outline.png</texture>
+                            </control>
+                            <control type="image">
+                                <visible>Control.HasFocus(3350)</visible>
+                                <width>313</width>
+                                <height>45</height>
+                                <posx>0</posx>
+                                <posy>313</posy>
+                                <texture border="0">box.png</texture>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3350)</visible>
+                                <posx>21</posx>
+                                <posy>295</posy>
+                                <width>255</width>
+                                <height>auto</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font10</font>
+                                <info>ListItem.Label</info>
+                                <textcolor>F39CD4F5</textcolor>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3350)</visible>
+                                <posx>21</posx>
+                                <posy>322</posy>
+                                <width>255</width>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font9</font>
+                                <info>ListItem.Label2</info>
+                                <textcolor>F39CD4F5</textcolor>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="image">
+                                <posx>21</posx>
+                                <posy>21</posy>
+                                <width>270</width>
+                                <height>270</height>
+                                <info blend="false">ListItem.Thumb</info>
+                                <aspectratio scalediffuse="true">scale</aspectratio>
+                            </control>
+                            <control type="image">
+                                <visible>SubString(ListItem.Property(explicit),True)</visible>
+                                <posx>21</posx>
+                                <posy>255</posy>
+                                <width>135</width>
+                                <height>135</height>
+                                <align>left</align>
+                                <texture blend="false">AlbumExplicit.png</texture>
+                                <aspectratio scalediffuse="true">scale</aspectratio>
+                                <scrolltime>200</scrolltime>
+                            </control>
+                        </focusedlayout>
+                    </control>
+<!-- Albums Panel View , Top Albums-->
+                    <control type="panel" id="3351">
+                        <visible>StringCompare(Window.Property(browseview),Browse_topalbums)</visible>
+                        <onup>301</onup>
+                        <ondown>3351</ondown>
+                        <onright>-</onright>
+                        <posy>135</posy>
+                        <width>1800</width>
+                        <height>1020</height>
+                        <onleft>100</onleft>
+                        <orientation>vertical</orientation>
+                        <itemlayout width="352" height="390">
+                            <control type="label">
+                                <posx>21</posx>
+                                <posy>295</posy>
+                                <width>255</width>
+                                <height>120</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font10</font>
+                                <info>ListItem.Label</info>
+                                <textcolor>DD171717</textcolor>
+                                <wrapmultiline>true</wrapmultiline>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="label">
+                                <posx>21</posx>
+                                <posy>322</posy>
+                                <width>255</width>
+                                <height>auto</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font9</font>
+                                <info>ListItem.Label2</info>
+                                <textcolor>DD171717</textcolor>
+                                <wrapmultiline>true</wrapmultiline>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="image">
+                                <posx>21</posx>
+                                <posy>21</posy>
+                                <width>270</width>
+                                <height>270</height>
+                                <align>left</align>
+                                <info blend="false">ListItem.Thumb</info>
+                                <aspectratio scalediffuse="false">scale</aspectratio>
+                                <fadetime>200</fadetime>
+                                <scrolltime>200</scrolltime>
+                            </control>
+                            <control type="image">
+                                <visible>SubString(ListItem.Property(explicit),True)</visible>
+                                <posx>21</posx>
+                                <posy>255</posy>
+                                <width>135</width>
+                                <height>135</height>
+                                <align>left</align>
+                                <texture blend="false">AlbumExplicit.png</texture>
+                                <aspectratio scalediffuse="true">scale</aspectratio>
+                                <scrolltime>200</scrolltime>
+                            </control>
+                        </itemlayout>
+                        <focusedlayout width="352" height="390">
+                            <!--control type="button">
+                                <posx>0</posx>
+                                <posy>0</posy>
+                                <label>-</label>
+                                <align>left</align>
+                                <font>-</font>
+                                <textcolor>-</textcolor>
+                                <focusedcolor>-</focusedcolor>
+                            </control-->
+                            <control type="image">
+                                <visible>Control.HasFocus(3351)</visible>
+                                <width>313</width>
+                                <height>313</height>
+                                <posx>0</posx>
+                                <posy>0</posy>
+                                <texture border="0">outline.png</texture>
+                            </control>
+                            <control type="image">
+                                <visible>Control.HasFocus(3351)</visible>
+                                <width>313</width>
+                                <height>45</height>
+                                <posx>0</posx>
+                                <posy>313</posy>
+                                <texture border="0">box.png</texture>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3351)</visible>
+                                <posx>21</posx>
+                                <posy>295</posy>
+                                <width>255</width>
+                                <height>auto</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font10</font>
+                                <info>ListItem.Label</info>
+                                <textcolor>F39CD4F5</textcolor>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3351)</visible>
+                                <posx>21</posx>
+                                <posy>322</posy>
+                                <width>255</width>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font9</font>
+                                <info>ListItem.Label2</info>
+                                <textcolor>F39CD4F5</textcolor>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="image">
+                                <posx>21</posx>
+                                <posy>21</posy>
+                                <width>270</width>
+                                <height>270</height>
+                                <info blend="false">ListItem.Thumb</info>
+                                <aspectratio scalediffuse="false">scale</aspectratio>
+                                <fadetime>200</fadetime>
+                            </control>
+                            <control type="image">
+                                <visible>SubString(ListItem.Property(explicit),True)</visible>
+                                <posx>21</posx>
+                                <posy>255</posy>
+                                <width>135</width>
+                                <height>135</height>
+                                <align>left</align>
+                                <texture blend="false">AlbumExplicit.png</texture>
+                                <aspectratio scalediffuse="true">scale</aspectratio>
+                                <scrolltime>200</scrolltime>
+                            </control>
+                        </focusedlayout>
+                    </control>
+<!-- Top Artists View -->
+                    <control type="panel" id="3352">
+                        <visible>StringCompare(Window.Property(browseview),Browse_topartists)</visible>
+                        <onup>301</onup>
+                        <ondown>3352</ondown>
+                        <onright>-</onright>
+                        <posy>135</posy>
+                        <width>1800</width>
+                        <height>1020</height>
+                        <onleft>100</onleft>
+                        <orientation>vertical</orientation>
+                        <itemlayout width="442" height="390">
+                            <control type="label">
+                                <posx>21</posx>
+                                <posy>295</posy>
+                                <width>255</width>
+                                <height>120</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font10</font>
+                                <info>ListItem.Label</info>
+                                <textcolor>DD171717</textcolor>
+                                <wrapmultiline>true</wrapmultiline>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="label">
+                                <posx>21</posx>
+                                <posy>322</posy>
+                                <width>255</width>
+                                <height>auto</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font9</font>
+                                <info>ListItem.Label2</info>
+                                <textcolor>DD171717</textcolor>
+                                <wrapmultiline>true</wrapmultiline>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="image">
+                                <posx>21</posx>
+                                <posy>21</posy>
+                                <width>405</width>
+                                <height>270</height>
+                                <align>left</align>
+                                <info blend="false">ListItem.Thumb</info>
+                                <aspectratio scalediffuse="true">scale</aspectratio>
+                                <scrolltime>200</scrolltime>
+                            </control>
+                        </itemlayout>
+                        <focusedlayout width="442" height="390">
+                            <!--control type="button">
+                                <posx>0</posx>
+                                <posy>0</posy>
+                                <label>-</label>
+                                <align>left</align>
+                                <font>-</font>
+                                <textcolor>-</textcolor>
+                                <focusedcolor>-</focusedcolor>
+                            </control-->
+                            <control type="image">
+                                <visible>Control.HasFocus(3352)</visible>
+                                <width>448</width>
+                                <height>313</height>
+                                <posx>0</posx>
+                                <posy>0</posy>
+                                <texture border="0">outline.png</texture>
+                            </control>
+                            <control type="image">
+                                <visible>Control.HasFocus(3352)</visible>
+                                <width>448</width>
+                                <height>45</height>
+                                <posx>0</posx>
+                                <posy>313</posy>
+                                <texture border="0">box.png</texture>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3352)</visible>
+                                <posx>21</posx>
+                                <posy>295</posy>
+                                <width>255</width>
+                                <height>auto</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font10</font>
+                                <info>ListItem.Label</info>
+                                <textcolor>F39CD4F5</textcolor>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3352)</visible>
+                                <posx>21</posx>
+                                <posy>322</posy>
+                                <width>255</width>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font9</font>
+                                <info>ListItem.Label2</info>
+                                <textcolor>F39CD4F5</textcolor>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="image">
+                                <posx>21</posx>
+                                <posy>21</posy>
+                                <width>405</width>
+                                <height>270</height>
+                                <info blend="false">ListItem.Thumb</info>
+                                <aspectratio scalediffuse="true">scale</aspectratio>
+                            </control>
+                        </focusedlayout>
+                    </control>
+<!-- Top Tracks View -->
+                    <control type="list" id="3353">
+                        <visible>StringCompare(Window.Property(browseview),Browse_toptracks)</visible>
+                        <onup>301</onup>
+                        <ondown>3353</ondown>
+                        <onright>-</onright>
+                        <posy>277</posy>
+                        <width>1800</width>
+                        <height>685</height>
+                        <onleft>100</onleft>
+                        <orientation>vertical</orientation>
+                        <itemlayout height="40">
+                            <control type="label">
+                                <posx>60</posx>
+                                <posy>0</posy>
+                                <width>562</width>
+                                <info>ListItem.Title</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                            </control>
+                            <control type="label">
+                                <posx>645</posx>
+                                <posy>0</posy>
+                                <width>367</width>
+                                <info>ListItem.Artist</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                            </control>
+                            <control type="label">
+                                <posx>1050</posx>
+                                <posy>0</posy>
+                                <width>540</width>
+                                <info>ListItem.Album</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                            </control>
+                            <control type="label">
+                                <posx>15</posx>
+                                <posy>0</posy>
+                                <width>45</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <posx>1665</posx>
+                                <posy>0</posy>
+                                <width>81</width>
+                                <info>ListItem.Duration</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <aligny>left></aligny>
+                                <align>right</align>
+                            </control>
+                        </itemlayout>
+                        <focusedlayout height="40">
+                            <control type="image">
+                                <!--visible>Control.HasFocus(51)</visible-->
+                                <width>1680</width>
+                                <height>40</height>
+                                <texture>button180x25.png</texture>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3353)</visible>
+                                <posx>60</posx>
+                                <posy>0</posy>
+                                <width>562</width>
+                                <info>ListItem.Title</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3353)</visible>
+                                <posx>60</posx>
+                                <posy>0</posy>
+                                <width>562</width>
+                                <info>ListItem.Title</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+
+                            <control type="label">
+                                <visible>Control.HasFocus(3353)</visible>
+                                <posx>645</posx>
+                                <posy>0</posy>
+                                <width>367</width>
+                                <info>ListItem.Artist</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3353)</visible>
+                                <posx>645</posx>
+                                <posy>0</posy>
+                                <width>367</width>
+                                <info>ListItem.Artist</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+
+                            <control type="label">
+                                <visible>Control.HasFocus(3353)</visible>
+                                <posx>1050</posx>
+                                <posy>0</posy>
+                                <width>540</width>
+                                <info>ListItem.Album</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3353)</visible>
+                                <posx>1050</posx>
+                                <posy>0</posy>
+                                <width>540</width>
+                                <info>ListItem.Album</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+
+                            <control type="label">
+                                <visible>Control.HasFocus(3353)</visible>
+                                <posx>15</posx>
+                                <posy>0</posy>
+                                <width>45</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3353)</visible>
+                                <posx>15</posx>
+                                <posy>0</posy>
+                                <width>45</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+
+                            <control type="label">
+                                <visible>Control.HasFocus(3353)</visible>
+                                <posx>1665</posx>
+                                <posy>0</posy>
+                                <width>81</width>
+                                <info>ListItem.Duration</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <aligny>top></aligny>
+                                <align>right</align>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3353)</visible>
+                                <posx>1665</posx>
+                                <posy>0</posy>
+                                <width>75</width>
+                                <info>ListItem.Duration</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <aligny>top></aligny>
+                                <align>right</align>
+                            </control>
+                            
+                            
+                        </focusedlayout>
+                    </control>
+                </control>
+
+                <control type="group" id="29">
+                    <visible>StringCompare(Window.Property(browseview),Browse_toptracks)</visible>
+                    <description>container for all controls under review</description>
+                    <posx>0</posx>
+                    <posy>135</posy>
+                    <control type="button" id="21">
+                        <posx>0</posx>
+                        <posy>0</posy>
+                        <width>322</width>
+                        <height>120</height>
+                        <label></label>
+                        <textcolor>black</textcolor>
+                        <textoffsetx>0</textoffsetx>
+                        <textoffsety>-8</textoffsety>
+                        <font>rhapsody_symbol96</font>
+                        <texturefocus>button210x80.png</texturefocus>
+
+                        <onright>24</onright>
+                        <onleft>51</onleft>
+                        <ondown>-</ondown>
+                    </control>
+                    <control type="label" id="22">
+                        <posx>135</posx>
+                        <posy>0</posy>
+                        <width>315</width>
+                        <align>left</align>
+                        <aligny>top</aligny>
+                        <label>PLAY</label>
+                        <textcolor>black</textcolor>
+                        <textoffsety>5</textoffsety>
+                        <font>rhapsody_font45caps_title</font>
+                        <onright>24</onright>
+                        <onleft>21</onleft>
+                        <ondown>-</ondown>
+                    </control>
+                    <control type="group">
+                        <description>subcontainer for Add to... buttons</description>
+                        <posx>322</posx>
+                        <posy>0</posy>
+                        <control type="button" id="23">
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <width>273</width>
+                            <height>37</height>
+                            <label>ADD TO QUEUE</label>
+                            <textcolor>black</textcolor>
+                            <textoffsetx>12</textoffsetx>
+                            <textoffsety>-3</textoffsety>
+                            <texturefocus>button180x25.png</texturefocus>
+                            <font>rhapsody_font13</font>
+
+                            <onleft>21</onleft>
+                            <onright>26</onright>
+                            <ondown>24</ondown>
+                        </control>
+                        <control type="button" id="24">
+                            <posy>42</posy>
+                            <posx>0</posx>
+                            <width>273</width>
+                            <height>37</height>
+                            <label>ADD TO PLAYLIST</label>
+                            <textcolor>black</textcolor>
+                            <textoffsetx>12</textoffsetx>
+                            <textoffsety>-3</textoffsety>
+                            <texturefocus>button180x25.png</texturefocus>
+                            <font>rhapsody_font13</font>
+
+                            <onup>23</onup>
+                            <onleft>21</onleft>
+                            <onright>26</onright>
+                            <ondown>25</ondown>
+                        </control>
+                        <control type="button" id="25">
+                            <posx>0</posx>
+                            <posy>82</posy>
+                            <width>273</width>
+                            <height>37</height>
+                            <label>ADD TO LIBRARY</label>
+                            <textcolor>black</textcolor>
+                            <textoffsetx>12</textoffsetx>
+                            <textoffsety>-3</textoffsety>
+                            <texturefocus>button180x25.png</texturefocus>
+                            <font>rhapsody_font13</font>
+
+                            <onup>24</onup>
+                            <onleft>21</onleft>
+                            <onright>26</onright>
+                            <ondown>-</ondown>
+                        </control>
+                    </control>
+                    <control type="button" id="26">
+                        <posx>600</posx>
+                        <posy>0</posy>
+                        <width>90</width>
+                        <height>120</height>
+                        <texturefocus>button210x80.png</texturefocus>
+                        <onleft>24</onleft>
+                        <onright>27</onright>
+                        <ondown>-</ondown>
+                        <onup>51</onup>
+                    </control>
+                    <control type="image" id="126">
+                        <posx>600</posx>
+                        <posy>15</posy>
+                        <width>90</width>
+                        <height>90</height>
+                        <aspectratio>keep</aspectratio>
+                        <texture>arrow_left.png</texture>
+                    </control>
+                    <control type="button" id="27">
+                        <posx>690</posx>
+                        <posy>0</posy>
+                        <width>90</width>
+                        <height>120</height>
+                        <texturefocus>button210x80.png</texturefocus>
+                        <onleft>26</onleft>
+                        <onright>-</onright>
+                        <ondown>-</ondown>
+                        <onup>51</onup>
+                    </control>
+                    <control type="image" id="127">
+                        <posx>690</posx>
+                        <posy>15</posy>
+                        <width>90</width>
+                        <height>90</height>
+                        <aspectratio>keep</aspectratio>
+                        <texture>arrow_right.png</texture>
+                    </control>
+                </control>
+            </control>
+<!-- Search Pane -->
+            <control type="group" id="400">
+                <visible>StringCompare(Window.Property(frame),Search)</visible>
+                <control type="button" id="201">
+                    <description>dummy button to set initial view</description>
+                    <posx>0</posx>
+                    <posy>0</posy>
+                    <texturenofocus>-</texturenofocus>
+                    <texturefocus>-</texturefocus>
+                    <onfocus>SetFocus(401)</onfocus>
+                    <ondown>401</ondown>
+                    <onup>401</onup>
+                    <onright>401</onright>
+                    <onleft>100</onleft>
+                    <onclick>-</onclick>
+                </control>
+                <control type="button" id="401">
+                    <posx>30</posx>
+                    <posy>30</posy>
+                    <width>630</width>
+                    <height>75</height>
+                    <align>center</align>
+                    <textoffsety>8</textoffsety>
+                    <label>Start New Search</label>
+                    <texturenofocus>white.png</texturenofocus>
+                    <texturefocus border="8">selectoutline_solid.png</texturefocus>
+                    <font>rhapsody_font24_title</font>
+                    <textcolor>DD171717</textcolor>
+                    <focusedcolor>DD171717</focusedcolor>
+                    <!--onclick>-</onclick-->
+                    <onup>1001</onup>
+                    <onleft>100</onleft>
+                    <onright>402</onright>
+                    <ondown>3400</ondown>
+                </control>
+                <control type="button" id="402">
+                    <posx>780</posx>
+                    <posy>30</posy>
+                    <width>630</width>
+                    <height>75</height>
+                    <align>center</align>
+                    <textoffsety>8</textoffsety>
+                    <label>Search For: $INFO[Window.Property(search_string)]</label>
+                    <texturenofocus>white.png</texturenofocus>
+                    <texturefocus border="8">selectoutline_solid.png</texturefocus>
+                    <font>rhapsody_font24_title</font>
+                    <textcolor>DD171717</textcolor>
+                    <focusedcolor>DD171717</focusedcolor>
+                    <!--onclick>-</onclick-->
+                    <onup>1001</onup>
+                    <onleft>401</onleft>
+                    <ondown>3400</ondown>
+                </control>
+
+                <control type="group" id="3400">
+<!-- Albums View -->
+                    <control type="panel" id="3451">
+                        <visible>StringCompare(Window.Property(browseview),search_albums)</visible>
+                        <onup>401</onup>
+                        <ondown>3451</ondown>
+                        <onright>-</onright>
+                        <posy>135</posy>
+                        <width>1800</width>
+                        <height>1020</height>
+                        <onleft>100</onleft>
+                        <orientation>vertical</orientation>
+                        <itemlayout width="352" height="390">
+                            <control type="label">
+                                <posx>21</posx>
+                                <posy>295</posy>
+                                <width>255</width>
+                                <height>120</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font10</font>
+                                <info>ListItem.Label</info>
+                                <textcolor>DD171717</textcolor>
+                                <wrapmultiline>true</wrapmultiline>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="label">
+                                <posx>21</posx>
+                                <posy>322</posy>
+                                <width>255</width>
+                                <height>auto</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font9</font>
+                                <info>ListItem.Label2</info>
+                                <textcolor>DD171717</textcolor>
+                                <wrapmultiline>true</wrapmultiline>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="image">
+                                <posx>21</posx>
+                                <posy>21</posy>
+                                <width>270</width>
+                                <height>270</height>
+                                <align>left</align>
+                                <info blend="false">ListItem.Thumb</info>
+                                <aspectratio scalediffuse="false">scale</aspectratio>
+                                <fadetime>200</fadetime>
+                                <scrolltime>200</scrolltime>
+                            </control>
+                            <control type="image">
+                                <visible>SubString(ListItem.Property(explicit),True)</visible>
+                                <posx>21</posx>
+                                <posy>255</posy>
+                                <width>135</width>
+                                <height>135</height>
+                                <align>left</align>
+                                <texture blend="false">AlbumExplicit.png</texture>
+                                <aspectratio scalediffuse="true">scale</aspectratio>
+                                <scrolltime>200</scrolltime>
+                            </control>
+                        </itemlayout>
+                        <focusedlayout width="352" height="390">
+                            <!--control type="button">
+                                <posx>0</posx>
+                                <posy>0</posy>
+                                <label>-</label>
+                                <align>left</align>
+                                <font>-</font>
+                                <textcolor>-</textcolor>
+                                <focusedcolor>-</focusedcolor>
+                            </control-->
+                            <control type="image">
+                                <visible>Control.HasFocus(3451)</visible>
+                                <width>313</width>
+                                <height>313</height>
+                                <posx>0</posx>
+                                <posy>0</posy>
+                                <texture border="0">outline.png</texture>
+                            </control>
+                            <control type="image">
+                                <visible>Control.HasFocus(3451)</visible>
+                                <width>313</width>
+                                <height>45</height>
+                                <posx>0</posx>
+                                <posy>313</posy>
+                                <texture border="0">box.png</texture>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3451)</visible>
+                                <posx>21</posx>
+                                <posy>295</posy>
+                                <width>255</width>
+                                <height>auto</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font10</font>
+                                <info>ListItem.Label</info>
+                                <textcolor>F39CD4F5</textcolor>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3451)</visible>
+                                <posx>21</posx>
+                                <posy>322</posy>
+                                <width>255</width>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font9</font>
+                                <info>ListItem.Label2</info>
+                                <textcolor>F39CD4F5</textcolor>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="image">
+                                <posx>21</posx>
+                                <posy>21</posy>
+                                <width>270</width>
+                                <height>270</height>
+                                <info blend="false">ListItem.Thumb</info>
+                                <aspectratio scalediffuse="false">scale</aspectratio>
+                                <fadetime>200</fadetime>
+                            </control>
+                            <control type="image">
+                                <visible>SubString(ListItem.Property(explicit),True)</visible>
+                                <posx>21</posx>
+                                <posy>255</posy>
+                                <width>135</width>
+                                <height>135</height>
+                                <align>left</align>
+                                <texture blend="false">AlbumExplicit.png</texture>
+                                <aspectratio scalediffuse="true">scale</aspectratio>
+                                <scrolltime>200</scrolltime>
+                            </control>
+                        </focusedlayout>
+                    </control>
+<!-- Artists View -->
+                    <control type="panel" id="3452">
+                        <visible>StringCompare(Window.Property(browseview),search_artists)</visible>
+                        <onup>401</onup>
+                        <ondown>3452</ondown>
+                        <onright>-</onright>
+                        <posy>135</posy>
+                        <width>1800</width>
+                        <height>1020</height>
+                        <onleft>100</onleft>
+                        <orientation>vertical</orientation>
+                        <itemlayout width="442" height="390">
+                            <control type="label">
+                                <posx>21</posx>
+                                <posy>295</posy>
+                                <width>255</width>
+                                <height>120</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font10</font>
+                                <info>ListItem.Label</info>
+                                <textcolor>DD171717</textcolor>
+                                <wrapmultiline>true</wrapmultiline>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="label">
+                                <posx>21</posx>
+                                <posy>322</posy>
+                                <width>255</width>
+                                <height>auto</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font9</font>
+                                <info>ListItem.Label2</info>
+                                <textcolor>DD171717</textcolor>
+                                <wrapmultiline>true</wrapmultiline>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="image">
+                                <posx>21</posx>
+                                <posy>21</posy>
+                                <width>405</width>
+                                <height>270</height>
+                                <align>left</align>
+                                <info blend="false">ListItem.Thumb</info>
+                                <aspectratio scalediffuse="true">scale</aspectratio>
+                                <scrolltime>200</scrolltime>
+                            </control>
+                        </itemlayout>
+                        <focusedlayout width="442" height="390">
+                            <!--control type="button">
+                                <posx>0</posx>
+                                <posy>0</posy>
+                                <label>-</label>
+                                <align>left</align>
+                                <font>-</font>
+                                <textcolor>-</textcolor>
+                                <focusedcolor>-</focusedcolor>
+                            </control-->
+                            <control type="image">
+                                <visible>Control.HasFocus(3452)</visible>
+                                <width>448</width>
+                                <height>313</height>
+                                <posx>0</posx>
+                                <posy>0</posy>
+                                <texture border="0">outline.png</texture>
+                            </control>
+                            <control type="image">
+                                <visible>Control.HasFocus(3452)</visible>
+                                <width>448</width>
+                                <height>45</height>
+                                <posx>0</posx>
+                                <posy>313</posy>
+                                <texture border="0">box.png</texture>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3452)</visible>
+                                <posx>21</posx>
+                                <posy>295</posy>
+                                <width>255</width>
+                                <height>auto</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font10</font>
+                                <info>ListItem.Label</info>
+                                <textcolor>F39CD4F5</textcolor>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3452)</visible>
+                                <posx>21</posx>
+                                <posy>322</posy>
+                                <width>255</width>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font9</font>
+                                <info>ListItem.Label2</info>
+                                <textcolor>F39CD4F5</textcolor>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="image">
+                                <posx>21</posx>
+                                <posy>21</posy>
+                                <width>405</width>
+                                <height>270</height>
+                                <info blend="false">ListItem.Thumb</info>
+                                <aspectratio scalediffuse="true">scale</aspectratio>
+                            </control>
+                        </focusedlayout>
+                    </control>
+<!-- Tracks View -->
+                    <control type="list" id="3453">
+                        <visible>StringCompare(Window.Property(browseview),search_tracks)</visible>
+                        <onup>401</onup>
+                        <ondown>3453</ondown>
+                        <onright>-</onright>
+                        <posy>277</posy>
+                        <width>1800</width>
+                        <height>685</height>
+                        <onleft>100</onleft>
+                        <orientation>vertical</orientation>
+                        <itemlayout height="40">
+                            <control type="label">
+                                <posx>60</posx>
+                                <posy>0</posy>
+                                <width>562</width>
+                                <info>ListItem.Title</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                            </control>
+                            <control type="label">
+                                <posx>645</posx>
+                                <posy>0</posy>
+                                <width>367</width>
+                                <info>ListItem.Artist</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                            </control>
+                            <control type="label">
+                                <posx>1050</posx>
+                                <posy>0</posy>
+                                <width>540</width>
+                                <info>ListItem.Album</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                            </control>
+                            <control type="label">
+                                <posx>15</posx>
+                                <posy>0</posy>
+                                <width>45</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <posx>1665</posx>
+                                <posy>0</posy>
+                                <width>81</width>
+                                <info>ListItem.Duration</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <aligny>left></aligny>
+                                <align>right</align>
+                            </control>
+                        </itemlayout>
+                        <focusedlayout height="40">
+                            <control type="image">
+                                <!--visible>Control.HasFocus(51)</visible-->
+                                <width>1680</width>
+                                <height>40</height>
+                                <texture>button180x25.png</texture>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3453)</visible>
+                                <posx>60</posx>
+                                <posy>0</posy>
+                                <width>562</width>
+                                <info>ListItem.Title</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3453)</visible>
+                                <posx>60</posx>
+                                <posy>0</posy>
+                                <width>562</width>
+                                <info>ListItem.Title</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+
+                            <control type="label">
+                                <visible>Control.HasFocus(3453)</visible>
+                                <posx>645</posx>
+                                <posy>0</posy>
+                                <width>367</width>
+                                <info>ListItem.Artist</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3453)</visible>
+                                <posx>645</posx>
+                                <posy>0</posy>
+                                <width>367</width>
+                                <info>ListItem.Artist</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+
+                            <control type="label">
+                                <visible>Control.HasFocus(3453)</visible>
+                                <posx>1050</posx>
+                                <posy>0</posy>
+                                <width>540</width>
+                                <info>ListItem.Album</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3453)</visible>
+                                <posx>1050</posx>
+                                <posy>0</posy>
+                                <width>540</width>
+                                <info>ListItem.Album</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+
+                            <control type="label">
+                                <visible>Control.HasFocus(3453)</visible>
+                                <posx>15</posx>
+                                <posy>0</posy>
+                                <width>45</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3453)</visible>
+                                <posx>15</posx>
+                                <posy>0</posy>
+                                <width>45</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+
+                            <control type="label">
+                                <visible>Control.HasFocus(3453)</visible>
+                                <posx>1665</posx>
+                                <posy>0</posy>
+                                <width>81</width>
+                                <info>ListItem.Duration</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <aligny>top></aligny>
+                                <align>right</align>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3453)</visible>
+                                <posx>1665</posx>
+                                <posy>0</posy>
+                                <width>75</width>
+                                <info>ListItem.Duration</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <aligny>top></aligny>
+                                <align>right</align>
+                            </control>
+                            
+                            
+                        </focusedlayout>
+                    </control>
+                    <!-- Radio View -->
+                    <control type="panel" id="3454">
+                        <visible>StringCompare(Window.Property(browseview),search_broadcast)</visible>
+                        <onup>401</onup>
+                        <ondown>3454</ondown>
+                        <onright>-</onright>
+                        <posy>135</posy>
+                        <width>1800</width>
+                        <height>1020</height>
+                        <onleft>100</onleft>
+                        <orientation>vertical</orientation>
+                        <itemlayout width="352" height="390">
+                            <control type="label">
+                                <posx>21</posx>
+                                <posy>295</posy>
+                                <width>255</width>
+                                <height>120</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font10</font>
+                                <info>ListItem.Label</info>
+                                <textcolor>DD171717</textcolor>
+                                <wrapmultiline>true</wrapmultiline>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="label">
+                                <posx>21</posx>
+                                <posy>322</posy>
+                                <width>255</width>
+                                <height>auto</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font9</font>
+                                <info>ListItem.Label2</info>
+                                <textcolor>DD171717</textcolor>
+                                <wrapmultiline>true</wrapmultiline>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="image">
+                                <posx>21</posx>
+                                <posy>21</posy>
+                                <width>270</width>
+                                <height>270</height>
+                                <align>left</align>
+                                <info blend="false">ListItem.Thumb</info>
+                                <aspectratio scalediffuse="false">scale</aspectratio>
+                                <fadetime>200</fadetime>
+                                <scrolltime>200</scrolltime>
+                            </control>
+                            <control type="image">
+                                <visible>SubString(ListItem.Property(explicit),True)</visible>
+                                <posx>21</posx>
+                                <posy>255</posy>
+                                <width>135</width>
+                                <height>135</height>
+                                <align>left</align>
+                                <texture blend="false">AlbumExplicit.png</texture>
+                                <aspectratio scalediffuse="true">scale</aspectratio>
+                                <scrolltime>200</scrolltime>
+                            </control>
+                        </itemlayout>
+                        <focusedlayout width="352" height="390">
+                            <!--control type="button">
+                                <posx>0</posx>
+                                <posy>0</posy>
+                                <label>-</label>
+                                <align>left</align>
+                                <font>-</font>
+                                <textcolor>-</textcolor>
+                                <focusedcolor>-</focusedcolor>
+                            </control-->
+                            <control type="image">
+                                <visible>Control.HasFocus(3454)</visible>
+                                <width>313</width>
+                                <height>313</height>
+                                <posx>0</posx>
+                                <posy>0</posy>
+                                <texture border="0">outline.png</texture>
+                            </control>
+                            <control type="image">
+                                <visible>Control.HasFocus(3454)</visible>
+                                <width>313</width>
+                                <height>45</height>
+                                <posx>0</posx>
+                                <posy>313</posy>
+                                <texture border="0">box.png</texture>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3454)</visible>
+                                <posx>21</posx>
+                                <posy>295</posy>
+                                <width>255</width>
+                                <height>auto</height>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font10</font>
+                                <info>ListItem.Label</info>
+                                <textcolor>F39CD4F5</textcolor>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3454)</visible>
+                                <posx>21</posx>
+                                <posy>322</posy>
+                                <width>255</width>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                                <font>rhapsody_font9</font>
+                                <info>ListItem.Label2</info>
+                                <textcolor>F39CD4F5</textcolor>
+                                <scroll>false</scroll>
+                            </control>
+                            <control type="image">
+                                <posx>21</posx>
+                                <posy>21</posy>
+                                <width>270</width>
+                                <height>270</height>
+                                <info blend="false">ListItem.Thumb</info>
+                                <aspectratio scalediffuse="false">scale</aspectratio>
+                                <fadetime>200</fadetime>
+                            </control>
+                            <control type="image">
+                                <visible>SubString(ListItem.Property(explicit),True)</visible>
+                                <posx>21</posx>
+                                <posy>255</posy>
+                                <width>135</width>
+                                <height>135</height>
+                                <align>left</align>
+                                <texture blend="false">AlbumExplicit.png</texture>
+                                <aspectratio scalediffuse="true">scale</aspectratio>
+                                <scrolltime>200</scrolltime>
+                            </control>
+                        </focusedlayout>
+                    </control>
+                </control>
+            </control>
+<!-- Library Pane -->
+            <control type="group" id="500">
+                <description>Library, albums - default view</description>
+                <visible>StringCompare(Window.Property(frame),Library)</visible>
+                <!--control type="button" id="202">
+                    <description>dummy button to set initial view</description>
+                    <posx>0</posx>
+                    <posy>0</posy>
+                    <texturenofocus>-</texturenofocus>
+                    <texturefocus>-</texturefocus>
+                    <ondown>50</ondown>
+                    <onup>201</onup>
+                    <onleft>50</onleft>
+                    <onright>50</onright>
+                </control-->
+                <!--Top Nav Menu -->
+                <control type="wraplist" id="501">
+                    <posx>21</posx>
+                    <posy>15</posy>
+                    <width>510</width>
+                    <height>67</height>
+                    <onright>-</onright>
+                    <ondown>3500</ondown>
+                    <orientation>horizontal</orientation>
+                    <itemlayout width="345">
+                        <control type="label">
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <width>315</width>
+                            <height>45</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font30</font>
+                            <info>ListItem.Label</info>
+                            <textcolor>F3FFFFFF</textcolor>
+                            <!-- white -->
+                        </control>
+                    </itemlayout>
+                    <focusedlayout width="345">
+                        <control type="label">
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <width>315</width>
+                            <height>45</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font30</font>
+                            <info>ListItem.Label</info>
+                            <textcolor>F30C1D2F</textcolor>
+                            <!-- darkblue -->
+                        </control>
+                    </focusedlayout>
+                    <content>
+                        <item id="31">
+                            <label>Albums</label>
+                            <onclick>SetProperty(browseview,library_albums)</onclick>
+                        </item>
+                        <item id="32">
+                            <label>Artists</label>
+                            <onclick>SetProperty(browseview,library_artists)</onclick>
+                        </item>
+                        <!--item id="33">
+                            <label>Tracks</label>
+                            <onclick>SetProperty(browseview,library_tracks)</onclick>
+                        </item>
+                        <item id="34">
+                            <label>Stations</label>
+                            <onclick>SetProperty(browseview,library_stations)</onclick>
+                        </item>
+                        <item id="35">
+                            <label>Favorites</label>
+                            <onclick>SetProperty(browseview,library_favorites)</onclick>
+                        </item-->
+                    </content>
+                </control>
+                <control type="image">
+                    <visible>Control.HasFocus(501)</visible>
+                    <width>300</width>
+                    <height>3</height>
+                    <posx>21</posx>
+                    <posy>82</posy>
+                    <texture border="0">box.png</texture>
+                </control>
+
+                <control type="group" id="3500">
+                <!-- Albums Panel View, Library -->
+                <control type="panel" id="3550">
+                    <visible>StringCompare(Window.Property(browseview),library_albums)</visible>
+                    <onup>501</onup>
+                    <ondown>3550</ondown>
+                    <onright>-</onright>
+                    <posy>135</posy>
+                    <width>1800</width>
+                    <height>1020</height>
+                    <onleft>100</onleft>
+                    <orientation>vertical</orientation>
+                    <itemlayout width="352" height="390">
+                        <control type="label">
+                            <posx>21</posx>
+                            <posy>295</posy>
+                            <width>255</width>
+                            <height>120</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font10</font>
+                            <info>ListItem.Label</info>
+                            <textcolor>DD171717</textcolor>
+                            <wrapmultiline>true</wrapmultiline>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="label">
+                            <posx>21</posx>
+                            <posy>322</posy>
+                            <width>255</width>
+                            <height>auto</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font9</font>
+                            <info>ListItem.Label2</info>
+                            <textcolor>DD171717</textcolor>
+                            <wrapmultiline>true</wrapmultiline>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="image">
+                            <posx>21</posx>
+                            <posy>21</posy>
+                            <width>270</width>
+                            <height>270</height>
+                            <align>left</align>
+                            <info blend="false">ListItem.Thumb</info>
+                            <aspectratio scalediffuse="true">scale</aspectratio>
+                            <scrolltime>200</scrolltime>
+                        </control>
+                        <control type="image">
+                            <visible>SubString(ListItem.Property(explicit),True)</visible>
+                            <posx>21</posx>
+                            <posy>255</posy>
+                            <width>135</width>
+                            <height>135</height>
+                            <align>left</align>
+                            <texture blend="false">AlbumExplicit.png</texture>
+                            <aspectratio scalediffuse="true">scale</aspectratio>
+                            <scrolltime>200</scrolltime>
+                        </control>
+                    </itemlayout>
+                    <focusedlayout width="352" height="390">
+                        <!--control type="button">
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <label>-</label>
+                            <align>left</align>
+                            <font>-</font>
+                            <textcolor>-</textcolor>
+                            <focusedcolor>-</focusedcolor>
+                        </control-->
+                        <control type="image">
+                            <visible>Control.HasFocus(3550)</visible>
+                            <width>313</width>
+                            <height>313</height>
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <texture border="0">outline.png</texture>
+                        </control>
+                        <control type="image">
+                            <visible>Control.HasFocus(3550)</visible>
+                            <width>313</width>
+                            <height>45</height>
+                            <posx>0</posx>
+                            <posy>313</posy>
+                            <texture border="0">box.png</texture>
+                        </control>
+                        <control type="label">
+                            <visible>Control.HasFocus(3550)</visible>
+                            <posx>21</posx>
+                            <posy>295</posy>
+                            <width>255</width>
+                            <height>auto</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font10</font>
+                            <info>ListItem.Label</info>
+                            <textcolor>F39CD4F5</textcolor>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="label">
+                            <visible>Control.HasFocus(3550)</visible>
+                            <posx>21</posx>
+                            <posy>322</posy>
+                            <width>255</width>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font9</font>
+                            <info>ListItem.Label2</info>
+                            <textcolor>F39CD4F5</textcolor>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="image">
+                            <posx>21</posx>
+                            <posy>21</posy>
+                            <width>270</width>
+                            <height>270</height>
+                            <info blend="false">ListItem.Thumb</info>
+                            <aspectratio scalediffuse="true">scale</aspectratio>
+                        </control>
+                        <control type="image">
+                            <visible>SubString(ListItem.Property(explicit),True)</visible>
+                            <posx>21</posx>
+                            <posy>255</posy>
+                            <width>135</width>
+                            <height>135</height>
+                            <align>left</align>
+                            <texture blend="false">AlbumExplicit.png</texture>
+                            <aspectratio scalediffuse="true">scale</aspectratio>
+                            <scrolltime>200</scrolltime>
+                        </control>
+                    </focusedlayout>
+                </control>
+                <!-- Artist Panel View , LIbrary-->
+                <control type="panel" id="3551">
+                    <visible>StringCompare(Window.Property(browseview),library_artists)</visible>
+                    <onup>501</onup>
+                    <ondown>3551</ondown>
+                    <onright>-</onright>
+                    <posy>135</posy>
+                    <width>1800</width>
+                    <height>1020</height>
+                    <onleft>100</onleft>
+                    <orientation>vertical</orientation>
+                    <itemlayout width="442" height="390">
+                        <control type="label">
+                            <posx>21</posx>
+                            <posy>295</posy>
+                            <width>255</width>
+                            <height>120</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font10</font>
+                            <info>ListItem.Label</info>
+                            <textcolor>DD171717</textcolor>
+                            <wrapmultiline>true</wrapmultiline>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="label">
+                            <posx>21</posx>
+                            <posy>322</posy>
+                            <width>255</width>
+                            <height>auto</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font9</font>
+                            <info>ListItem.Label2</info>
+                            <textcolor>DD171717</textcolor>
+                            <wrapmultiline>true</wrapmultiline>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="image">
+                            <posx>21</posx>
+                            <posy>21</posy>
+                            <width>405</width>
+                            <height>270</height>
+                            <align>left</align>
+                            <info blend="false">ListItem.Thumb</info>
+                            <aspectratio scalediffuse="false">scale</aspectratio>
+                            <fadetime>200</fadetime>
+                            <scrolltime>200</scrolltime>
+                        </control>
+                    </itemlayout>
+                    <focusedlayout width="442" height="390">
+                        <!--control type="button">
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <label>-</label>
+                            <align>left</align>
+                            <font>-</font>
+                            <textcolor>-</textcolor>
+                            <focusedcolor>-</focusedcolor>
+                        </control-->
+                        <control type="image">
+                            <visible>Control.HasFocus(3551)</visible>
+                            <width>448</width>
+                            <height>313</height>
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <texture border="0">outline.png</texture>
+                        </control>
+                        <control type="image">
+                            <visible>Control.HasFocus(3551)</visible>
+                            <width>448</width>
+                            <height>45</height>
+                            <posx>0</posx>
+                            <posy>313</posy>
+                            <texture border="0">box.png</texture>
+                        </control>
+                        <control type="label">
+                            <visible>Control.HasFocus(3551)</visible>
+                            <posx>21</posx>
+                            <posy>295</posy>
+                            <width>255</width>
+                            <height>auto</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font10</font>
+                            <info>ListItem.Label</info>
+                            <textcolor>F39CD4F5</textcolor>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="label">
+                            <visible>Control.HasFocus(3551)</visible>
+                            <posx>21</posx>
+                            <posy>322</posy>
+                            <width>255</width>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font9</font>
+                            <info>ListItem.Label2</info>
+                            <textcolor>F39CD4F5</textcolor>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="image">
+                            <posx>21</posx>
+                            <posy>21</posy>
+                            <width>405</width>
+                            <height>270</height>
+                            <info blend="false">ListItem.Thumb</info>
+                            <aspectratio scalediffuse="false">scale</aspectratio>
+                            <fadetime>200</fadetime>
+                        </control>
+                    </focusedlayout>
+                </control>
+                <!-- Top Artists View -->
+                <control type="panel" id="50">
+                    <visible>StringCompare(Window.Property(browseview),library_tracks)</visible>
+                    <onup>201</onup>
+                    <ondown>50</ondown>
+                    <onright>-</onright>
+                    <posy>135</posy>
+                    <width>1800</width>
+                    <height>1020</height>
+                    <onleft>100</onleft>
+                    <orientation>vertical</orientation>
+                    <itemlayout width="352" height="390">
+                        <control type="label">
+                            <posx>21</posx>
+                            <posy>295</posy>
+                            <width>255</width>
+                            <height>120</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font10</font>
+                            <info>ListItem.Label</info>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                            <wrapmultiline>true</wrapmultiline>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="label">
+                            <posx>21</posx>
+                            <posy>322</posy>
+                            <width>255</width>
+                            <height>auto</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font9</font>
+                            <info>ListItem.Label2</info>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                            <wrapmultiline>true</wrapmultiline>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="image">
+                            <posx>21</posx>
+                            <posy>21</posy>
+                            <width>270</width>
+                            <height>270</height>
+                            <align>left</align>
+                            <info blend="false">ListItem.Thumb</info>
+                            <aspectratio scalediffuse="false">scale</aspectratio>
+                            <fadetime>200</fadetime>
+                            <scrolltime>200</scrolltime>
+                        </control>
+                    </itemlayout>
+                    <focusedlayout width="352" height="390">
+                        <control type="button">
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <label>-</label>
+                            <align>left</align>
+                            <font>-</font>
+                            <textcolor>-</textcolor>
+                            <focusedcolor>-</focusedcolor>
+                        </control>
+                        <control type="image">
+                            <visible>Control.HasFocus(50)</visible>
+                            <width>313</width>
+                            <height>313</height>
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <texture border="0">outline.png</texture>
+                        </control>
+                        <control type="image">
+                            <visible>Control.HasFocus(50)</visible>
+                            <width>313</width>
+                            <height>45</height>
+                            <posx>0</posx>
+                            <posy>313</posy>
+                            <texture border="0">box.png</texture>
+                        </control>
+                        <control type="label">
+                            <visible>Control.HasFocus(50)</visible>
+                            <posx>21</posx>
+                            <posy>295</posy>
+                            <width>255</width>
+                            <height>auto</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font10</font>
+                            <info>ListItem.Label</info>
+                            <textcolor>blue</textcolor>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="label">
+                            <visible>Control.HasFocus(50)</visible>
+                            <posx>21</posx>
+                            <posy>322</posy>
+                            <width>255</width>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font9</font>
+                            <info>ListItem.Label2</info>
+                            <textcolor>blue</textcolor>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="image">
+                            <posx>21</posx>
+                            <posy>21</posy>
+                            <width>270</width>
+                            <height>270</height>
+                            <info blend="false">ListItem.Thumb</info>
+                            <aspectratio scalediffuse="false">scale</aspectratio>
+                            <fadetime>200</fadetime>
+                        </control>
+                    </focusedlayout>
+                </control>
+                <!-- Top Tracks View -->
+                <control type="panel" id="50">
+                    <visible>StringCompare(Window.Property(browseview),library_stations)</visible>
+                    <onup>201</onup>
+                    <ondown>50</ondown>
+                    <onright>-</onright>
+                    <posy>135</posy>
+                    <width>1800</width>
+                    <height>1020</height>
+                    <onleft>100</onleft>
+                    <orientation>vertical</orientation>
+                    <itemlayout width="352" height="390">
+                        <control type="label">
+                            <posx>21</posx>
+                            <posy>295</posy>
+                            <width>255</width>
+                            <height>120</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font10</font>
+                            <info>ListItem.Label</info>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                            <wrapmultiline>true</wrapmultiline>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="label">
+                            <posx>21</posx>
+                            <posy>322</posy>
+                            <width>255</width>
+                            <height>auto</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font9</font>
+                            <info>ListItem.Label2</info>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                            <wrapmultiline>true</wrapmultiline>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="image">
+                            <posx>21</posx>
+                            <posy>21</posy>
+                            <width>270</width>
+                            <height>270</height>
+                            <align>left</align>
+                            <info blend="false">ListItem.Thumb</info>
+                            <aspectratio scalediffuse="false">scale</aspectratio>
+                            <fadetime>200</fadetime>
+                            <scrolltime>200</scrolltime>
+                        </control>
+                    </itemlayout>
+                    <focusedlayout width="352" height="390">
+                        <control type="button">
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <label>-</label>
+                            <align>left</align>
+                            <font>-</font>
+                            <textcolor>-</textcolor>
+                            <focusedcolor>-</focusedcolor>
+                            <!--onfocus>RunScript(special://skin/scripts/newreleases2.py)</onfocus-->
+                        </control>
+                        <control type="image">
+                            <visible>Control.HasFocus(50)</visible>
+                            <width>313</width>
+                            <height>313</height>
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <texture border="0">outline.png</texture>
+                        </control>
+                        <control type="image">
+                            <visible>Control.HasFocus(50)</visible>
+                            <width>313</width>
+                            <height>45</height>
+                            <posx>0</posx>
+                            <posy>313</posy>
+                            <texture border="0">box.png</texture>
+                        </control>
+                        <control type="label">
+                            <visible>Control.HasFocus(50)</visible>
+                            <posx>21</posx>
+                            <posy>295</posy>
+                            <width>255</width>
+                            <height>auto</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font10</font>
+                            <info>ListItem.Label</info>
+                            <textcolor>blue</textcolor>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="label">
+                            <visible>Control.HasFocus(50)</visible>
+                            <posx>21</posx>
+                            <posy>322</posy>
+                            <width>255</width>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font9</font>
+                            <info>ListItem.Label2</info>
+                            <textcolor>blue</textcolor>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="image">
+                            <posx>21</posx>
+                            <posy>21</posy>
+                            <width>270</width>
+                            <height>270</height>
+                            <info blend="false">ListItem.Thumb</info>
+                            <aspectratio scalediffuse="false">scale</aspectratio>
+                            <fadetime>200</fadetime>
+                        </control>
+                    </focusedlayout>
+                </control>
+                <control type="panel" id="50">
+                    <visible>StringCompare(Window.Property(browseview),library_favorites)</visible>
+                    <onup>201</onup>
+                    <ondown>50</ondown>
+                    <onright>-</onright>
+                    <posy>135</posy>
+                    <width>1800</width>
+                    <height>1020</height>
+                    <onleft>100</onleft>
+                    <orientation>vertical</orientation>
+                    <itemlayout width="352" height="390">
+                        <control type="label">
+                            <posx>21</posx>
+                            <posy>295</posy>
+                            <width>255</width>
+                            <height>120</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font10</font>
+                            <info>ListItem.Label</info>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                            <wrapmultiline>true</wrapmultiline>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="label">
+                            <posx>21</posx>
+                            <posy>322</posy>
+                            <width>255</width>
+                            <height>auto</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font9</font>
+                            <info>ListItem.Label2</info>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                            <wrapmultiline>true</wrapmultiline>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="image">
+                            <posx>21</posx>
+                            <posy>21</posy>
+                            <width>270</width>
+                            <height>270</height>
+                            <align>left</align>
+                            <info blend="false">ListItem.Thumb</info>
+                            <aspectratio scalediffuse="false">scale</aspectratio>
+                            <fadetime>200</fadetime>
+                            <scrolltime>200</scrolltime>
+                        </control>
+                    </itemlayout>
+                    <focusedlayout width="352" height="390">
+                        <control type="button">
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <label>-</label>
+                            <align>left</align>
+                            <font>-</font>
+                            <textcolor>-</textcolor>
+                            <focusedcolor>-</focusedcolor>
+                            <!--onfocus>RunScript(special://skin/scripts/newreleases2.py)</onfocus-->
+                        </control>
+                        <control type="image">
+                            <visible>Control.HasFocus(50)</visible>
+                            <width>313</width>
+                            <height>313</height>
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <texture border="0">outline.png</texture>
+                        </control>
+                        <control type="image">
+                            <visible>Control.HasFocus(50)</visible>
+                            <width>313</width>
+                            <height>45</height>
+                            <posx>0</posx>
+                            <posy>313</posy>
+                            <texture border="0">box.png</texture>
+                        </control>
+                        <control type="label">
+                            <visible>Control.HasFocus(50)</visible>
+                            <posx>21</posx>
+                            <posy>295</posy>
+                            <width>255</width>
+                            <height>auto</height>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font10</font>
+                            <info>ListItem.Label</info>
+                            <textcolor>blue</textcolor>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="label">
+                            <visible>Control.HasFocus(50)</visible>
+                            <posx>21</posx>
+                            <posy>322</posy>
+                            <width>255</width>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font9</font>
+                            <info>ListItem.Label2</info>
+                            <textcolor>blue</textcolor>
+                            <scroll>false</scroll>
+                        </control>
+                        <control type="image">
+                            <posx>21</posx>
+                            <posy>21</posy>
+                            <width>270</width>
+                            <height>270</height>
+                            <info blend="false">ListItem.Thumb</info>
+                            <aspectratio scalediffuse="false">scale</aspectratio>
+                            <fadetime>200</fadetime>
+                        </control>
+                    </focusedlayout>
+                </control>
+                </control>
+            </control>
+<!-- Playlist Pane -->
+            <control type="group" id="600">
+                <visible>StringCompare(Window.Property(frame),Playlists)</visible>
+                <control type="button" id="202">
+                    <description>dummy button to set initial view</description>
+                    <posx>0</posx>
+                    <posy>0</posy>
+                    <texturenofocus>-</texturenofocus>
+                    <texturefocus>-</texturefocus>
+                    <!--onfocus>SetFocus(502)</onfocus>
+                    <ondown>502</ondown>
+                    <onup>502</onup>
+                    <onright>502</onright-->
+                    <onleft>100</onleft>
+                    <onclick>-</onclick>
+                </control>
+                <!--control type="label" id="601">
+                    <label>Playlists</label>
+                    <align>left</align>
+                    <aligny>top</aligny>
+                    <font>rhapsody_font35_title</font>
+                    <textcolor>black</textcolor>
+                </control-->
+                <control type="group" id="3600">
+                    <!-- Member list of Playlists View -->
+                    <control type="list" id="3650">
+                        <visible>StringCompare(Window.Property(browseview),library_playlists)</visible>
+
+                        <ondown>3650</ondown>
+
+                        <posy>277</posy>
+                        <width>900</width>
+                        <height>685</height>
+                        <onleft>100</onleft>
+                        <onright>3651</onright>
+                        <orientation>vertical</orientation>
+                        <itemlayout height="40">
+                            <control type="label">
+                                <posx>60</posx>
+                                <posy>0</posy>
+                                <width>660</width>
+                                <info>ListItem.Label</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                            </control>
+                            <control type="label">
+                                <posx>15</posx>
+                                <posy>0</posy>
+                                <width>45</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <posx>765</posx>
+                                <posy>0</posy>
+                                <width>231</width>
+                                <info>ListItem.Label2</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <aligny>left></aligny>
+                                <align>right</align>
+                            </control>
+                        </itemlayout>
+                        <focusedlayout height="40">
+                            <control type="image">
+                                <!--visible>Control.HasFocus(51)</visible-->
+                                <width>780</width>
+                                <height>40</height>
+                                <texture>button180x25.png</texture>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3650)</visible>
+                                <posx>60</posx>
+                                <posy>0</posy>
+                                <width>660</width>
+                                <info>ListItem.Label</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3650)</visible>
+                                <posx>15</posx>
+                                <posy>0</posy>
+                                <width>45</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3650)</visible>
+                                <posx>765</posx>
+                                <posy>0</posy>
+                                <width>231</width>
+                                <info>ListItem.Label2</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <aligny>top></aligny>
+                                <align>right</align>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3650)</visible>
+                                <posx>60</posx>
+                                <posy>0</posy>
+                                <width>675</width>
+                                <info>ListItem.Label</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3650)</visible>
+                                <posx>15</posx>
+                                <posy>0</posy>
+                                <width>45</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3650)</visible>
+                                <posx>765</posx>
+                                <posy>0</posy>
+                                <width>225</width>
+                                <info>ListItem.Label2</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <aligny>top></aligny>
+                                <align>right</align>
+                            </control>
+
+                        </focusedlayout>
+                    </control>
+                    <!-- Member Playlist tracklist -->
+                    <control type="list" id="3651">
+                        <visible>StringCompare(Window.Property(browseview),library_playlists)</visible>
+                        <onup>3651</onup>
+                        <ondown>3651</ondown>
+                        <posx>900</posx>
+                        <posy>277</posy>
+                        <width>900</width>
+                        <height>685</height>
+                        <onleft>3650</onleft>
+                        <orientation>vertical</orientation>
+                        <itemlayout height="40">
+                            <control type="label">
+                                <posx>60</posx>
+                                <posy>0</posy>
+                                <width>660</width>
+                                <info>ListItem.Title</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                            </control>
+                            <control type="label">
+                                <posx>15</posx>
+                                <posy>0</posy>
+                                <width>45</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <posx>765</posx>
+                                <posy>0</posy>
+                                <width>231</width>
+                                <info>ListItem.Duration</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <aligny>left></aligny>
+                                <align>right</align>
+                            </control>
+                        </itemlayout>
+                        <focusedlayout height="40">
+                            <control type="image">
+                                <!--visible>Control.HasFocus(51)</visible-->
+                                <width>780</width>
+                                <height>40</height>
+                                <texture>button180x25.png</texture>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3650)</visible>
+                                <posx>60</posx>
+                                <posy>0</posy>
+                                <width>660</width>
+                                <info>ListItem.Title</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3650)</visible>
+                                <posx>15</posx>
+                                <posy>0</posy>
+                                <width>45</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3650)</visible>
+                                <posx>765</posx>
+                                <posy>0</posy>
+                                <width>231</width>
+                                <info>ListItem.Duration</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <aligny>top></aligny>
+                                <align>right</align>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3650)</visible>
+                                <posx>60</posx>
+                                <posy>0</posy>
+                                <width>675</width>
+                                <info>ListItem.Title</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3650)</visible>
+                                <posx>15</posx>
+                                <posy>0</posy>
+                                <width>45</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3650)</visible>
+                                <posx>765</posx>
+                                <posy>0</posy>
+                                <width>225</width>
+                                <info>ListItem.Duration</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <aligny>top></aligny>
+                                <align>right</align>
+                            </control>
+
+                        </focusedlayout>
+                    </control>
+                </control>
+            </control>
+<!-- Radio Pane -->
+            <control type="group" id="700">
+                <visible>StringCompare(Window.Property(frame),Radio)</visible>
+                <control type="button" id="202">
+                    <description>dummy button to set initial view</description>
+                    <posx>0</posx>
+                    <posy>0</posy>
+                    <texturenofocus>-</texturenofocus>
+                    <texturefocus>-</texturefocus>
+                    <!--onfocus>SetFocus(502)</onfocus>
+                    <ondown>502</ondown>
+                    <onup>502</onup>
+                    <onright>502</onright-->
+                    <onleft>100</onleft>
+                    <onclick>-</onclick>
+                </control>
+                <control type="label" id="701">
+                    <label>Radio</label>
+                    <align>left</align>
+                    <aligny>top</aligny>
+                    <font>rhapsody_font35_title</font>
+                    <textcolor>black</textcolor>
+                </control>
+            </control>
+<!-- Queue Pane  -->
+            <control type="group" id="800">
+                <visible>StringCompare(Window.Property(frame),Queue)</visible>
+                <control type="button" id="202">
+                    <description>dummy button to set initial view</description>
+                    <posx>0</posx>
+                    <posy>0</posy>
+                    <texturenofocus>-</texturenofocus>
+                    <texturefocus>-</texturefocus>
+                    <!--onfocus>SetFocus(502)</onfocus>
+                    <ondown>502</ondown>
+                    <onup>502</onup>
+                    <onright>502</onright-->
+                    <onleft>100</onleft>
+                    <onclick>-</onclick>
+                </control>
+                <control type="label" id="801">
+                    <label>Queue</label>
+                    <align>left</align>
+                    <aligny>top</aligny>
+                    <font>rhapsody_font35_title</font>
+                    <textcolor>black</textcolor>
+                </control>
+            </control>
+<!-- Listening History Pane -->
+            <control type="group" id="900">
+                <visible>StringCompare(Window.Property(frame),Listening History)</visible>
+                <control type="button" id="202">
+                    <description>dummy button to set initial view</description>
+                    <posx>0</posx>
+                    <posy>0</posy>
+                    <texturenofocus>-</texturenofocus>
+                    <texturefocus>-</texturefocus>
+                    <!--onfocus>SetFocus(502)</onfocus>
+                    <ondown>502</ondown>
+                    <onup>502</onup>
+                    <onright>502</onright-->
+                    <onleft>100</onleft>
+                    <onclick>-</onclick>
+                </control>
+                <control type="label" id="901">
+                    <label>Listening History</label>
+                    <align>left</align>
+                    <aligny>top</aligny>
+                    <font>rhapsody_font35_title</font>
+                    <textcolor>black</textcolor>
+                </control>
+                <control type="group" id="3900">
+                    <!-- Listening History Tracks View -->
+                    <control type="list" id="3950">
+                        <visible>StringCompare(Window.Property(browseview),history_tracks)</visible>
+
+                        <ondown>3950</ondown>
+
+                        <posy>277</posy>
+                        <width>900</width>
+                        <height>685</height>
+                        <onleft>100</onleft>
+                        <orientation>vertical</orientation>
+                        <itemlayout height="40">
+                            <control type="label">
+                                <posx>60</posx>
+                                <posy>0</posy>
+                                <width>660</width>
+                                <info>ListItem.Title</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <align>left</align>
+                                <aligny>top</aligny>
+                            </control>
+                            <control type="label">
+                                <posx>15</posx>
+                                <posy>0</posy>
+                                <width>45</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <posx>765</posx>
+                                <posy>0</posy>
+                                <width>81</width>
+                                <info>ListItem.Duration</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>black</textcolor>
+                                <aligny>left></aligny>
+                                <align>right</align>
+                            </control>
+                        </itemlayout>
+                        <focusedlayout height="40">
+                            <control type="image">
+                                <!--visible>Control.HasFocus(51)</visible-->
+                                <width>780</width>
+                                <height>40</height>
+                                <texture>button180x25.png</texture>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3353)</visible>
+                                <posx>60</posx>
+                                <posy>0</posy>
+                                <width>660</width>
+                                <info>ListItem.Title</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3353)</visible>
+                                <posx>15</posx>
+                                <posy>0</posy>
+                                <width>45</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>Control.HasFocus(3353)</visible>
+                                <posx>765</posx>
+                                <posy>0</posy>
+                                <width>81</width>
+                                <info>ListItem.Duration</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <aligny>top></aligny>
+                                <align>right</align>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3353)</visible>
+                                <posx>60</posx>
+                                <posy>0</posy>
+                                <width>675</width>
+                                <info>ListItem.Title</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3353)</visible>
+                                <posx>15</posx>
+                                <posy>0</posy>
+                                <width>45</width>
+                                <info>ListItem.TrackNumber</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <align>left</align>
+                                <aligny>top></aligny>
+                            </control>
+                            <control type="label">
+                                <visible>!Control.HasFocus(3353)</visible>
+                                <posx>765</posx>
+                                <posy>0</posy>
+                                <width>75</width>
+                                <info>ListItem.Duration</info>
+                                <font>rhapsody_font12</font>
+                                <textcolor>F3FFFFFF</textcolor>
+                                <!-- white -->
+                                <aligny>top></aligny>
+                                <align>right</align>
+                            </control>
+
+                        </focusedlayout>
+                    </control>
+                </control>
+            </control>
+<!-- Settings Pane -->
+            <control type="group" id="1000">
+                <visible>StringCompare(Window.Property(frame),Settings)</visible>
+                <control type="label">
+                    <posx>0</posx>
+                    <posy>42</posy>
+                    <label>$INFO[Window.Property(view)]</label>
+                    <align>left</align>
+                    <aligny>top</aligny>
+                    <font>rhapsody_font35_title</font>
+                    <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                </control>
+                <control type="group">
+                    <posy>75</posy>
+                    <control type="label">
+                        <posx>0</posx>
+                        <posy>150</posy>
+                        <label>Rhapsody for XBMC</label>
+                        <align>left</align>
+                        <aligny>top</aligny>
+                        <font>rhapsody_font24_title</font>
+                        <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                    </control>
+                    <control type="label">
+                        <posx>0</posx>
+                        <posy>210</posy>
+                        <label>Version 1.0.4  [CR]Coded by Jerimiah Ham</label>
+                        <align>left</align>
+                        <aligny>top</aligny>
+                        <font>rhapsody_font13</font>
+                        <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                    </control>
+                    <control type="label">
+                        <posx>0</posx>
+                        <posy>345</posy>
+                        <label>Account Info</label>
+                        <align>left</align>
+                        <aligny>top</aligny>
+                        <font>rhapsody_font24_title</font>
+                        <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                    </control>
+                    <control type="group">
+                        <posx>0</posx>
+                        <posy>405</posy>
+                        <width>975</width>
+                        <control type="label">
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <label>User:</label>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font13</font>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                        </control>
+                        <control type="label">
+                            <posx>0</posx>
+                            <posy>45</posy>
+                            <label>Email/Login:</label>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font13</font>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                        </control>
+                        <control type="label">
+                            <posx>0</posx>
+                            <posy>90</posy>
+                            <label>Country:</label>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font13</font>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                        </control>
+                        <control type="label">
+                            <posx>0</posx>
+                            <posy>135</posy>
+                            <label>Member Since:</label>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font13</font>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                        </control>
+                        <control type="label">
+                            <posx>0</posx>
+                            <posy>180</posy>
+                            <label>Account Type:</label>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font13</font>
+                            <textcolor>DD171717</textcolor>
+                            <!-- darkgrey -->
+                        </control>
+                        <control type="button" id="201">
+                            <description>dummy button to set initial view</description>
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <texturenofocus>-</texturenofocus>
+                            <texturefocus>-</texturefocus>
+                            <onfocus>SetFocus(401)</onfocus>
+                            <ondown>1001</ondown>
+                            <onup>1001</onup>
+                            <onright>1001</onright>
+                            <onleft>100</onleft>
+                            <onclick>-</onclick>
+                        </control>
+                        <control type="button" id="1001">
+                            <posx>0</posx>
+                            <posy>300</posy>
+                            <width>630</width>
+                            <height>75</height>
+                            <align>center</align>
+                            <textoffsety>8</textoffsety>
+                            <label>Login with different account</label>
+                            <texturenofocus>white.png</texturenofocus>
+                            <texturefocus border="8">selectoutline_solid.png</texturefocus>
+                            <font>rhapsody_font24_title</font>
+                            <textcolor>DD171717</textcolor>
+                            <focusedcolor>DD171717</focusedcolor>
+                    <!-- darkgrey -->
+                            <onclick>ClearProperty(username)</onclick>
+                            <onclick>ClearProperty(password)</onclick>
+                            <onclick>ClearProperty(guid)</onclick>
+                            <onclick>ClearProperty(token)</onclick>
+                            <onclick>ClearProperty(date_created)</onclick>
+                            <onclick>ClearProperty(full_name)</onclick>
+                            <onclick>ClearProperty(country)</onclick>
+                            <onclick>ClearProperty(logged_in)</onclick>
+                            <ondown>1002</ondown>
+                            <onright>-</onright>
+                            <onleft>100</onleft>
+
+                        </control>
+                        <control type="button" id="1002">
+                            <posx>0</posx>
+                            <posy>405</posy>
+                            <width>630</width>
+                            <height>75</height>
+                            <align>center</align>
+                            <textoffsety>8</textoffsety>
+                            <label>Delete cache files and restart</label>
+                            <texturenofocus>white.png</texturenofocus>
+                            <texturefocus border="8">selectoutline_solid.png</texturefocus>
+                            <font>rhapsody_font24_title</font>
+                            <textcolor>DD171717</textcolor>
+                            <focusedcolor>DD171717</focusedcolor>
+                            <!--onclick>-</onclick-->
+                            <onup>1001</onup>
+                            <onleft>100</onleft>
+                        </control>
+                    </control>
+                    <control type="group">
+                        <posx>300</posx>
+                        <posy>405</posy>
+                        <width>675</width>
+                        <control type="label">
+                            <posx>0</posx>
+                            <posy>0</posy>
+                            <label>$INFO[Window.Property(full_name)]</label>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font13</font>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                        </control>
+                        <control type="label">
+                            <posx>0</posx>
+                            <posy>45</posy>
+                            <label>$INFO[Window.Property(username)]</label>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font13</font>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                        </control>
+                        <control type="label">
+                            <posx>0</posx>
+                            <posy>90</posy>
+                            <label>$INFO[Window.Property(country)]</label>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font13</font>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                        </control>
+                        <control type="label">
+                            <posx>0</posx>
+                            <posy>135</posy>
+                            <label>$INFO[Window.Property(date_created)]</label>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font13</font>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                        </control>
+                        <control type="label">
+                            <posx>0</posx>
+                            <posy>180</posy>
+                            <label>$INFO[Window.Property(account_type)]</label>
+                            <align>left</align>
+                            <aligny>top</aligny>
+                            <font>rhapsody_font13</font>
+                            <textcolor>DD171717</textcolor>
+                    <!-- darkgrey -->
+                        </control>
+                    </control>
+                </control>
+                <control type="image">
+                     <posx>780</posx>
+                     <posy>345</posy>
+                     <height>366</height>
+                     <width>900</width>
+                     <texture>combinedlogo.png</texture>
+                </control>
+            </control>
+        </control>
+
+        <control type="image" id="120">
+            <posx>1560</posx>
+            <posy>0</posy>
+            <width>420</width>
+            <height>75</height>
+            <texture>bkrnd_box.png</texture>
+        </control>
+        <control type="label" id="121">
+            <description>'frame' string used by script to detect active view</description>
+            <posx>150</posx>
+            <posy>7</posy>
+            <width>420</width>
+            <label>$INFO[Window.Property(frame)]</label>
+            <font>rhapsody_font35_title</font>
+            <textcolor>DD171717</textcolor>
+            <align>right</align>
+            <aligny>top</aligny>
+        </control>
+        <control type="image">
+            <posx>0</posx>
+            <posy>0</posy>
+            <width>1920</width>
+            <height>1080</height>
+            <texture>haze2-50.png</texture>
+        </control>
+
+        <control type="group">
+            <description>container for bottom player status area</description>
+            <visible>Player.Playing</visible>
+            <posx>1350</posx>
+            <posy>960</posy>
+            <description>Slide-out bottom nav for album view</description>
+            <animation effect="slide" start="0,0" end="0,-120" time="400">Player.Playing</animation>
+            <animation effect="slide" start="0,-120" end="0,0" time="400">Player.Stopped</animation>
+
+            <control type="image" id="30">
+                <visible>false</visible>
+                <width>1290</width>
+                <height>75</height>
+                <posx>180</posx>
+                <posy>840</posy>
+                <texture>white.png</texture>
+            </control>
+            <control type="image">
+                <posx>0</posx>
+                <posy>0</posy>
+                <width>555</width>
+                <height>105</height>
+                <colordiffuse>EEFFFFFF</colordiffuse>
+                <texture border="12">OverlayDialogBackground.png</texture>
+            </control>
+            <control type="group">
+                <posx>390</posx>
+                <posy>15</posy>
+                <control type="image">
+                    <posx>15</posx>
+                    <posy>0</posy>
+                    <width>120</width>
+                    <height>75</height>
+                    <texture>OSDSeekFrame.png</texture>
+                </control>
+                <control type="image">
+                    <posx>0</posx>
+                    <posy>4</posy>
+                    <width>30</width>
+                    <height>66</height>
+                    <texture>OSDSeekRewind.png</texture>
+                    <visible>Player.Rewinding</visible>
+                </control>
+                <control type="image">
+                    <posx>120</posx>
+                    <posy>4</posy>
+                    <width>30</width>
+                    <height>66</height>
+                    <texture>OSDSeekForward.png</texture>
+                    <visible>Player.Forwarding</visible>
+                </control>
+                <control type="image">
+                    <posx>46</posx>
+                    <posy>6</posy>
+                    <width>60</width>
+                    <height>60</height>
+                    <texture>OSDPause.png</texture>
+                    <visible>Player.Paused</visible>
+                </control>
+                <control type="image">
+                    <posx>46</posx>
+                    <posy>6</posy>
+                    <width>60</width>
+                    <height>60</height>
+                    <texture>OSDPlay.png</texture>
+                    <visible>Player.Playing</visible>
+                </control>
+
+                <control type="image">
+                    <posx>42</posx>
+                    <posy>6</posy>
+                    <width>60</width>
+                    <height>60</height>
+                    <texture>OSD2x.png</texture>
+                    <visible>Player.Rewinding2x</visible>
+                </control>
+                <control type="image">
+                    <posx>37</posx>
+                    <posy>6</posy>
+                    <width>60</width>
+                    <height>60</height>
+                    <texture>OSD4x.png</texture>
+                    <visible>Player.Rewinding4x</visible>
+                </control>
+                <control type="image">
+                    <posx>33</posx>
+                    <posy>6</posy>
+                    <width>60</width>
+                    <height>60</height>
+                    <texture>OSD8x.png</texture>
+                    <visible>Player.Rewinding8x</visible>
+                </control>
+                <control type="image">
+                    <posx>28</posx>
+                    <posy>6</posy>
+                    <width>60</width>
+                    <height>60</height>
+                    <texture>OSD16x.png</texture>
+                    <visible>Player.Rewinding16x</visible>
+                </control>
+                <control type="image">
+                    <posx>25</posx>
+                    <posy>6</posy>
+                    <width>60</width>
+                    <height>60</height>
+                    <texture>OSD32x.png</texture>
+                    <visible>Player.Rewinding32x</visible>
+                </control>
+
+                <control type="image">
+                    <posx>51</posx>
+                    <posy>6</posy>
+                    <width>60</width>
+                    <height>60</height>
+                    <texture>OSD2x.png</texture>
+                    <visible>Player.Forwarding2x</visible>
+                </control>
+                <control type="image">
+                    <posx>55</posx>
+                    <posy>6</posy>
+                    <width>60</width>
+                    <height>60</height>
+                    <texture>OSD4x.png</texture>
+                    <visible>Player.Forwarding4x</visible>
+                </control>
+                <control type="image">
+                    <posx>60</posx>
+                    <posy>6</posy>
+                    <width>60</width>
+                    <height>60</height>
+                    <texture>OSD8x.png</texture>
+                    <visible>Player.Forwarding8x</visible>
+                </control>
+                <control type="image">
+                    <posx>64</posx>
+                    <posy>6</posy>
+                    <width>60</width>
+                    <height>60</height>
+                    <texture>OSD16x.png</texture>
+                    <visible>Player.Forwarding16x</visible>
+                </control>
+                <control type="image">
+                    <posx>67</posx>
+                    <posy>6</posy>
+                    <width>60</width>
+                    <height>60</height>
+                    <texture>OSD32x.png</texture>
+                    <visible>Player.Forwarding32x</visible>
+                </control>
+            </control>
+
+            <control type="label">
+                <description>Playing Label</description>
+                <posx>30</posx>
+                <posy>10</posy>
+                <width>360</width>
+                <height>30</height>
+                <align>left</align>
+                <aligny>center</aligny>
+                <font>font10_title</font>
+                <textcolor>blue</textcolor>
+                <label>$LOCALIZE[31042]</label>
+                <visible>Player.Playing + !Player.Seeking + !Player.DisplayAfterSeek</visible>
+            </control>
+            <control type="label">
+                <description>Paused Label</description>
+                <posx>30</posx>
+                <posy>10</posy>
+                <width>360</width>
+                <height>30</height>
+                <align>left</align>
+                <aligny>center</aligny>
+                <font>font10_title</font>
+                <textcolor>blue</textcolor>
+                <label>31043</label>
+                <visible>[Player.Paused + !Player.Caching] + !Player.Seeking + !Player.DisplayAfterSeek</visible>
+            </control>
+            <control type="label">
+                <description>Cache Label</description>
+                <posx>30</posx>
+                <posy>10</posy>
+                <width>360</width>
+                <height>30</height>
+                <align>left</align>
+                <aligny>center</aligny>
+                <font>font10_title</font>
+                <textcolor>blue</textcolor>
+                <label>$LOCALIZE[15107] $INFO[Player.CacheLevel]%</label>
+                <visible>[Player.Paused + Player.Caching] + !Player.Seeking</visible>
+            </control>
+            <control type="label">
+                <description>Seeking Label</description>
+                <posx>30</posx>
+                <posy>10</posy>
+                <width>360</width>
+                <height>30</height>
+                <align>left</align>
+                <aligny>center</aligny>
+                <font>font10_title</font>
+                <textcolor>blue</textcolor>
+                <label>[B]$LOCALIZE[773][/B]</label>
+                <visible>Player.Seeking</visible>
+            </control>
+            <control type="label">
+                <description>Final Seek amount Label</description>
+                <posx>30</posx>
+                <posy>10</posy>
+                <width>360</width>
+                <height>30</height>
+                <align>left</align>
+                <aligny>center</aligny>
+                <font>font10_title</font>
+                <textcolor>blue</textcolor>
+                <label>[B]$LOCALIZE[773][/B][COLOR=grey] $INFO[Player.SeekOffset][/COLOR]</label>
+                <visible>Player.DisplayAfterSeek + ![player.forwarding | player.rewinding]</visible>
+            </control>
+            <control type="label">
+                <description>FF Label</description>
+                <posx>30</posx>
+                <posy>10</posy>
+                <width>360</width>
+                <height>30</height>
+                <align>left</align>
+                <aligny>center</aligny>
+                <font>font10_title</font>
+                <textcolor>blue</textcolor>
+                <label>31044</label>
+                <visible>Player.Forwarding</visible>
+            </control>
+            <control type="label">
+                <description>RW Label</description>
+                <posx>30</posx>
+                <posy>10</posy>
+                <width>360</width>
+                <height>30</height>
+                <align>left</align>
+                <aligny>center</aligny>
+                <font>font10_title</font>
+                <textcolor>blue</textcolor>
+                <label>31045</label>
+                <visible>Player.Rewinding</visible>
+            </control>
+            <control type="label">
+                <description>Elapsed Time Label</description>
+                <posx>30</posx>
+                <posy>34</posy>
+                <width>360</width>
+                <height>30</height>
+                <font>font13_title</font>
+                <textcolor>white</textcolor>
+                <align>left</align>
+                <aligny>center</aligny>
+                <label>$INFO[Player.Time] - $INFO[Player.Duration]</label>
+                <visible>!Player.Seeking</visible>
+            </control>
+            <control type="label">
+                <description>Seek Time Label</description>
+                <posx>30</posx>
+                <posy>34</posy>
+                <width>360</width>
+                <height>30</height>
+                <font>font13_title</font>
+                <textcolor>white</textcolor>
+                <align>left</align>
+                <aligny>center</aligny>
+                <label>$INFO[Player.SeekTime] - $INFO[Player.Duration]</label>
+                <visible>Player.Seeking</visible>
+            </control>
+            <control type="progress">
+                <description>ProgressbarCache</description>
+                <posx>30</posx>
+                <posy>67</posy>
+                <width>360</width>
+                <height>22</height>
+                <info>Player.ProgressCache</info>
+                <midtexture border="6,0,6,0">OSDProgressMidLight.png</midtexture>
+                <visible>true</visible>
+            </control>
+            <control type="progress" id="23">
+                <description>Progressbar</description>
+                <posx>30</posx>
+                <posy>67</posy>
+                <width>360</width>
+                <height>22</height>
+                <info>Player.Progress</info>
+                <visible>true</visible>
+            </control>
+            <control type="slider" id="401">
+                <description>Seek Slider</description>
+                <posx>30</posx>
+                <posy>63</posy>
+                <width>360</width>
+                <height>18</height>
+                <texturesliderbar>seekslider.png</texturesliderbar>
+                <textureslidernib>osd_slider_nib.png</textureslidernib>
+                <textureslidernibfocus>osd_slider_nib.png</textureslidernibfocus>
+                <visible>Player.Seeking</visible>
+            </control>
+        </control>
+
+    </controls>
+</window>
+
+
+
