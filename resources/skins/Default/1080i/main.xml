@@ -18,7 +18,7 @@
 
 <!-- Left Navbar -->
         <control type="group" id="100">
-            <animation effect="slide" start="0,0" end="-200,0" time="400" condition="ControlGroup(200).HasFocus | Control(200).HasFocus(201) | !ControlGroup(100).HasFocus" tween="cubic" easing="inout">Conditional</animation>
+            <animation effect="slide" start="0,0" end="-300,0" time="400" condition="ControlGroup(200).HasFocus | Control(200).HasFocus(201) | !ControlGroup(100).HasFocus" tween="cubic" easing="inout">Conditional</animation>
             <!--visible>!IsEmpty(Window.Property(view))</visible-->
             <onright>201</onright>
             <control type="image">
@@ -127,7 +127,7 @@
         </control>
 <!-- Group for all views -->
         <control type="group" id="200">
-            <animation effect="slide" start="0,0" end="200,0" time="400" condition="ControlGroup(100).HasFocus | Control(100).HasFocus(101) | !Control.IsVisible(101)" tween="cubic" easing="inout">Conditional</animation>
+            <animation effect="slide" start="0,0" end="300,0" time="400" condition="ControlGroup(100).HasFocus | Control(100).HasFocus(101) | !Control.IsVisible(101)" tween="cubic" easing="inout">Conditional</animation>
             <onleft>101</onleft>
             <onfocus>SetFocus(201)</onfocus>
             <onup>-</onup>
