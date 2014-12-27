@@ -7,6 +7,7 @@ import subprocess
 import thread
 
 from base import DialogBase
+from lib.cache_new import newCache
 
 
 class ArtistDialog(DialogBase):
@@ -81,8 +82,6 @@ class ArtistDialog(DialogBase):
 
         self.list_ready = False
         artist = cache[artist_id]
-        print "Artist:"
-        print artist
         self.reset_fields()
         #self.clearList()
         self.clist.reset()
@@ -105,7 +104,7 @@ class ArtistDialog(DialogBase):
         print "ArtistDialog: Manage tracklist for gui list"
 
         self.list_ready = False
-        self.toptracks=self.api.get_artist_top_tracks(artist['artist_id'])
+        self.toptracks=self.app.newCache.get_artist_top_tracks(artist['artist_id'])
         liz = self.app.windowtracklist.get_artist_litems(self.toptracks)
         for item in liz:
             self.clist.addItem(item)

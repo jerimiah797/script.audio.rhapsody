@@ -148,7 +148,7 @@ class LoginWin(WinBase):
             if self.app.get_var('bad_creds'):
                 self.getControl(10).setLabel('Login failed! Try again...')
             #print "Set fail label message"
-            self.inputwin = InputDialog("input.xml", self.app.__addon_path__, 'Default', '1080i', app=self.app)
+            self.inputwin = InputDialog("input.xml", self.app.__addon_path__, 'Default', '720p', app=self.app)
             self.inputwin.doModal()
             if not self.app.get_var('exiting'):
                 data = self.mem.login_member(self.inputwin.name_txt, self.inputwin.pswd_txt)
@@ -399,6 +399,7 @@ class MainWin(WinBase):
         try:
             pos = self.clist.getSelectedPosition()
             thing = self.app.get_var('list')[pos]
+            print thing
         except:
             print "onclick shouldn't be processed for empty lists"
             return

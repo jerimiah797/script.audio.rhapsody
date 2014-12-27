@@ -12,6 +12,7 @@ from lib import lists
 from lib import caching
 from lib import MyFont
 from lib import httpd
+from lib.cache_new import newCache
 import sys
 import os
 
@@ -53,6 +54,7 @@ class Application():
 
 		self.mem = member.Member(self)
 		self.api = rhapapi.Api(self)
+		self.newCache=newCache(self.api)
 		self.cache = caching.Cache(self)
 		self.img = image.Image(self.__addon_path__, self.__addon_data__, self)
 		self.win = view.MainWin("main.xml", self.__addon_path__, 'Default', '720p', app=self)
