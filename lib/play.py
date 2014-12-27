@@ -3,7 +3,7 @@ import xbmcgui
 import time
 import thread
 import os
-from lib import view
+from lib.views import view
 from lib import utils
 
 class Player(xbmc.Player):

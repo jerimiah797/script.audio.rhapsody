@@ -6,7 +6,8 @@ from lib import rhapapi
 from lib import image
 from lib import member
 from lib import play
-from lib import view
+from lib import views
+from lib.views import view
 from lib import lists
 from lib import caching
 from lib import MyFont
