@@ -414,7 +414,7 @@ class MainWin(WinBase):
             return
         #print "mainwin onClick: id: "+str(id)
         if (control == 3350) or (control == 3351) or (control == 3550) or (control == 3551) or (control == 3451):
-            self.alb_dialog = AlbumDialog("album.xml", self.app.__addon_path__, 'Default', '720i', current_list=self.app.get_var('list'),
+            self.alb_dialog = AlbumDialog("album.xml", self.app.__addon_path__, 'Default', '720p', current_list=self.app.get_var('list'),
                                           pos=pos, cache=self.cache.album, alb_id=thing, app=self.app)
             self.alb_dialog.setProperty("review", "has_review")
             self.alb_dialog.doModal()
@@ -422,15 +422,15 @@ class MainWin(WinBase):
             if self.empty_list():
                 draw_mainwin(self, self.app)
             self.clist.selectItem(self.alb_dialog.pos)
-        if (control == 3352) :
-            self.alb_dialog = ArtistDialog("artist.xml", self.app.__addon_path__, 'Default', '720i', current_list=self.app.get_var('list'),
+        if (control == 3352) or (control == 3452) :
+            self.artist_dialog = ArtistDialog("artist.xml", self.app.__addon_path__, 'Default', '720p', current_list=self.app.get_var('list'),
                                           pos=pos, cache=self.cache.artist, artist_id=thing, app=self.app)
-            self.alb_dialog.setProperty("review", "has_review")
-            self.alb_dialog.doModal()
-            self.alb_dialog.id = None
+            self.artist_dialog.setProperty("review", "has_review")
+            self.artist_dialog.doModal()
+            self.artist_dialog.id = None
             if self.empty_list():
                 draw_mainwin(self, self.app)
-            self.clist.selectItem(self.alb_dialog.pos)
+            self.clist.selectItem(self.artist_dialog.pos)
 
         #self.cache.save_album_data()
 
@@ -878,10 +878,11 @@ class ArtistDialog(DialogBase):
         self.img_dir = self.app.__addon_path__+'/resources/skins/Default/media/'
         self.listcontrol_id = 3150
         self.list_ready = False
-        self.tracks_ready = False
         self.thr1 = {}
         self.thr2 = {}
         self.thr3 = {}
+        self.toptracks = None
+        self.tracks_ready=False
 
 
 
@@ -896,13 +897,12 @@ class ArtistDialog(DialogBase):
 
     def show_info(self, artist_id, cache):
 
-        def get_art(self, cache, album):
+        def get_art(self, cache, artist):
             static_id = self.id[:]
             #print "Get art for "+static_id
-            self.manage_artwork(cache, album)
+            self.manage_artwork(cache, artist)
             if static_id == self.id:
-                #self.manage_windowtracklist(cache, artist)
-                self.getControl(7).setImage(album["bigthumb"])
+                self.getControl(7).setImage(artist["bigthumb"])
             #self.manage_windowtracklist(cache, artist)
             else:
                 pass
@@ -925,6 +925,7 @@ class ArtistDialog(DialogBase):
             #self.manage_details(cache, artist)
             if static_id == self.id:
                 self.manage_windowtracklist(cache, artist)
+                self.tracks_ready=True
                 self.getControl(10).setLabel(artist["style"])
                 #self.getControl(10).setLabel(artist["label"])
                 #self.getControl(6).setLabel(artist["tags"]+album['type'])
@@ -945,7 +946,7 @@ class ArtistDialog(DialogBase):
         thread.start_new_thread(get_art, (self, cache, artist))
         thread.start_new_thread(get_bio, (self, cache, artist))
         thread.start_new_thread(get_details, (self, cache, artist))
-        thread.start_new_thread(self.manage_windowtracklist, (self, cache, artist))
+        #thread.start_new_thread(self.manage_windowtracklist, (cache, artist))
 
 
     def show_next_album(self, offset):
@@ -958,10 +959,8 @@ class ArtistDialog(DialogBase):
         print "ArtistDialog: Manage tracklist for gui list"
 
         self.list_ready = False
-        while self.tracks_ready == False:
-            xbmc.sleep(100)
-            print "waiting for tracks..."
-        liz = self.app.windowtracklist.get_artist_litems(cache, artist["artist_id"])
+        self.toptracks=self.api.get_artist_top_tracks(artist['artist_id'])
+        liz = self.app.windowtracklist.get_artist_litems(self.toptracks)
         for item in liz:
             self.clist.addItem(item)
         self.win.sync_playlist_pos()
@@ -1012,13 +1011,13 @@ class ArtistDialog(DialogBase):
             pass
 
 
-    def start_playback(self, id, album):
+    def start_playback(self, id, artist):
         print "Album dialog: start playback"
-        if not self.now_playing_matches_album_dialog():
-            self.app.player.now_playing = {'pos': 0, 'type':'album', 'item':album['tracks'], 'id':album['album_id']}
+        if not self.now_playing_matches_artist_dialog():
+            self.app.player.now_playing = {'pos': 0, 'type':'artist', 'item':self.toptracks, 'id':artist['artist_id']}
             self.app.player.build()
-        if self.app.player.now_playing['type'] != 'album':
-            self.app.player.now_playing = {'pos': 0, 'type':'album', 'item':album['tracks'], 'id':album['album_id']}
+        if self.app.player.now_playing['type'] != 'artist':
+            self.app.player.now_playing = {'pos': 0, 'type':'artist', 'item':self.toptracks, 'id':artist['artist_id']}
             self.app.player.build()
         if id == self.listcontrol_id:
             self.app.player.now_playing['pos'] = self.clist.getSelectedPosition()
@@ -1033,7 +1032,7 @@ class ArtistDialog(DialogBase):
                     return
                 xbmc.sleep(100)
                 print str(self.list_ready)+": waiting for list"
-            self.app.player.now_playing = {'pos': 0, 'type':'album', 'item':album['tracks'], 'id':album['album_id']}
+            self.app.player.now_playing = {'pos': 0, 'type':'album', 'item':self.toptracks, 'id':artist['artist_id']}
             self.app.player.build()
             self.app.player.playselected(self.app.player.now_playing['pos'])
             #xbmc.executebuiltin("XBMC.Notification(Rhapsody, Playback started, 2000, %s)" %(self.app.__addon_icon__))
@@ -1045,7 +1044,7 @@ class ArtistDialog(DialogBase):
         #thread.start_new_thread(self.app.player.session_test, () )
         #remove this when session handling is complete
 
-    def now_playing_matches_album_dialog(self):
+    def now_playing_matches_artist_dialog(self):
         try:
             if self.app.player.now_playing['id'] == self.id:
                 return True
