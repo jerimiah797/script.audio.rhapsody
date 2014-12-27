@@ -413,7 +413,7 @@ class MainWin(WinBase):
             print "onclick shouldn't be processed for empty lists"
             return
         #print "mainwin onClick: id: "+str(id)
-        if (control == 3350) or (control == 3351) or (control == 3550) or (control == 3551) or (control == 3451):
+        if (control == 3350) or (control == 3351) or (control == 3550) or (control == 3451):
             self.alb_dialog = AlbumDialog("album.xml", self.app.__addon_path__, 'Default', '720p', current_list=self.app.get_var('list'),
                                           pos=pos, cache=self.cache.album, alb_id=thing, app=self.app)
             self.alb_dialog.setProperty("review", "has_review")
@@ -422,7 +422,7 @@ class MainWin(WinBase):
             if self.empty_list():
                 draw_mainwin(self, self.app)
             self.clist.selectItem(self.alb_dialog.pos)
-        if (control == 3352) or (control == 3452) :
+        if (control == 3352) or (control == 3452) or (control == 3551):
             self.artist_dialog = ArtistDialog("artist.xml", self.app.__addon_path__, 'Default', '720p', current_list=self.app.get_var('list'),
                                           pos=pos, cache=self.cache.artist, artist_id=thing, app=self.app)
             self.artist_dialog.setProperty("review", "has_review")
