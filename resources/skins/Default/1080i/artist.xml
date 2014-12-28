@@ -394,7 +394,7 @@
                         </control>
                         <control type="label">
                             <visible>Control.HasFocus(3150)</visible>
-                            <posx>693</posx>
+                            <posx>765</posx>
                             <posy>0</posy>
                             <width>81</width>
                             <info>ListItem.Duration</info>
@@ -429,7 +429,7 @@
                         </control>
                         <control type="label">
                             <visible>!Control.HasFocus(3150)</visible>
-                            <posx>693</posx>
+                            <posx>765</posx>
                             <posy>0</posy>
                             <width>75</width>
                             <info>ListItem.Duration</info>
