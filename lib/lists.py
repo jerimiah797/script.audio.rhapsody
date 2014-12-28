@@ -6,7 +6,7 @@ from lib import utils
 
 class ContentList(object):
     # handle new releases, top albums, artist discography, library album list, etc.
-    def __init__(self, *args):
+    def __init__(self, type, name, filename, app):
 
         self.data = []
         self.liz = []
@@ -14,10 +14,10 @@ class ContentList(object):
         self.fresh = False
         self.pos = 0
         self.timestamp = time.time()
-        self.type = args[0]
-        self.name = args[1]
-        self.filename = args[2]
-        self.app = args[3]
+        self.type = type
+        self.name = name
+        self.filename = filename
+        self.app = app
         self.win = self.app.win
         self.cache = self.app.cache
         self.img = self.app.img
@@ -32,15 +32,7 @@ class ContentList(object):
     #def fresh(self):
     #	return True
 
-    def make_active(self, **kwargs):
-
-        if kwargs.get("results"):
-            results = kwargs.get("results")
-        #print "make_active, using results from kwargs"
-        else:
-            results = None
-        #print "make_active, results set to None"
-
+    def make_active(self, results=None):
         if (self.app.get_var('last_rendered_list') == self.name) and self.win.getListSize() > 2:
             #print "Window already has that list in memory. Skipping list building"
             return
@@ -61,11 +53,9 @@ class ContentList(object):
         self.app.set_var('list', self.data)
 
 
-    def build(self, **kwargs):
+    def build(self, results=None):
         #print "ContentList: build (full)"
-        if kwargs.get('results'):
-            results = kwargs.get('results')
-        else:
+        if results is None:
             results = self.download_list()
         if results:
             self.ingest_list(results)

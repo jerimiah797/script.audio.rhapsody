@@ -5,8 +5,8 @@ from rhapapi import Api
 
 class Cache(object):
 
-	def __init__(self, *args):
-		self.app = args[0]
+	def __init__(self, app):
+		self.app = app
 		self.__addon_path__ = self.app.__addon_data__
 		self.user_data = {} #object to store cached data
 
