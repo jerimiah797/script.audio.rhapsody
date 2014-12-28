@@ -14,11 +14,7 @@ from loginWin import LoginWin
 from artistDialog import ArtistDialog
 from albumDialog import AlbumDialog
 
-def draw_mainwin(win, app, **kwargs):
-    if kwargs.get("results"):
-        results = kwargs.get("results")
-    else:
-        results = None
+def draw_mainwin(win, app, results=None):
     frame = win.handle.getProperty('frame')
     if frame == "Settings":
         #print "Drawmain: No lists to draw on settings Page"
