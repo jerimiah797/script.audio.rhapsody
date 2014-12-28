@@ -1,12 +1,12 @@
 import time
 import pickle
+
 import xbmcgui
-from lib import utils
 
 
 class ContentList(object):
     # handle new releases, top albums, artist discography, library album list, etc.
-    def __init__(self, *args):
+    def __init__(self, type, name, filename, app):
 
         self.data = []
         self.liz = []
@@ -14,10 +14,10 @@ class ContentList(object):
         self.fresh = False
         self.pos = 0
         self.timestamp = time.time()
-        self.type = args[0]
-        self.name = args[1]
-        self.filename = args[2]
-        self.app = args[3]
+        self.type = type
+        self.name = name
+        self.filename = filename
+        self.app = app
         self.win = self.app.win
         self.cache = self.app.cache
         self.img = self.app.img
@@ -25,22 +25,14 @@ class ContentList(object):
         self.raw = None
         print 'Instantiating ' + self.name
         if (self.name == "srch_albums") or (self.name == "srch_artists") or (self.name == "srch_tracks") or (
-            self.name == "srch_brdcst"):
+                    self.name == "srch_brdcst"):
             self.built = True
             self.fresh = True
 
-    #def fresh(self):
+    # def fresh(self):
     #	return True
 
-    def make_active(self, **kwargs):
-
-        if kwargs.get("results"):
-            results = kwargs.get("results")
-        #print "make_active, using results from kwargs"
-        else:
-            results = None
-        #print "make_active, results set to None"
-
+    def make_active(self, results=None):
         if (self.app.get_var('last_rendered_list') == self.name) and self.win.getListSize() > 2:
             #print "Window already has that list in memory. Skipping list building"
             return
@@ -61,11 +53,9 @@ class ContentList(object):
         self.app.set_var('list', self.data)
 
 
-    def build(self, **kwargs):
+    def build(self, results=None):
         #print "ContentList: build (full)"
-        if kwargs.get('results'):
-            results = kwargs.get('results')
-        else:
+        if results is None:
             results = self.download_list()
         if results:
             self.ingest_list(results)
@@ -98,12 +88,11 @@ class ContentList(object):
                  'lib_albums': self.api.get_library_albums,
                  'lib_artists': self.api.get_library_artists,
                  'hist_tracks': self.api.get_listening_history,
-			     'lib_playlists': self.api.get_library_playlists,
+                 'lib_playlists': self.api.get_library_playlists,
                  'lib_playlists': self.api.get_library_playlists,
                  #'lib_tracks':    api.get_library_artist_tracks,
                  #'lib_stations':  api.get_library_stations,
-                 #'lib_favorites': api.get_library_favorites,
-			     #'lib_favorites': api.get_library_favorites,
+                 #'lib_favorites': api.get_library_favorites,  #'lib_favorites': api.get_library_favorites,
             }
             r = d[self.name]()
         #self.save_raw_data(r)
@@ -151,6 +140,7 @@ class ContentList(object):
             del infos
 
         self.built = True
+
     #utils.prettyprint(self.data)
 
 
@@ -207,7 +197,6 @@ class ContentList(object):
         return s
 
 
-
     def process_artist(self, count, item, data):
 
         bigthumb = self.img.default_artist_img
@@ -249,11 +238,11 @@ class ContentList(object):
         }
         data['listitem'] = xbmcgui.ListItem(item["name"], item["artist"]["name"])
         info = {
-        "title": item["name"],
-        "album": item['album']['name'],
-        "artist": item["artist"]["name"],
-        "duration": item['duration'],
-        "tracknumber": count + 1,
+            "title": item["name"],
+            "album": item['album']['name'],
+            "artist": item["artist"]["name"],
+            "duration": item['duration'],
+            "tracknumber": count + 1,
         }
         data['listitem'].setInfo("music", info)
         return data
@@ -291,57 +280,22 @@ class ContentList(object):
 class WindowTrackList(object):
     def __init__(self):
         pass
+
     # handle albums, playlists
 
-    def get_album_litems(self, cache, id):
-        print "Tracklist(album): adding tracks for gui list"
-        src = cache[id]
-        mylist = []
-        i = None
-        for i, item in enumerate(src["tracks"]):
-            newlistitem = xbmcgui.ListItem(path="http://dummyurl.org")
-            newlistitem.setInfo('music', {'tracknumber': int(i) + 1,
-                                          'title': src["tracks"][i]["name"],
-                                          'duration': int(src["tracks"][i]["duration"])
-            })
-            mylist.append(newlistitem)
-        if i:
-            #print "Showing "+str(i+1)+" tracks"
-            pass
-        return mylist
-
-    def get_artist_litems(self, tracklist):
-        print "Tracklist(artist): adding tracks for gui list"
+    def get_litems(self, tracklist):
+        print "Tracklist: adding tracks for gui list"
         mylist = []
         i = None
         for i, item in enumerate(tracklist):
             newlistitem = xbmcgui.ListItem(path="http://dummyurl.org")
             newlistitem.setInfo('music', {'tracknumber': int(i) + 1,
-                                          'title': tracklist[i]["name"],
-                                          'duration': int(tracklist[i]["duration"])
+                                          'title': item["name"],
+                                          'duration': item["duration"]
             })
             mylist.append(newlistitem)
         if i:
-            #print "Showing "+str(i+1)+" tracks"
+            # print "Showing "+str(i+1)+" tracks"
             pass
-        return mylist
-
-    def get_playlist_litems(self, cache, id):
-        print "Tracklist(playlist): adding tracks for gui list"
-        src = cache[id]
-        mylist = []
-        i = None
-        for i, item in enumerate(src["tracks"]):
-            newlistitem = xbmcgui.ListItem(path="http://dummyurl.org")
-            newlistitem.setInfo('music', {'tracknumber': i + 1,
-                                          'title': item['name'],
-                                          'duration': item['duration'],
-            })
-            mylist.append(newlistitem)
-        if i:
-            pass
-        #print "Showing "+str(i+1)+" tracks"
-        else:
-            print "Playlist contains no tracks!"
         return mylist
 

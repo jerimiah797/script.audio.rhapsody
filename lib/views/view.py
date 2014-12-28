@@ -9,15 +9,12 @@ import threading
 from threading import Thread
 from lib import utils
 from base import DialogBase, WinBase
+from loginWin import LoginWin
 
 from artistDialog import ArtistDialog
 from albumDialog import AlbumDialog
 
-def draw_mainwin(win, app, **kwargs):
-    if kwargs.get("results"):
-        results = kwargs.get("results")
-    else:
-        results = None
+def draw_mainwin(win, app, results=None):
     frame = win.handle.getProperty('frame')
     if frame == "Settings":
         #print "Drawmain: No lists to draw on settings Page"
@@ -125,7 +122,7 @@ def draw_playlist_sublist(win, app, thing):
     if win.manage_playlist_detail(app.cache.playlist, thing, thing['playlist_id']):
         #win.dlist = win.getControl(3651)
         #win.dlist.reset()
-        liz = app.windowtracklist.get_playlist_litems(cache, thing['playlist_id'])
+        liz = app.windowtracklist.get_litems(thing['playlist_id']['tracks'])
         for item in liz:
             win.dlist.addItem(item)
         ###win.sync_playlist_pos()
@@ -134,64 +131,6 @@ def draw_playlist_sublist(win, app, thing):
         #print "resetting list"
         win.dlist.reset()
     win.make_visible(3651)
-
-
-class LoginWin(WinBase):
-    def __init__(self, *args, **kwargs):
-        WinBase.__init__(self, *args)
-        self.app = kwargs.get('app')
-        self.mem = self.app.mem
-
-    def onInit(self):
-        #print "Starting login UI loop"
-        while not self.app.get_var('logged_in'):
-            if self.app.get_var('bad_creds'):
-                self.getControl(10).setLabel('Login failed! Try again...')
-            #print "Set fail label message"
-            self.inputwin = InputDialog("input.xml", self.app.__addon_path__, 'Default', '1080i', app=self.app)
-            self.inputwin.doModal()
-            if not self.app.get_var('exiting'):
-                data = self.mem.login_member(self.inputwin.name_txt, self.inputwin.pswd_txt)
-                self.app.set_var('logged_in', data['logged_in'])
-                self.app.set_var('bad_creds', data['bad_creds'])
-                del self.inputwin
-            #print "Logged_in value: " + str(self.app.get_var('logged_in'))
-            #print "Bad Creds value: " + str(self.app.get_var('bad_creds'))
-            else:
-                break
-
-        #print "Exited the login UI loop! Calling the del function"
-        self.close()
-
-class InputDialog(DialogBase):
-
-    #def __init__(self, xmlFilename, scriptPath, defaultSkin, defaultRes):
-    def __init__(self, *args, **kwargs):
-        DialogBase.__init__(self, *args)
-        self.app = kwargs.get('app')
-        self.name = xbmcgui.ControlEdit(530, 320, 400, 120, '', 'rhapsody_font16', '0xDD171717', focusTexture="none.png")
-        self.pswd = xbmcgui.ControlEdit(530, 320, 400, 120, '', font='rhapsody_font16', textColor='0xDD171717', focusTexture="none.png", isPassword=1)
-        self.butn = None
-        self.name_txt = ""
-        self.pswd_txt = ""
-
-    def onInit(self):
-        self.name_select = self.getControl(10)
-        self.pswd_select = self.getControl(11)
-        self.pswd_select.setVisible(False)
-        self.addControl(self.name)
-        self.addControl(self.pswd)
-        self.butn = self.getControl(22)
-        self.name.setPosition(600, 320)
-        self.name.setWidth(400)
-        self.name.controlDown(self.pswd)
-        self.pswd.setPosition(600, 410)
-        self.pswd.setWidth(400)
-        self.pswd.controlUp(self.name)
-        self.pswd.controlDown(self.butn)
-        self.butn.controlUp(self.pswd)
-        self.setFocus(self.name)
-
 
     def onAction(self, action):
         #print str(action.getId())
@@ -399,6 +338,7 @@ class MainWin(WinBase):
         try:
             pos = self.clist.getSelectedPosition()
             thing = self.app.get_var('list')[pos]
+            print thing
         except:
             print "onclick shouldn't be processed for empty lists"
             return
