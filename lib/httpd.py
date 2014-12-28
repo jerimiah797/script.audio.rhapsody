@@ -1,7 +1,7 @@
 import threading
 import thread
 import sys
-from cgi import parse_qs
+from urlparse import parse_qs
 from wsgiref.simple_server import make_server
 if sys.version_info >=  (2, 7):
     import json as json
