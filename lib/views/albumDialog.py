@@ -119,7 +119,7 @@ class AlbumDialog(DialogBase):
         while self.tracks_ready == False:
             xbmc.sleep(100)
             print "waiting for tracks..."
-        liz = self.app.windowtracklist.get_album_litems(cache, album["album_id"])
+        liz = self.app.windowtracklist.get_litems(album['tracks'])
         for item in liz:
             self.clist.addItem(item)
         self.win.sync_playlist_pos()

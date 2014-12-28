@@ -122,7 +122,7 @@ def draw_playlist_sublist(win, app, thing):
     if win.manage_playlist_detail(app.cache.playlist, thing, thing['playlist_id']):
         #win.dlist = win.getControl(3651)
         #win.dlist.reset()
-        liz = app.windowtracklist.get_playlist_litems(cache, thing['playlist_id'])
+        liz = app.windowtracklist.get_litems(thing['playlist_id']['tracks'])
         for item in liz:
             win.dlist.addItem(item)
         ###win.sync_playlist_pos()
