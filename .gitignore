@@ -12,3 +12,4 @@ pysrc
 .project
 .pydevproject
 
+*.pyo
