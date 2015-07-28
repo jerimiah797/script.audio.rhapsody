@@ -338,7 +338,7 @@
                             <font>rhapsody_font12</font>
                             <textcolor>black</textcolor>
                             <align>left</align>
-                            <aligny>top></aligny>
+                            <aligny>top</aligny>
                         </control>
                         <control type="label">
                             <posx>10</posx>
@@ -348,16 +348,16 @@
                             <font>rhapsody_font12</font>
                             <textcolor>black</textcolor>
                             <align>left</align>
-                            <aligny>top></aligny>
+                            <aligny>top</aligny>
                         </control>
                         <control type="label">
-                            <posx>510</posx>
+                            <posx>460</posx>
                             <posy>0</posy>
                             <width>54</width>
                             <info>ListItem.Duration</info>
                             <font>rhapsody_font12</font>
                             <textcolor>black</textcolor>
-                            <aligny>top></aligny>
+                            <aligny>top</aligny>
                             <align>right</align>
                         </control>
                     </itemlayout>
@@ -378,7 +378,7 @@
                             <textcolor>F3FFFFFF</textcolor>
                             <!-- white -->
                             <align>left</align>
-                            <aligny>top></aligny>
+                            <aligny>top</aligny>
                         </control>
                         <control type="label">
                             <visible>Control.HasFocus(3150)</visible>
@@ -390,18 +390,18 @@
                             <textcolor>F3FFFFFF</textcolor>
                             <!-- white -->
                             <align>left</align>
-                            <aligny>top></aligny>
+                            <aligny>top</aligny>
                         </control>
                         <control type="label">
                             <visible>Control.HasFocus(3150)</visible>
-                            <posx>510</posx>
+                            <posx>460</posx>
                             <posy>0</posy>
                             <width>54</width>
                             <info>ListItem.Duration</info>
                             <font>rhapsody_font12</font>
                             <textcolor>F3FFFFFF</textcolor>
                             <!-- white -->
-                            <aligny>top></aligny>
+                            <aligny>top</aligny>
                             <align>right</align>
                         </control>
                         <control type="label">
@@ -413,7 +413,7 @@
                             <font>rhapsody_font12</font>
                             <textcolor>F3FFFFFF</textcolor>
                             <!-- white -->
-                            <aligny>center></aligny>
+                            <aligny>center</aligny>
                         </control>
                         <control type="label">
                             <visible>!Control.HasFocus(3150)</visible>
@@ -425,18 +425,18 @@
                             <textcolor>F3FFFFFF</textcolor>
                             <!-- white -->
                             <align>left</align>
-                            <aligny>top></aligny>
+                            <aligny>top</aligny>
                         </control>
                         <control type="label">
                             <visible>!Control.HasFocus(3150)</visible>
-                            <posx>510</posx>
+                            <posx>460</posx>
                             <posy>0</posy>
-                            <width>50</width>
+                            <width>54</width>
                             <info>ListItem.Duration</info>
                             <font>rhapsody_font12</font>
                             <textcolor>F3FFFFFF</textcolor>
                             <!-- white -->
-                            <aligny>top></aligny>
+                            <aligny>top</aligny>
                             <align>right</align>
                         </control>
 
@@ -528,7 +528,7 @@
             <posy>80</posy>
             <texture>feather_line_inverted.png</texture>
         </control-->
-        
+
         <!--control type="image">
             <posx>0</posx>
             <posy>0</posy>
