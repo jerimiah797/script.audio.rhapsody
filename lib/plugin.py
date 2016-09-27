@@ -23,9 +23,9 @@
 #import xbmc
 import xbmcgui
 import xbmcplugin
-import cgi
 #import urllib
 import urllib2
+import urlparse
 import json
 #import base64
 #import datetime
@@ -35,7 +35,7 @@ def get_it(args):
 
   #def parse_query(query, clean=True):
   def parse_query(query):
-    queries = cgi.parse_qs(query)
+    queries = urlparse.parse_qs(query)
     q = {}
     for key, value in queries.items():
         q[key] = value[0]

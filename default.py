@@ -2,7 +2,7 @@ import xbmc
 import xbmcgui
 import time
 import sys
-from lib import view
+from lib.views import view
 from lib import main
 from lib import skincheck
 from lib import utils
