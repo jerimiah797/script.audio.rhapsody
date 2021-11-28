@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="script.audio.rhapsody" version="1.0.5" name="Rhapsody" provider-name="Jerimiah Ham">
+<addon id="script.audio.rhapsody" version="1.0.5" name="Napster" provider-name="Jerimiah Ham">
     <requires>
         <import addon="xbmc.python" version="2.25.0"/>
 		<import addon="script.module.simplejson" version="2.0.10"/>
@@ -10,8 +10,8 @@
     </extension>
     <extension point="xbmc.addon.metadata">
         <platform>all</platform>
-        <summary>Rhapsody / Napster subscription music service.</summary>
-        <description>Rhapsody lets you search for artist and albums, browse your library and playlists, and discover new music.[CR][CR]It can be used with any full featured Rhapsody or Napster account. Requires a broadband internet connection to play all music.</description>
+        <summary>Napster (formerly Rhapsody) subscription music service.</summary>
+        <description> Napster lets you search for artist and albums, browse your library and playlists, and discover new music.[CR][CR]It can be used with any full featured Rhapsody or Napster account. Requires a broadband internet connection to play all music.</description>
         <disclaimer>unRadio and Radio+ accounts are not supported at this time, sorry. </disclaimer>
 		<platform>all</platform>
     </extension>

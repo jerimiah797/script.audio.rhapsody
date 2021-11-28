@@ -45,9 +45,9 @@ if len(sys.argv) < 2:
 	#rhapserver = serve.RhapServer(app)
 	#rhapserver.start("localhost", 8090)
 
-	app.loadwin.getControl(10).setLabel('Welcome to Rhapsody')
+	app.loadwin.getControl(10).setLabel('Welcome to Napster')
 	xbmc.sleep(2000)
-	app.loadwin.getControl(10).setLabel('Checking Rhapsody servers...')
+	app.loadwin.getControl(10).setLabel('Checking Napster servers...')
 	results = app.api.get_artist_genre("Art.954")
 	if results:
 		xbmc.log("Performing normal app startup")
@@ -64,7 +64,7 @@ if len(sys.argv) < 2:
 			xbmc.sleep(1000)
 			app.cache.load_cached_data()
 		else:
-		 	app.loadwin.getControl(10).setLabel('Can\'t reach Rhapsody servers. \nExiting...')
+		 	app.loadwin.getControl(10).setLabel('Can\'t reach Napster servers. \nExiting...')
 		 	xbmc.sleep(2000)
 		 	app.set_var('running', False)
 
@@ -108,7 +108,7 @@ if len(sys.argv) < 2:
 	del app
 	#rhapserver.server.shutdown()
 	#del rhapserver
-	xbmc.log("Rhapsody addon has exited.")
+	xbmc.log("Napster addon has exited.")
 else:
 	#print "Rhapsody plugin call invoked."
 	plugin.get_it(sys.argv)
