@@ -148,9 +148,9 @@ class Member(object):
 		#try:
 		if result:
 			#utils.prettyprint(result)
-			t = int(result["createDate"])/1000
-			self.account_type =     result["productName"]
-			self.date_created =     datetime.datetime.fromtimestamp(t).strftime('%B %d, %Y')
+			self.account_type = result["account"]["subscription"]["productName"]
+			# self.date_created =     datetime.datetime.fromtimestamp(t).strftime('%B %d, %Y')
+			self.date_created = result["account"]["subscription"]["createDate"]
 			print "retrieved and set account details"
 		#except:
 		#	print "Couldn't set account details"
