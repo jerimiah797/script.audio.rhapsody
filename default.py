@@ -17,7 +17,7 @@ import threading
 from threading import Thread
 
 REMOTE_DBG = False
-TEST = True
+TEST = False
 PORT_NUMBER = 8090
 
 # append pydev remote debugger
@@ -50,7 +50,7 @@ if len(sys.argv) < 2:
 	app.loadwin.getControl(10).setLabel('Checking Rhapsody servers...')
 	results = app.api.get_artist_genre("Art.954")
 	if results:
-		print "Performing normal app startup"
+		xbmc.log("Performing normal app startup")
 		app.loadwin.getControl(10).setLabel('Loading fonts...')
 		app.init_fonts()
 		xbmc.sleep(1000)
@@ -59,7 +59,7 @@ if len(sys.argv) < 2:
 		xbmc.sleep(1000)
 	else:
 		if TEST == True:
-			print "*****************OFFLINE TEST MODE*****************"
+			xbmc.log("*****************OFFLINE TEST MODE*****************")
 			app.loadwin.getControl(10).setLabel('Starting in OFFLINE TEST mode...')
 			xbmc.sleep(1000)
 			app.cache.load_cached_data()
@@ -97,7 +97,7 @@ if len(sys.argv) < 2:
 				app.cache.save_album_data()
 				app.cache.save_artist_data()
 				if app.cache.genre_modified == True:
-					print "Saving updated genre data"
+					xbmc.log("Saving updated genre data")
 					app.cache.save_genre_data()
 				xbmc.sleep(2000)
 	if not app.get_var('exiting'):
@@ -108,7 +108,7 @@ if len(sys.argv) < 2:
 	del app
 	#rhapserver.server.shutdown()
 	#del rhapserver
-	print "Rhapsody addon has exited."
+	xbmc.log("Rhapsody addon has exited.")
 else:
 	#print "Rhapsody plugin call invoked."
 	plugin.get_it(sys.argv)

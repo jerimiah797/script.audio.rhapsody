@@ -21,7 +21,7 @@ class Application():
 
 
 	def __init__(self):
-		print "Initializing Rhapsody for XBMC"
+		xbmc.log("Initializing Rhapsody for XBMC")
 		self.__vars = {}  #dict for app vars
 		self.view_keeper = {'browseview': 'browse_newreleases', 'frame': 'Browse', 'view_id':3350}
 
@@ -66,7 +66,7 @@ class Application():
 		self.init_lists()
 		self.init_vars()
 
-		self.player = play.Player(xbmc.PLAYER_CORE_AUTO, app=self)
+		self.player = play.Player(app=self)
 		self.playlist = self.player.playlist
 		#self.win.toptracks = self.toptracks
 		self.win.player = self.player
@@ -78,9 +78,9 @@ class Application():
 	def init_dirs(self):
 		if not xbmcvfs.exists(self.__addon_data__):
 			xbmcvfs.mkdir(self.__addon_data__)
-			print "Created addon data folder"
+			xbmc.log("Created addon data folder")
 		else:
-			print "Found existing addon data folder"
+			xbmc.log("Found existing addon data folder")
 
 
 	def init_lists(self):
@@ -102,7 +102,7 @@ class Application():
 		self.windowtracklist = lists.WindowTrackList()
 
 	def reinit_lists(self):
-		print "Reinitializing library lists"
+		xbmc.log("Reinitializing library lists")
 		self.win.clist = self.win.getControl(3550) #delete library album list cached in window control
 		self.win.clist.reset()
 		self.win.clist = self.win.getControl(3551) #delete library artist list cached in window control
@@ -123,8 +123,8 @@ class Application():
 						               "search_broadcast":   self.srch_brdcst,
 						               "library_albums":     self.lib_albums,
 						               "library_artists":    self.lib_artists,
-		                               "history_tracks":     self.hist_tracks,
-		                               "library_playlists":  self.lib_playlists,
+		                       "history_tracks":     self.hist_tracks,
+		                       "library_playlists":  self.lib_playlists,
 						               #"library_tracks":     lib_tracks,
 						               #"library_stations":   lib_stations,
 						               #"library_favorites":  lib_favorites,
@@ -140,8 +140,8 @@ class Application():
 						              "search_broadcast":		3454,
 						              "library_albums":       	3550,
 						              "library_artists":      	3551,
-		                              "history_tracks":       	3950,
-		                              "library_playlists":    	3650
+		                      "history_tracks":       	3950,
+		                      "library_playlists":    	3650
 						                })
 
 		self.set_var('running', True)
@@ -152,7 +152,7 @@ class Application():
 		#self.set_var('alb_dialog_id', None)
 
 	def init_fonts(self):
-		print "Installing Rhapsody fonts"
+		xbmc.log("Installing Rhapsody fonts")
 		MyFont.addFont( "rhapsody_font8" , "segoeuisl.ttf" , "10", self.__addon_path__ )
 		MyFont.addFont( "rhapsody_font9" , "segoeuisl.ttf" , "12", self.__addon_path__  )
 		MyFont.addFont( "rhapsody_font10" , "segoeuisl.ttf" , "14", self.__addon_path__  )

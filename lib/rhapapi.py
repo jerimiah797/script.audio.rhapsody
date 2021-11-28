@@ -40,7 +40,7 @@ class Api(object):
 					print "Call to %s succeeded in %s seconds" % (str(localreq.get_full_url()), '%.3f'%(t2-t1))
 					try:
 						results = json.load(response)
-						#utils.prettyprint(results)
+						utils.prettyprint(results)
 						return results
 					except:
 						return True
@@ -52,7 +52,7 @@ class Api(object):
 					print e
 					if succeed == 0:
 						print "(inner) something went very wrong with that request. Let's try refreshing our token"
-						self.login_member(self.app.mem.username, self.app.mem.password)
+						# self.login_member(self.app.mem.username, self.app.mem.password)     infinite recursion when auth server fails!! :-(
 						localreq = self.__build_member_req(req.get_full_url())
 						succeed += 1
 					elif succeed == 1:
