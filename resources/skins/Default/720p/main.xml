@@ -2732,7 +2732,7 @@
                     <control type="label">
                         <posx>0</posx>
                         <posy>100</posy>
-                        <label>Rhapsody for XBMC</label>
+                        <label>Napster for Kodi</label>
                         <align>left</align>
                         <aligny>top</aligny>
                         <font>rhapsody_font24_title</font>
