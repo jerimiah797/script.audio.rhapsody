@@ -21,6 +21,7 @@ class Api(object):
 		self.S_BASEURL = "https://api.rhapsody.com/v1/"
 		self.BASEURL_V2 = "https://api.napster.com/v2.2/"
 		self.APIKEY = "22Q1bFiwGxYA2eaG4vVAGsJqi3SQWzmd"
+		self.DEFAULT_TIMEOUT = 20
 		self.app = app
 
 	def __get_data_from_rhapsody(self, req, timeout):
@@ -101,7 +102,7 @@ class Api(object):
 		#print url
 		# req = self.__build_req(url)
 		# results = self.__get_data_from_rhapsody(req, 20)
-		results = requests.get(url)
+		results = requests.get(url, timeout=self.DEFAULT_TIMEOUT)
 		if results:
 			self.app.mem.access_token = results.json()["access_token"]
 			#print "got a new access token: "+self.app.mem.access_token
@@ -154,7 +155,7 @@ class Api(object):
 	def get_account_info(self):
 		print("Rhapapi: Getting Account Details with requests/APIv2.2")
 		url = "%sme/account" %(self.BASEURL_V2)
-		results = requests.get(url, headers=self.__member_headers())
+		results = requests.get(url, headers=self.__member_headers(), timeout=self.DEFAULT_TIMEOUT)
 		if results.status_code == requests.codes.ok:
 			return results.json()
 
