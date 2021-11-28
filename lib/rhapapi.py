@@ -6,6 +6,7 @@ import datetime
 import time
 import utils
 import sys
+import requests
 
 if sys.version_info >=  (2, 7):
     import json as json
@@ -20,6 +21,7 @@ class Api(object):
 	def __init__(self, app):
 		self.BASEURL = "http://api.rhapsody.com/v1/"
 		self.S_BASEURL = "https://api.rhapsody.com/v1/"
+		self.BASEURL_V2 = "https://api.napster.com/v2.2/"
 		self.APIKEY = "22Q1bFiwGxYA2eaG4vVAGsJqi3SQWzmd"
 		self.app = app
 
@@ -40,7 +42,7 @@ class Api(object):
 					print "Call to %s succeeded in %s seconds" % (str(localreq.get_full_url()), '%.3f'%(t2-t1))
 					try:
 						results = json.load(response)
-						utils.prettyprint(results)
+						# utils.prettyprint(results)
 						return results
 					except:
 						return True

@@ -3,7 +3,7 @@
     <requires>
         <import addon="xbmc.python" version="2.25.0"/>
 		<import addon="script.module.simplejson" version="2.0.10"/>
-        <import addon="script.module.requests" version="2.22.0"/>
+        <import addon="script.module.requests" version="2.12.4"/>
     </requires>
     <extension point="xbmc.python.script" library="default.py">
         <provides>audio</provides>
